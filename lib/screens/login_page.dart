@@ -1,6 +1,7 @@
 // lib/screens/login_page.dart
 import 'package:flutter/material.dart';
-import 'Inscription.dart'; // ⬅️ ou 'inscription.dart' si ton fichier est en minuscules
+import 'Inscription.dart';   // ou 'inscription.dart' selon la casse
+import 'mdpoublier1.dart';  // ForgotPasswordPage
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,6 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // 🎨 Palette
   static const _blue   = Color(0xFF2F80ED);
   static const _text   = Color(0xFF0B0B0B);
   static const _hint   = Color(0xFF9CA3AF);
@@ -48,6 +50,16 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // pas de flèche retour
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          'Connexion',
+          style: TextStyle(color: _text, fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -56,15 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: isShort ? 28 : 48),
-
-                const Text(
-                  'Connexion',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: _text),
-                ),
-
-                const SizedBox(height: 36),
+                SizedBox(height: isShort ? 12 : 20),
 
                 const Text('Email', style: TextStyle(fontSize: 14, color: _text)),
                 const SizedBox(height: 8),
@@ -96,15 +100,20 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 10),
 
-                Align(
-                  alignment: Alignment.centerRight,
+                // ✅ "Mot de passe oublié ?" centré + navigation
+                SizedBox(
+                  width: double.infinity,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: mot de passe oublié
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ForgotPasswordPage()),
+                      );
                     },
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: const Text(
                       'Mot de passe oublié ?',
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 13.5, color: Colors.black54),
                     ),
                   ),
@@ -112,6 +121,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 8),
 
+                // Bouton Connexion
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
@@ -131,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 24),
 
+                // Séparateur "Ou"
                 Row(
                   children: const [
                     Expanded(child: Divider(color: _border, thickness: 1)),
@@ -159,23 +170,17 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 28),
 
-                // 👉 Navigation vers Inscription.dart ici
+                // Vers Inscription
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Vous n’avez pas de compte ? ',
-                      style: TextStyle(color: Colors.black87),
-                    ),
+                    const Text('Vous n’avez pas de compte ? ', style: TextStyle(color: Colors.black87)),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const SignUpPage()),
+                          MaterialPageRoute(builder: (_) => SignUpPage()),
                         );
-                        // Alternatives:
-                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignUpPage()));
-                        // Navigator.pushNamed(context, '/signup');
                       },
                       child: const Text(
                         'Inscrivez-vous',
