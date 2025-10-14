@@ -1,5 +1,6 @@
 // lib/screens/login_page.dart
 import 'package:flutter/material.dart';
+import 'Inscription.dart'; // ⬅️ ou 'inscription.dart' si ton fichier est en minuscules
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,12 +10,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // 🎨 Palette
   static const _blue   = Color(0xFF2F80ED);
   static const _text   = Color(0xFF0B0B0B);
   static const _hint   = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
-  static const _light  = Color(0xFFEFF4FF); // fond clair des boutons sociaux
+  static const _light  = Color(0xFFEFF4FF);
 
   final _emailCtrl = TextEditingController();
   final _passCtrl  = TextEditingController();
@@ -58,22 +58,15 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SizedBox(height: isShort ? 28 : 48),
 
-                // Titre
                 const Text(
                   'Connexion',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: _text,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: _text),
                 ),
 
                 const SizedBox(height: 36),
 
-                // Label Email
-                const Text('Email',
-                    style: TextStyle(fontSize: 14, color: _text)),
+                const Text('Email', style: TextStyle(fontSize: 14, color: _text)),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _emailCtrl,
@@ -84,9 +77,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 16),
 
-                // Label Mot de passe
-                const Text('Mot de passe',
-                    style: TextStyle(fontSize: 14, color: _text)),
+                const Text('Mot de passe', style: TextStyle(fontSize: 14, color: _text)),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _passCtrl,
@@ -96,9 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                     suffixIcon: IconButton(
                       onPressed: () => setState(() => _obscure = !_obscure),
                       icon: Icon(
-                        _obscure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
+                        _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                         color: Colors.black54,
                       ),
                     ),
@@ -107,7 +96,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 10),
 
-                // Mot de passe oublié
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -116,18 +104,14 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: const Text(
-                      'Mot de passe oublier ?',
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        color: Colors.black54,
-                      ),
+                      'Mot de passe oublié ?',
+                      style: TextStyle(fontSize: 13.5, color: Colors.black54),
                     ),
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
-                // Bouton principal
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
@@ -138,19 +122,15 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: _blue,
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      textStyle: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w700),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                     ),
-                    child: const Text('Se conecter'), // (orthographe selon maquette)
+                    child: const Text('Se connecter'),
                   ),
                 ),
 
                 const SizedBox(height: 24),
 
-                // Séparateur "Ou"
                 Row(
                   children: const [
                     Expanded(child: Divider(color: _border, thickness: 1)),
@@ -164,28 +144,22 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 20),
 
-                // Google
                 _SocialButton(
-                  label: 'Connectez vous avec Google',
+                  label: 'Connectez-vous avec Google',
                   assetPath: 'assets/icons/google.png',
-                  onTap: () {
-                    // TODO: Google Sign-In
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(height: 12),
 
-                // Facebook
                 _SocialButton(
-                  label: 'Connectez vous avec Facebook',
+                  label: 'Connectez-vous avec Facebook',
                   assetPath: 'assets/icons/facebook.png',
-                  onTap: () {
-                    // TODO: Facebook Login
-                  },
+                  onTap: () {},
                 ),
 
                 const SizedBox(height: 28),
 
-                // Lien inscription
+                // 👉 Navigation vers Inscription.dart ici
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -195,14 +169,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const SignUpPage()),
+                        );
+                        // Alternatives:
+                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignUpPage()));
                         // Navigator.pushNamed(context, '/signup');
                       },
                       child: const Text(
                         'Inscrivez-vous',
-                        style: TextStyle(
-                          color: _blue,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(color: _blue, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -248,10 +225,7 @@ class _SocialButton extends StatelessWidget {
             Container(
               width: 34,
               height: 34,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(17),
-              ),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
               alignment: Alignment.center,
               child: Image.asset(
                 assetPath,
@@ -266,11 +240,7 @@ class _SocialButton extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
+                style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
             ),
           ],
