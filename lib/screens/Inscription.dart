@@ -1,5 +1,6 @@
 // lib/screens/inscription.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/screens/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -199,7 +200,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       }
 
                       // TODO: logique d’inscription (appel API, etc.)
-                      _showSnack('Formulaire valide ✅');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                      );
+                      _showSnack('Formulaire valide ');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _blue,

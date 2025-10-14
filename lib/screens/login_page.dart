@@ -1,5 +1,6 @@
 // lib/screens/login_page.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/screens/fournisseur/navigationBar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,14 +11,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // 🎨 Palette
-  static const _blue   = Color(0xFF2F80ED);
-  static const _text   = Color(0xFF0B0B0B);
-  static const _hint   = Color(0xFF9CA3AF);
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
-  static const _light  = Color(0xFFEFF4FF); // fond clair des boutons sociaux
+  static const _light = Color(0xFFEFF4FF); // fond clair des boutons sociaux
 
   final _emailCtrl = TextEditingController();
-  final _passCtrl  = TextEditingController();
+  final _passCtrl = TextEditingController();
   bool _obscure = true;
 
   InputDecoration _decoration(String hint) => InputDecoration(
@@ -72,8 +73,10 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 36),
 
                 // Label Email
-                const Text('Email',
-                    style: TextStyle(fontSize: 14, color: _text)),
+                const Text(
+                  'Email',
+                  style: TextStyle(fontSize: 14, color: _text),
+                ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _emailCtrl,
@@ -85,8 +88,10 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 16),
 
                 // Label Mot de passe
-                const Text('Mot de passe',
-                    style: TextStyle(fontSize: 14, color: _text)),
+                const Text(
+                  'Mot de passe',
+                  style: TextStyle(fontSize: 14, color: _text),
+                ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _passCtrl,
@@ -117,10 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: const Text(
                       'Mot de passe oublier ?',
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        color: Colors.black54,
-                      ),
+                      style: TextStyle(fontSize: 13.5, color: Colors.black54),
                     ),
                   ),
                 ),
@@ -132,7 +134,12 @@ class _LoginPageState extends State<LoginPage> {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: logique de connexion
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const Navigationbar(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _blue,
@@ -142,9 +149,13 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       textStyle: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w700),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    child: const Text('Se conecter'), // (orthographe selon maquette)
+                    child: const Text(
+                      'Se conecter',
+                    ), // (orthographe selon maquette)
                   ),
                 ),
 
@@ -156,7 +167,10 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(child: Divider(color: _border, thickness: 1)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('Ou', style: TextStyle(color: Colors.black54)),
+                      child: Text(
+                        'Ou',
+                        style: TextStyle(color: Colors.black54),
+                      ),
                     ),
                     Expanded(child: Divider(color: _border, thickness: 1)),
                   ],
@@ -259,7 +273,7 @@ class _SocialButton extends StatelessWidget {
                 height: 22,
                 fit: BoxFit.contain,
                 errorBuilder: (_, __, ___) =>
-                const Icon(Icons.image_not_supported_outlined, size: 18),
+                    const Icon(Icons.image_not_supported_outlined, size: 18),
               ),
             ),
             const SizedBox(width: 12),
