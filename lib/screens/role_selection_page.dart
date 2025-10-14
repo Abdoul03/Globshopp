@@ -1,6 +1,6 @@
 // lib/screens/role_selection_page.dart
 import 'package:flutter/material.dart';
-import 'Inscription.dart'; // 👈 ajoute l'import vers ta page d'inscription
+import 'login_page.dart'; // ✅ destination : page de connexion
 
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});
@@ -33,13 +33,16 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 15),
                     const Text(
                       'Qui êtes-vous ?',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: _text),
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: _text,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -49,16 +52,23 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Commerçant
+                    // 🛒 Commerçant
                     _RoleCard(
                       selected: _selected == _UserRole.merchant,
                       leading: Container(
-                        width: 56, height: 56, alignment: Alignment.center,
+                        width: 56,
+                        height: 56,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle,
+                          color: Colors.white,
+                          shape: BoxShape.circle,
                           border: Border.all(
-                              color: _selected == _UserRole.merchant ? _blue : _border, width: 2),
-                          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
+                            color: _selected == _UserRole.merchant ? _blue : _border,
+                            width: 2,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+                          ],
                         ),
                         padding: const EdgeInsets.all(10),
                         child: Image.asset('assets/icons/Vector.png', fit: BoxFit.contain),
@@ -69,16 +79,23 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                     ),
                     const SizedBox(height: 18),
 
-                    // Fournisseur
+                    // 🏭 Fournisseur
                     _RoleCard(
                       selected: _selected == _UserRole.supplier,
                       leading: Container(
-                        width: 56, height: 56, alignment: Alignment.center,
+                        width: 56,
+                        height: 56,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle,
+                          color: Colors.white,
+                          shape: BoxShape.circle,
                           border: Border.all(
-                              color: _selected == _UserRole.supplier ? Colors.orangeAccent : _border, width: 2),
-                          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
+                            color: _selected == _UserRole.supplier ? Colors.orangeAccent : _border,
+                            width: 2,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+                          ],
                         ),
                         padding: const EdgeInsets.all(10),
                         child: Image.asset('assets/icons/Vector (1).png', fit: BoxFit.contain),
@@ -90,26 +107,21 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
 
                     const SizedBox(height: 32),
 
-                    // 🔵 Bouton Continuer
+                    // 🔵 Bouton Continuer -> LoginPage
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _selected == null
                             ? null
                             : () {
-                          // === Variante A : push direct ===
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const SignUpPage()),
+                            MaterialPageRoute(builder: (_) => const LoginPage()),
                           );
 
-                          // === Variante B : route nommée ===
-                          // Navigator.pushNamed(context, '/signup');
-
-                          // (Optionnel) si tu veux empêcher le retour:
-                          // Navigator.pushReplacement(context,
-                          //   MaterialPageRoute(builder: (_) => const SignUpPage()),
-                          // );
+                          // 👉 variantes possibles :
+                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                          // Navigator.pushNamed(context, '/login'); // si routes nommées
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _blue,
@@ -119,7 +131,8 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                           minimumSize: const Size(double.infinity, 56),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('Continuer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                        child: const Text('Continuer',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -169,7 +182,8 @@ class _RoleCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: selected ? _blue : _border, width: 1.2),
             boxShadow: [
-              if (selected) BoxShadow(color: _blue.withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 6)),
+              if (selected)
+                BoxShadow(color: _blue.withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 6)),
             ],
           ),
           child: Row(
@@ -181,9 +195,17 @@ class _RoleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _text)),
+                    Text(title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: _text,
+                        )),
                     const SizedBox(height: 6),
-                    Text(subtitle, style: const TextStyle(fontSize: 14, height: 1.45, color: _sub)),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(fontSize: 14, height: 1.45, color: _sub),
+                    ),
                   ],
                 ),
               ),
