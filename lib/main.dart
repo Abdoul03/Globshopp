@@ -12,7 +12,7 @@ class GlobalShopperApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       title: 'Global Shopper',
       theme: ThemeData(useMaterial3: true),
       home: const OnboardingCarousel(),
