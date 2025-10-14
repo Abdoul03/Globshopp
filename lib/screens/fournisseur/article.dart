@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/_base/constant.dart';
+import 'package:globshopp/screens/fournisseur/custom/custumSearchBar.dart';
 import 'package:remixicon/remixicon.dart';
 
 class Article extends StatefulWidget {
@@ -10,6 +11,19 @@ class Article extends StatefulWidget {
 }
 
 class _ArticleState extends State<Article> {
+  final _searchController = TextEditingController();
+
+  void _onSearchTextChanged(String text) {
+    setState(() {
+      if (text.isEmpty) {
+        setState(() {
+          //_searchResults;
+        });
+        return;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +34,7 @@ class _ArticleState extends State<Article> {
           child: Padding(
             padding: EdgeInsets.all(12),
             child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,13 +43,13 @@ class _ArticleState extends State<Article> {
                     Container(
                       alignment: Alignment.center,
                       // padding: EdgeInsets.all(20),
-                      width: 50,
-                      height: 50,
+                      width: 45,
+                      height: 45,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle, // Make it a circle
                         border: Border.all(
                           color: Constant.colorsgray,
-                          width: 3.0,
+                          width: 2.0,
                         ),
                       ),
                       child: IconButton(
@@ -47,13 +62,13 @@ class _ArticleState extends State<Article> {
                     Container(
                       alignment: Alignment.center,
                       // padding: EdgeInsets.all(20),
-                      width: 50,
-                      height: 50,
+                      width: 45,
+                      height: 45,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle, // Make it a circle
                         border: Border.all(
                           color: Constant.colorsgray,
-                          width: 3.0,
+                          width: 2.0,
                         ),
                       ),
                       child: IconButton(
@@ -63,6 +78,12 @@ class _ArticleState extends State<Article> {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(height: 20),
+                Custumsearchbar(
+                  hintText: "Rechercher",
+                  onchange: _onSearchTextChanged,
+                  controller: _searchController,
                 ),
               ],
             ),
