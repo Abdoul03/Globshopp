@@ -17,19 +17,19 @@ class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 0;
 
-  final List<CategoryItem> _categories = const [
-    CategoryItem(label: 'Tous', icon: Icons.grid_view_rounded),
-    CategoryItem(label: 'Accessoires', icon: Icons.headphones_rounded),
-    CategoryItem(label: 'Electronique', icon: Icons.devices_other_rounded),
-    CategoryItem(label: 'Habits', icon: Icons.checkroom_rounded),
-    CategoryItem(label: 'Electro', icon: Icons.kitchen_rounded),
+  final _categories = const [
+    ('Tous', Icons.grid_view_rounded),
+    ('Accessoires', Icons.headphones_rounded),
+    ('Electronique', Icons.devices_other_rounded),
+    ('Habits', Icons.checkroom_rounded),
+    ('Electro', Icons.kitchen_rounded),
   ];
 
-  final List<Product> _products = const [
+  final _products = const [
     Product(
       title: 'T-shirts coton “Everyday Fit”',
       price: '1000 FCFA',
-      moq: 'MOQ : 20 pieces',
+      moq: 'MOQ: 20 pcs',
       brand: 'Baba Fashion',
       image: 'assets/image/tshirt.png',
       badge: 'Disponible',
@@ -37,21 +37,21 @@ class _HomePageState extends State<HomePage> {
     Product(
       title: 'T-shirts coton “Everyday Fit”',
       price: '1000 FCFA',
-      moq: 'MOQ : 20 pieces',
+      moq: 'MOQ: 20 pcs',
       brand: 'Baba Fashion',
       image: 'assets/image/tshirt.png',
     ),
     Product(
       title: 'Casques JBL live 770nc',
       price: '1000 FCFA',
-      moq: 'MOQ : 100 pieces',
+      moq: 'MOQ: 100 pcs',
       brand: '',
       image: 'assets/image/jbl.png',
     ),
     Product(
       title: 'Casques JBL live 770nc',
       price: '1000 FCFA',
-      moq: 'MOQ : 100 pieces',
+      moq: 'MOQ: 100 pcs',
       brand: '',
       image: 'assets/image/jbl.png',
     ),
@@ -59,71 +59,77 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final topSafe = MediaQuery.of(context).padding.top;
-
     return Scaffold(
       backgroundColor: Colors.white,
+
+      // ------------------ CONTENU ------------------
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: SizedBox(height: topSafe)),
-
-          // En-tête
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: const Color(0xFFF0F3FF),
-                    child: Image.asset(
-                      'assets/icons/logo.png',
-                      width: 22,
-                      height: 22,
-                      errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.shopping_cart_outlined, size: 18),
-                    ),
-                  ),
-                  const Spacer(),
-                  _roundIcon(Icons.notifications_none_rounded),
-                  const SizedBox(width: 12),
-                  _roundIcon(Icons.history_rounded),
-                ],
+          // En-tête + recherche
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            expandedHeight: 140,
+            leadingWidth: 64,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: CircleAvatar(
+                radius: 20,
+                backgroundColor: const Color(0xFFF0F3FF),
+                child: Image.asset(
+                  'assets/icons/logo.png',
+                  width: 22,
+                  height: 22,
+                  errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.shopping_cart_outlined, size: 18),
+                ),
               ),
             ),
-          ),
-
-          // Barre de recherche
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Rechercher',
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: _cardBorder),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: _cardBorder),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications_none_rounded,
+                    color: Colors.black87),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.history_rounded, color: Colors.black87),
+                onPressed: () {},
+              ),
+              const SizedBox(width: 6),
+            ],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(64),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Rechercher',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: _cardBorder),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: _cardBorder),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
 
-          // Titre "Catégories"
+          // Titre
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(16, 10, 16, 8),
               child: Text(
-                'Categories',
+                'Catégories',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
@@ -133,7 +139,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Chips Catégories
+          // Chips catégories
           SliverToBoxAdapter(
             child: SizedBox(
               height: 92,
@@ -141,10 +147,10 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
-                  final item = _categories[i];
+                  final (label, icon) = _categories[i];
                   return CategoryChip(
-                    label: item.label,
-                    icon: item.icon,
+                    label: label,
+                    icon: icon,
                     selected: i == 0,
                     onTap: () {},
                   );
@@ -155,7 +161,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Grille produits  ✅ SliverPadding utilise "sliver:"
+          // Grille produits
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 100),
             sliver: SliverGrid(
@@ -177,37 +183,68 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
 
-      // Bottom bar avec icônes images
-      bottomNavigationBar: _BottomNav(
-        currentIndex: _currentIndex,
-        onChanged: (i) => setState(() => _currentIndex = i),
-      ),
-    );
-  }
-
-  Widget _roundIcon(IconData icon) {
-    return Ink(
-      width: 40,
-      height: 40,
-      decoration: const ShapeDecoration(
-        color: Color(0xFFF6F7FB),
-        shape: CircleBorder(),
-      ),
-      child: IconButton(
-        onPressed: () {},
-        icon: Icon(icon, color: _text),
+      // ------------------ NAVIGATION BAR BOTTOM ------------------
+      bottomNavigationBar: NavigationBarTheme(
+        data: const NavigationBarThemeData(
+          height: 84,
+          indicatorColor: Color(0x142F80ED),
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          labelTextStyle: WidgetStatePropertyAll(
+            TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+          ),
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (i) {
+            // Accueil : on reste sur HomePage
+            if (i == 0) {
+              setState(() => _currentIndex = 0);
+              return;
+            }
+            // ✅ Commandes → ouvre via route nommée (déclarée dans main.dart)
+            if (i == 2) {
+              Navigator.pushNamed(context, '/commandes');
+              return;
+            }
+            // Autres onglets : MAJ visuelle
+            setState(() => _currentIndex = i);
+          },
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          destinations: const [
+            NavigationDestination(
+              icon: _NavIcon('assets/icons/home.png', size: 28),
+              selectedIcon: _NavIcon('assets/icons/home_active.png', size: 28),
+              label: 'Accueil',
+            ),
+            NavigationDestination(
+              icon: _NavIcon('assets/icons/store.png', size: 28),
+              selectedIcon: _NavIcon('assets/icons/store_active.png', size: 28),
+              label: 'Fournisseurs',
+            ),
+            NavigationDestination(
+              icon: _NavIcon('assets/icons/orders.png', size: 28),
+              selectedIcon: _NavIcon('assets/icons/orders_active.png', size: 28),
+              label: 'Commandes',
+            ),
+            NavigationDestination(
+              icon: _NavIcon('assets/icons/contacts.png', size: 28),
+              selectedIcon: _NavIcon('assets/icons/contacts_active.png', size: 28),
+              label: 'Annuaire',
+            ),
+            NavigationDestination(
+              icon: _NavIcon('assets/icons/profile.png', size: 28),
+              selectedIcon: _NavIcon('assets/icons/profile_active.png', size: 28),
+              label: 'Profil',
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// ======== Modèles & Widgets ========
-
-class CategoryItem {
-  final String label;
-  final IconData icon;
-  const CategoryItem({required this.label, required this.icon});
-}
+//// --------- MODELES & WIDGETS ---------
 
 class Product {
   final String title;
@@ -291,6 +328,7 @@ class ProductCard extends StatelessWidget {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(14),
+      elevation: 0,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
         onTap: () {},
@@ -324,21 +362,23 @@ class ProductCard extends StatelessWidget {
                     ),
                     if (product.badge != null)
                       Positioned(
-                        top: 8,
-                        right: 8,
+                        top: 6,
+                        right: 6,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFF3CC36C),
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Text(
-                            'Disponible',
-                            style: TextStyle(
+                          child: Text(
+                            product.badge!,
+                            style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              height: 1.0,
+                              letterSpacing: 0.1,
                             ),
                           ),
                         ),
@@ -348,6 +388,7 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
 
+              // Titre
               Text(
                 product.title,
                 maxLines: 2,
@@ -360,27 +401,49 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(height: 6),
 
+              // Prix + MOQ
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    product.price,
-                    style: const TextStyle(
-                        fontSize: 12.5, fontWeight: FontWeight.w700),
+                  Expanded(
+                    child: Text(
+                      product.price,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                  Text(
-                    product.moq,
-                    style: const TextStyle(
-                        fontSize: 11.5, color: _HomePageState._sub),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        product.moq,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          color: _HomePageState._sub,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
+
               if (product.brand.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Text(
                   product.brand,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 11.5, color: _HomePageState._sub),
+                    fontSize: 11.5,
+                    color: _HomePageState._sub,
+                  ),
                 ),
               ],
             ],
@@ -391,58 +454,14 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class _BottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onChanged;
-  const _BottomNav({required this.currentIndex, required this.onChanged});
-
-  static const double _iconSize = 24;
-
-  Widget _img(String path) => Image.asset(
-    path,
-    width: _iconSize,
-    height: _iconSize,
-    fit: BoxFit.contain,
-    errorBuilder: (_, __, ___) =>
-    const Icon(Icons.image_not_supported_outlined, size: _iconSize),
-  );
+/// Icône image pour NavigationBar (const-friendly)
+class _NavIcon extends StatelessWidget {
+  final String path;
+  final double size;
+  const _NavIcon(this.path, {this.size = 26, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onChanged,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: _HomePageState._blue,
-      unselectedItemColor: Colors.grey,
-      showUnselectedLabels: true,
-      items: [
-        BottomNavigationBarItem(
-          icon: _img('assets/icons/home.png'),
-          activeIcon: _img('assets/icons/home_active.png'),
-          label: 'Accueil',
-        ),
-        BottomNavigationBarItem(
-          icon: _img('assets/icons/store.png'),
-          activeIcon: _img('assets/icons/store_active.png'),
-          label: 'Fournisseurs',
-        ),
-        BottomNavigationBarItem(
-          icon: _img('assets/icons/orders.png'),
-          activeIcon: _img('assets/icons/orders_active.png'),
-          label: 'Commandes',
-        ),
-        BottomNavigationBarItem(
-          icon: _img('assets/icons/contacts.png'),
-          activeIcon: _img('assets/icons/contacts_active.png'),
-          label: 'Annuaire',
-        ),
-        BottomNavigationBarItem(
-          icon: _img('assets/icons/profile.png'),
-          activeIcon: _img('assets/icons/profile_active.png'),
-          label: 'Profil',
-        ),
-      ],
-    );
+    return Image.asset(path, width: size, height: size, fit: BoxFit.contain);
   }
 }

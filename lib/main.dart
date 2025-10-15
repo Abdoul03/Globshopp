@@ -1,5 +1,9 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/onboarding_carousel.dart';
+import 'package:globshopp/screens/login_page.dart';
+import 'package:globshopp/screens/accueil.dart';
+import 'package:globshopp/screens/commandes_page.dart'; // ← ajoute la page Commandes
 
 void main() {
   runApp(const GlobalShopperApp());
@@ -8,14 +12,28 @@ void main() {
 class GlobalShopperApp extends StatelessWidget {
   const GlobalShopperApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Global Shopper',
       theme: ThemeData(useMaterial3: true),
+
+      // Écran de démarrage
       home: const OnboardingCarousel(),
+
+      // ✅ Routes nommées accessibles partout
+      routes: {
+        '/login': (_) => const LoginPage(),
+        '/accueil': (_) => const HomePage(),
+        '/commandes': (_) => const CommandesPage(),
+      },
+
+      // (optionnel) Si une route inconnue est demandée
+      onUnknownRoute: (settings) => MaterialPageRoute(
+        builder: (_) => const HomePage(),
+        settings: const RouteSettings(name: '/accueil'),
+      ),
     );
   }
 }
