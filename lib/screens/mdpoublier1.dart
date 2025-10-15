@@ -1,6 +1,7 @@
 // lib/screens/mdpoublier1.dart
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'verification.dart'; // ✅ page de destination
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -21,8 +22,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   InputDecoration _decoration(String hint) => InputDecoration(
     hintText: hint,
     hintStyle: const TextStyle(color: _hint),
-    contentPadding:
-    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: _border, width: 1.2),
@@ -35,15 +35,23 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   void _sendCode() {
     final email = _emailCtrl.text.trim();
+
+    // petite validation
     if (email.isEmpty || !email.contains('@')) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veuillez entrer un email valide.')),
       );
       return;
     }
-    // TODO: appel API d’envoi du code
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Code envoyé ✅ Vérifiez votre email.')),
+
+    // (Optionnel) TODO: appel API d’envoi du code ici
+
+    // 👉 navigation vers la page de vérification + passage de l'email
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VerificationPage(email: email),
+      ),
     );
   }
 
@@ -58,7 +66,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // AppBar avec flèche retour (tu peux mettre automaticallyImplyLeading: false pour la masquer)
+      // AppBar (flèche retour)
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -79,7 +87,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 mainAxisAlignment: MainAxisAlignment.center, // centrage vertical
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // 🔽 On descend un peu le titre avec un espace au-dessus
                   const SizedBox(height: 20),
 
                   // 🧭 Titre centré et un peu plus grand
@@ -88,10 +95,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       'Mot de passe oublier ?',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 28,            // ⬅️ agrandi (avant ~26)
+                        fontSize: 28,
                         fontWeight: FontWeight.w700,
                         color: _text,
-                        height: 1.2,             // un peu d’air
+                        height: 1.2,
                       ),
                     ),
                   ),
@@ -101,7 +108,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   // 🖼 Illustration
                   Center(
                     child: Image.asset(
-                      'assets/image/mdpo.png',   // adapte le chemin si besoin
+                      'assets/image/mdpo.png', // adapte le chemin si besoin
                       height: 240,
                       fit: BoxFit.contain,
                     ),
@@ -123,7 +130,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
                   const SizedBox(height: 24),
 
-                  // 🔵 Envoyer le code
+                  // 🔵 Envoyer le code → VerificationPage
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
@@ -156,7 +163,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (_) => LoginPage()), // pas de const ici
+                              MaterialPageRoute(builder: (_) => const LoginPage()),
                             );
                           },
                           child: const Text(
