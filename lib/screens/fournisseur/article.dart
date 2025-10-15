@@ -79,11 +79,91 @@ class _ArticleState extends State<Article> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 33),
+                //Bar de recherche
                 Custumsearchbar(
                   hintText: "Rechercher",
                   onchange: _onSearchTextChanged,
                   controller: _searchController,
+                ),
+                SizedBox(height: 20),
+
+                //Contenaire de produits
+                GestureDetector(
+                  onTap: () {
+                    print("Conteneur tapé !");
+                  },
+                  child: Container(
+                    width: 400,
+                    height: 115,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                        color: Constant.colorsgray,
+                        width: 1.0,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        //Image
+                        Container(
+                          margin: EdgeInsets.only(left: 10.0),
+                          width: 95,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(
+                              color: Constant.colorsgray,
+                              width: 1.0,
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          child: Text("Image"),
+                        ),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "T-shirts coton “Everyday Fit” ",
+                                style: TextStyle(
+                                  color: Constant.colorsBlack,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Prix : 1000 fcfa",
+                                textAlign: TextAlign.right,
+                                style: TextStyle(color: Constant.colorsgray),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Text(
+                                    "MOQ : 144 pieces",
+                                    style: TextStyle(color: Constant.jaune),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Text(
+                                    "Stock : 20000",
+                                    style: TextStyle(
+                                      color: Constant.blue,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
