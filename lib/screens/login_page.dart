@@ -112,9 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                     suffixIcon: IconButton(
                       onPressed: () => setState(() => _obscure = !_obscure),
                       icon: Icon(
-                        _obscure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
+                        _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                         color: Colors.black54,
                       ),
                     ),
@@ -208,10 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Vous n’avez pas de compte ? ',
-                      style: TextStyle(color: Colors.black87),
-                    ),
+                    const Text('Vous n’avez pas de compte ? ', style: TextStyle(color: Colors.black87)),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -221,10 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       child: const Text(
                         'Inscrivez-vous',
-                        style: TextStyle(
-                          color: _blue,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(color: _blue, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -270,10 +262,7 @@ class _SocialButton extends StatelessWidget {
             Container(
               width: 34,
               height: 34,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(17),
-              ),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
               alignment: Alignment.center,
               child: Image.asset(
                 assetPath,
@@ -288,11 +277,7 @@ class _SocialButton extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
+                style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
             ),
           ],
