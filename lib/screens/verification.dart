@@ -2,11 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_page.dart';
+import 'changer_mdp.dart'; // ✅ destination après "Vérifier" (ResetPasswordPage)
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({
     super.key,
-    this.email = 'samabdoul03@gmail.com', // passe l'email si besoin
+    this.email = 'samabdoul03@gmail.com',
   });
 
   final String email;
@@ -61,9 +62,13 @@ class _VerificationPageState extends State<VerificationPage> {
       );
       return;
     }
-    // TODO: appel API de vérification du code
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Code $_code vérifié ✅')),
+
+    // (Optionnel) TODO: vérifier le code côté serveur
+
+    // 👉 Navigation vers la page "changer_mdp.dart"
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
     );
   }
 
@@ -101,9 +106,13 @@ class _VerificationPageState extends State<VerificationPage> {
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
         keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(1)],
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(1),
+        ],
         decoration: _otpDecoration(),
-        onChanged: (v) => _onChanged(value: v, current: node, next: next, prev: prev),
+        onChanged: (v) =>
+            _onChanged(value: v, current: node, next: next, prev: prev),
       ),
     );
   }
@@ -112,6 +121,7 @@ class _VerificationPageState extends State<VerificationPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isShort = size.height < 720;
+    final double topGap = isShort ? 48.0 : 80.0;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -130,7 +140,8 @@ class _VerificationPageState extends State<VerificationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Titre + sous-titre
+              SizedBox(height: topGap),
+
               const Text(
                 'Verification',
                 textAlign: TextAlign.center,
@@ -145,7 +156,6 @@ class _VerificationPageState extends State<VerificationPage> {
 
               const SizedBox(height: 36),
 
-              // Message email
               Text(
                 'Nous avons envoyer un code à\n${widget.email}',
                 textAlign: TextAlign.left,
@@ -154,7 +164,6 @@ class _VerificationPageState extends State<VerificationPage> {
 
               const SizedBox(height: 28),
 
-              // Les 4 cases OTP
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -167,11 +176,10 @@ class _VerificationPageState extends State<VerificationPage> {
 
               const SizedBox(height: 28),
 
-              // Bouton Vérifier
               SizedBox(
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _verify,
+                  onPressed: _verify, // ✅ va pousser vers ResetPasswordPage
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _blue,
                     foregroundColor: Colors.white,
@@ -185,17 +193,14 @@ class _VerificationPageState extends State<VerificationPage> {
 
               const SizedBox(height: 18),
 
-              // Renvoyer
               Center(
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text('Vous n’avez pas reçu le code ? ',
-                        style: TextStyle(color: Colors.black87)),
+                    const Text('Vous n’avez pas reçu le code ? ', style: TextStyle(color: Colors.black87)),
                     InkWell(
                       onTap: _resend,
-                      child: const Text('Renvoyer',
-                          style: TextStyle(color: _blue, fontWeight: FontWeight.w600)),
+                      child: const Text('Renvoyer', style: TextStyle(color: _blue, fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),
@@ -203,7 +208,6 @@ class _VerificationPageState extends State<VerificationPage> {
 
               const SizedBox(height: 36),
 
-              // Lien retour connexion
               Center(
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
