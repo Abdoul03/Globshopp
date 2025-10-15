@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'Inscription.dart'; // ou 'inscription.dart' selon la casse
 import 'mdpoublier1.dart'; // ForgotPasswordPage
+import 'accueil.dart'; // ⬅️ HomePage (page d'accueil)
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -41,6 +42,16 @@ class _LoginPageState extends State<LoginPage> {
     _emailCtrl.dispose();
     _passCtrl.dispose();
     super.dispose();
+  }
+
+  void _goHome() {
+    // 👉 Après vérification/connexion réussie, on navigue vers l'accueil
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const HomePage()),
+      (route) =>
+          false, // supprime tout l'historique pour empêcher le retour au login
+    );
   }
 
   @override
@@ -108,18 +119,22 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                  onSubmitted: (_) =>
+                      _goHome(), // Entrée => tente la connexion puis va à l'accueil
                 ),
 
                 const SizedBox(height: 10),
 
-                // ✅ "Mot de passe oublié ?" centré + navigation
+                // "Mot de passe oublié ?" centré + navigation
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => ForgotPasswordPage()),
+                        MaterialPageRoute(
+                          builder: (_) => const ForgotPasswordPage(),
+                        ),
                       );
                     },
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
@@ -133,18 +148,12 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 8),
 
-                // Bouton Connexion
+                // Bouton Connexion -> Accueil
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const Navigationbar(),
-                        ),
-                      );
-                    },
+                    onPressed:
+                        _goHome, // ⬅️ redirige vers HomePage (accueil.dart)
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _blue,
                       foregroundColor: Colors.white,
@@ -207,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => SignUpPage()),
+                          MaterialPageRoute(builder: (_) => const SignUpPage()),
                         );
                       },
                       child: const Text(
