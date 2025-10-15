@@ -1,6 +1,7 @@
 // lib/screens/login_page.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/fournisseur/navigationBar.dart';
+import 'Inscription.dart'; // ⬅️ ou 'inscription.dart' si ton fichier est en minuscules
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,12 +11,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // 🎨 Palette
   static const _blue = Color(0xFF2F80ED);
   static const _text = Color(0xFF0B0B0B);
   static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
-  static const _light = Color(0xFFEFF4FF); // fond clair des boutons sociaux
+  static const _light = Color(0xFFEFF4FF);
 
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
@@ -59,7 +59,6 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SizedBox(height: isShort ? 28 : 48),
 
-                // Titre
                 const Text(
                   'Connexion',
                   textAlign: TextAlign.center,
@@ -72,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 36),
 
-                // Label Email
                 const Text(
                   'Email',
                   style: TextStyle(fontSize: 14, color: _text),
@@ -87,7 +85,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 16),
 
-                // Label Mot de passe
                 const Text(
                   'Mot de passe',
                   style: TextStyle(fontSize: 14, color: _text),
@@ -112,7 +109,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 10),
 
-                // Mot de passe oublié
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -121,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: const Text(
-                      'Mot de passe oublier ?',
+                      'Mot de passe oublié ?',
                       style: TextStyle(fontSize: 13.5, color: Colors.black54),
                     ),
                   ),
@@ -129,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 8),
 
-                // Bouton principal
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
@@ -153,15 +148,12 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    child: const Text(
-                      'Se conecter',
-                    ), // (orthographe selon maquette)
+                    child: const Text('Se connecter'),
                   ),
                 ),
 
                 const SizedBox(height: 24),
 
-                // Séparateur "Ou"
                 Row(
                   children: const [
                     Expanded(child: Divider(color: _border, thickness: 1)),
@@ -178,28 +170,22 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 20),
 
-                // Google
                 _SocialButton(
-                  label: 'Connectez vous avec Google',
+                  label: 'Connectez-vous avec Google',
                   assetPath: 'assets/icons/google.png',
-                  onTap: () {
-                    // TODO: Google Sign-In
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(height: 12),
 
-                // Facebook
                 _SocialButton(
-                  label: 'Connectez vous avec Facebook',
+                  label: 'Connectez-vous avec Facebook',
                   assetPath: 'assets/icons/facebook.png',
-                  onTap: () {
-                    // TODO: Facebook Login
-                  },
+                  onTap: () {},
                 ),
 
                 const SizedBox(height: 28),
 
-                // Lien inscription
+                // 👉 Navigation vers Inscription.dart ici
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -209,6 +195,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const SignUpPage()),
+                        );
+                        // Alternatives:
+                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignUpPage()));
                         // Navigator.pushNamed(context, '/signup');
                       },
                       child: const Text(
