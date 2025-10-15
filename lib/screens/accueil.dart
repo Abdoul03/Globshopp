@@ -1,5 +1,6 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/screens/_base/constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -67,6 +68,7 @@ class _HomePageState extends State<HomePage> {
         slivers: [
           // En-tête + recherche
           SliverAppBar(
+            surfaceTintColor: Constant.colorsWhite,
             pinned: true,
             backgroundColor: Colors.white,
             elevation: 0,
@@ -82,14 +84,16 @@ class _HomePageState extends State<HomePage> {
                   width: 22,
                   height: 22,
                   errorBuilder: (_, __, ___) =>
-                  const Icon(Icons.shopping_cart_outlined, size: 18),
+                      const Icon(Icons.shopping_cart_outlined, size: 18),
                 ),
               ),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.notifications_none_rounded,
-                    color: Colors.black87),
+                icon: const Icon(
+                  Icons.notifications_none_rounded,
+                  color: Colors.black87,
+                ),
                 onPressed: () {},
               ),
               IconButton(
@@ -108,8 +112,10 @@ class _HomePageState extends State<HomePage> {
                     prefixIcon: const Icon(Icons.search_rounded),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(color: _cardBorder),
@@ -171,13 +177,10 @@ class _HomePageState extends State<HomePage> {
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
               ),
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  final p = _products[index];
-                  return ProductCard(product: p);
-                },
-                childCount: _products.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final p = _products[index];
+                return ProductCard(product: p);
+              }, childCount: _products.length),
             ),
           ),
         ],
@@ -224,17 +227,26 @@ class _HomePageState extends State<HomePage> {
             ),
             NavigationDestination(
               icon: _NavIcon('assets/icons/orders.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/orders_active.png', size: 28),
+              selectedIcon: _NavIcon(
+                'assets/icons/orders_active.png',
+                size: 28,
+              ),
               label: 'Commandes',
             ),
             NavigationDestination(
               icon: _NavIcon('assets/icons/contacts.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/contacts_active.png', size: 28),
+              selectedIcon: _NavIcon(
+                'assets/icons/contacts_active.png',
+                size: 28,
+              ),
               label: 'Annuaire',
             ),
             NavigationDestination(
               icon: _NavIcon('assets/icons/profile.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/profile_active.png', size: 28),
+              selectedIcon: _NavIcon(
+                'assets/icons/profile_active.png',
+                size: 28,
+              ),
               label: 'Profil',
             ),
           ],
@@ -365,8 +377,10 @@ class ProductCard extends StatelessWidget {
                         top: 6,
                         right: 6,
                         child: Container(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF3CC36C),
                             borderRadius: BorderRadius.circular(12),

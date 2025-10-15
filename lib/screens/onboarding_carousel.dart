@@ -1,6 +1,8 @@
 // lib/screens/onboarding_carousel.dart
 import 'package:flutter/material.dart';
-import 'role_selection_page.dart'; // 👈 destination finale après l’onboarding
+
+//destination finale après l’onboarding
+import 'role_selection_page.dart';
 
 class OnboardingCarousel extends StatefulWidget {
   const OnboardingCarousel({super.key});
@@ -14,38 +16,41 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
   int _current = 0;
 
   // Palette (reprend tes couleurs)
-  static const _blue  = Color(0xFF2F80ED);
+  static const _blue = Color(0xFF2F80ED);
   static const _beige = Color(0xFFEEDFC2);
   static const _title = Color(0xFF0B0B0B);
-  static const _sub   = Color(0xFF5C5F66);
+  static const _sub = Color(0xFF5C5F66);
 
   // Les 3 slides équivalents à tes Onboarding1/2/3
   final List<_SlideData> _slides = const [
     _SlideData(
       image: 'assets/image/onb1.png',
       title: 'Ensemble, on commande\nmieux !',
-      text:  'Finies les petites commandes non rentables !\n'
+      text:
+          'Finie les petites commandes non rentables !\n'
           'Rejoignez d’autres commerçants pour acheter en\n'
           'groupe et profiter de meilleurs prix.',
     ),
     _SlideData(
       image: 'assets/image/onb2.png',
       title: 'Payez en toute confiance !',
-      text:  'Vos paiements sont sécurisés et 100% traçables.\n'
+      text:
+          'Vos paiements sont sécurisés et 100% traçables.\n'
           'Profitez d’une transparence totale à chaque\n'
           'transaction.',
     ),
     _SlideData(
       image: 'assets/image/onb3.png',
       title: 'Le monde à portée de main !',
-      text:  'Accédez directement aux meilleurs fournisseurs.\n'
+      text:
+          'Accédez directement aux meilleurs fournisseurs.\n'
           'Découvrez et commandez des produits du\n'
           'monde entier.',
     ),
   ];
 
   void _skip() {
-    // 👉 Va directement après l’onboarding
+    //Va directement après l’onboarding
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const RoleSelectionPage()),
@@ -178,7 +183,11 @@ class _SlideData {
   final String image;
   final String title;
   final String text;
-  const _SlideData({required this.image, required this.title, required this.text});
+  const _SlideData({
+    required this.image,
+    required this.title,
+    required this.text,
+  });
 }
 
 class _Slide extends StatelessWidget {
@@ -230,11 +239,7 @@ class _Slide extends StatelessWidget {
         // Paragraphe
         Text(
           data.text,
-          style: TextStyle(
-            fontSize: 13,
-            height: 1.50,
-            color: textColor,
-          ),
+          style: TextStyle(fontSize: 13, height: 1.50, color: textColor),
         ),
       ],
     );

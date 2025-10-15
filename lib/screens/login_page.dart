@@ -1,8 +1,8 @@
 // lib/screens/login_page.dart
 import 'package:flutter/material.dart';
-import 'Inscription.dart';     // ou 'inscription.dart' selon la casse
-import 'mdpoublier1.dart';    // ForgotPasswordPage
-import 'accueil.dart';        // ⬅️ HomePage (page d'accueil)
+import 'Inscription.dart'; // ou 'inscription.dart' selon la casse
+import 'mdpoublier1.dart'; // ForgotPasswordPage
+import 'accueil.dart'; // ⬅️ HomePage (page d'accueil)
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,14 +13,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // 🎨 Palette
-  static const _blue   = Color(0xFF2F80ED);
-  static const _text   = Color(0xFF0B0B0B);
-  static const _hint   = Color(0xFF9CA3AF);
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
-  static const _light  = Color(0xFFEFF4FF);
+  static const _light = Color(0xFFEFF4FF);
 
   final _emailCtrl = TextEditingController();
-  final _passCtrl  = TextEditingController();
+  final _passCtrl = TextEditingController();
   bool _obscure = true;
 
   InputDecoration _decoration(String hint) => InputDecoration(
@@ -49,7 +49,8 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const HomePage()),
-          (route) => false, // supprime tout l'historique pour empêcher le retour au login
+      (route) =>
+          false, // supprime tout l'historique pour empêcher le retour au login
     );
   }
 
@@ -67,7 +68,11 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         title: const Text(
           'Connexion',
-          style: TextStyle(color: _text, fontSize: 20, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            color: _text,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       body: SafeArea(
@@ -80,7 +85,10 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SizedBox(height: isShort ? 12 : 20),
 
-                const Text('Email', style: TextStyle(fontSize: 14, color: _text)),
+                const Text(
+                  'Email',
+                  style: TextStyle(fontSize: 14, color: _text),
+                ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _emailCtrl,
@@ -91,7 +99,10 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 16),
 
-                const Text('Mot de passe', style: TextStyle(fontSize: 14, color: _text)),
+                const Text(
+                  'Mot de passe',
+                  style: TextStyle(fontSize: 14, color: _text),
+                ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _passCtrl,
@@ -106,7 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  onSubmitted: (_) => _goHome(), // Entrée => tente la connexion puis va à l'accueil
+                  onSubmitted: (_) =>
+                      _goHome(), // Entrée => tente la connexion puis va à l'accueil
                 ),
 
                 const SizedBox(height: 10),
@@ -118,7 +130,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
+                        MaterialPageRoute(
+                          builder: (_) => const ForgotPasswordPage(),
+                        ),
                       );
                     },
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
@@ -136,13 +150,19 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _goHome, // ⬅️ redirige vers HomePage (accueil.dart)
+                    onPressed:
+                        _goHome, // ⬅️ redirige vers HomePage (accueil.dart)
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _blue,
                       foregroundColor: Colors.white,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     child: const Text('Se connecter'),
                   ),
@@ -156,7 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(child: Divider(color: _border, thickness: 1)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('Ou', style: TextStyle(color: Colors.black54)),
+                      child: Text(
+                        'Ou',
+                        style: TextStyle(color: Colors.black54),
+                      ),
                     ),
                     Expanded(child: Divider(color: _border, thickness: 1)),
                   ],
@@ -247,7 +270,7 @@ class _SocialButton extends StatelessWidget {
                 height: 22,
                 fit: BoxFit.contain,
                 errorBuilder: (_, __, ___) =>
-                const Icon(Icons.image_not_supported_outlined, size: 18),
+                    const Icon(Icons.image_not_supported_outlined, size: 18),
               ),
             ),
             const SizedBox(width: 12),

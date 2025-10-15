@@ -1,5 +1,6 @@
 // lib/screens/inscription.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/screens/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -10,21 +11,21 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   // 🎨 Palette
-  static const _blue   = Color(0xFF2F80ED);
-  static const _text   = Color(0xFF0B0B0B);
-  static const _hint   = Color(0xFF9CA3AF);
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
 
   // 🔹 Contrôleurs
-  final _nameCtrl     = TextEditingController();
-  final _firstCtrl    = TextEditingController();
-  final _phoneCtrl    = TextEditingController();
-  final _emailCtrl    = TextEditingController();
-  final _passCtrl     = TextEditingController();
-  final _confirmCtrl  = TextEditingController(); // ✅ nouveau: confirmation
+  final _nameCtrl = TextEditingController();
+  final _firstCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
+  final _confirmCtrl = TextEditingController(); // nouveau: confirmation
 
-  bool _obscure        = true;
-  bool _obscureConfirm = true; // ✅ œil pour le champ de confirmation
+  bool _obscure = true;
+  bool _obscureConfirm = true; // œil pour le champ de confirmation
 
   InputDecoration _decoration(String hint) => InputDecoration(
     hintText: hint,
@@ -41,9 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
   );
 
   void _showSnack(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -146,19 +145,20 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _confirmCtrl,
                   textInputAction: TextInputAction.done,
                   obscureText: _obscureConfirm,
-                  decoration:
-                  _decoration('Confirmez votre mot de passe').copyWith(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirm
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: Colors.black54,
+                  decoration: _decoration('Confirmez votre mot de passe')
+                      .copyWith(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirm
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () => setState(
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
+                        ),
                       ),
-                      onPressed: () =>
-                          setState(() => _obscureConfirm = !_obscureConfirm),
-                    ),
-                  ),
                 ),
 
                 const SizedBox(height: 28),
@@ -169,22 +169,29 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      final name    = _nameCtrl.text.trim();
-                      final first   = _firstCtrl.text.trim();
-                      final phone   = _phoneCtrl.text.trim();
-                      final email   = _emailCtrl.text.trim();
-                      final pass    = _passCtrl.text.trim();
+                      final name = _nameCtrl.text.trim();
+                      final first = _firstCtrl.text.trim();
+                      final phone = _phoneCtrl.text.trim();
+                      final email = _emailCtrl.text.trim();
+                      final pass = _passCtrl.text.trim();
                       final confirm = _confirmCtrl.text.trim();
 
-                      // ✅ Petites validations côté UI
-                      if ([name, first, phone, email, pass, confirm]
-                          .any((e) => e.isEmpty)) {
+                      // Petites validations côté UI
+                      if ([
+                        name,
+                        first,
+                        phone,
+                        email,
+                        pass,
+                        confirm,
+                      ].any((e) => e.isEmpty)) {
                         _showSnack('Veuillez remplir tous les champs.');
                         return;
                       }
                       if (pass.length < 6) {
                         _showSnack(
-                            'Le mot de passe doit contenir au moins 6 caractères.');
+                          'Le mot de passe doit contenir au moins 6 caractères.',
+                        );
                         return;
                       }
                       if (pass != confirm) {
@@ -193,7 +200,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       }
 
                       // TODO: logique d’inscription (appel API, etc.)
-                      _showSnack('Formulaire valide ✅');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                      );
+                      _showSnack('Formulaire valide ');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _blue,
@@ -219,8 +230,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     Expanded(child: Divider(color: _border, thickness: 1)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('Ou',
-                          style: TextStyle(color: Colors.black54)),
+                      child: Text(
+                        'Ou',
+                        style: TextStyle(color: Colors.black54),
+                      ),
                     ),
                     Expanded(child: Divider(color: _border, thickness: 1)),
                   ],
@@ -280,7 +293,7 @@ class _SocialSquare extends StatelessWidget {
             width: 28,
             height: 28,
             errorBuilder: (_, __, ___) =>
-            const Icon(Icons.image_not_supported_outlined),
+                const Icon(Icons.image_not_supported_outlined),
           ),
         ),
       ),
