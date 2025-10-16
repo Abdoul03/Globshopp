@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:globshopp/screens/_base/constant.dart';
+import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/screens/fournisseur/custom/custumSearchBar.dart';
 import 'package:remixicon/remixicon.dart';
 
