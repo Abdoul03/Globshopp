@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 class Constant {
+  //Couleurs
   static const blue = Color.fromARGB(255, 61, 116, 182);
   static const blueTransparant = Color.fromARGB(51, 61, 116, 182);
   static const jaune = Color.fromARGB(255, 233, 171, 48);
@@ -12,4 +13,6 @@ class Constant {
   static const rougeVif = Color.fromARGB(255, 255, 26, 30);
   static const vert = Color.fromARGB(255, 120, 200, 65);
   static const vertTransparant = Color.fromARGB(38, 120, 200, 65);
+  //Url de Base
+  static const remoteUrl = "http://localhost:8080/api";
 }

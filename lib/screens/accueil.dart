@@ -1,6 +1,6 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
-import 'package:globshopp/screens/_base/constant.dart';
+import 'package:globshopp/_base/constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
