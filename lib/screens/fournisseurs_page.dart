@@ -18,17 +18,67 @@ class _FournisseursPageState extends State<FournisseursPage> {
   final _searchCtrl = TextEditingController();
   int _currentIndex = 1; // Fournisseurs actif
 
-  final _items = List.generate(
-    8,
-        (_) => const Supplier(
-      name: 'Aminata traoré',
-      subtitle: 'Fournisseur d’ustensils de cuisine',
-      cityCountry: 'Bamako/Mali',
-      imageUrl:
-      'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=300',
+  // ----- Données démo : mix assets + URL -----
+  // Mets tes propres fichiers sous assets/images/...
+  final List<Supplier> _items = const [
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
       verified: true,
     ),
-  );
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
+      verified: true,
+    ),
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
+      verified: true,
+    ),
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
+      verified: true,
+    ),
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
+      verified: true,
+    ),
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
+      verified: true,
+    ),
+    Supplier(
+      name: 'Aminata Traoré',
+      subtitle: 'Ustensiles de cuisine',
+      cityCountry: 'Bamako / Mali',
+      image: 'assets/image/ustensils.png',
+      isAsset: true,
+      verified: true,
+    ),
+
+  ];
 
   @override
   void dispose() {
@@ -38,25 +88,37 @@ class _FournisseursPageState extends State<FournisseursPage> {
 
   @override
   Widget build(BuildContext context) {
-    final top = MediaQuery.of(context).padding.top;
-
     return Scaffold(
       backgroundColor: Colors.white,
+
+      // ------------ CONTENU ------------
       body: CustomScrollView(
         slivers: [
-          // --------- En-tête bleu + Recherche ---------
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, top + 16, 16, 16),
-              color: _blue,
-              child: _SearchField(controller: _searchCtrl),
+          // Bandeau bleu fixe avec champ de recherche
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: _blue,
+            surfaceTintColor: Colors.transparent,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            automaticallyImplyLeading: false,
+            toolbarHeight: 0, // on n'affiche que la partie "bottom"
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(88),
+              child: Container(
+                color: _blue,
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 52),
+                  child: _SearchField(controller: _searchCtrl),
+                ),
+              ),
             ),
           ),
 
-          // Espacement sous l’entête
           const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
-          // --------- Liste des fournisseurs ---------
+          // Liste des fournisseurs
           SliverList.separated(
             itemCount: _items.length,
             separatorBuilder: (_, __) => const SizedBox(height: 14),
@@ -70,7 +132,7 @@ class _FournisseursPageState extends State<FournisseursPage> {
         ],
       ),
 
-      // --------- Navigation Bar (même style que tes autres pages) ---------
+      // ------------ NAVIGATION BOTTOM ------------
       bottomNavigationBar: NavigationBarTheme(
         data: const NavigationBarThemeData(
           height: 84,
@@ -83,21 +145,28 @@ class _FournisseursPageState extends State<FournisseursPage> {
         child: NavigationBar(
           selectedIndex: _currentIndex,
           onDestinationSelected: (i) {
-            if (i == 0) {
-              // Accueil
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/accueil',
-                    (r) => false,
-              );
-              return;
+            if (i == _currentIndex) return;
+            switch (i) {
+              case 0:
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/accueil',
+                      (r) => false,
+                );
+                break;
+              case 1:
+              // déjà ici
+                break;
+              case 2:
+                Navigator.pushNamed(context, '/commandes');
+                break;
+              case 3:
+                Navigator.pushNamed(context, '/annuaire');
+                break;
+              case 4:
+                Navigator.pushNamed(context, '/profil');
+                break;
             }
-            if (i == 2) {
-              // Commandes
-              Navigator.pushNamed(context, '/commandes');
-              return;
-            }
-            // Visuel uniquement pour Annuaire/Profil (à brancher plus tard)
             setState(() => _currentIndex = i);
           },
           backgroundColor: Colors.white,
@@ -135,6 +204,31 @@ class _FournisseursPageState extends State<FournisseursPage> {
       ),
     );
   }
+}
+
+/* =================== Modèle =================== */
+
+class Supplier {
+  final String name;
+  final String subtitle;
+  final String cityCountry;
+
+  /// Peut être un chemin d'asset (ex: assets/images/...) ou une URL http(s)
+  final String image;
+
+  /// `true` si `image` est un asset local, `false` si c'est une URL
+  final bool isAsset;
+
+  final bool verified;
+
+  const Supplier({
+    required this.name,
+    required this.subtitle,
+    required this.cityCountry,
+    required this.image,
+    this.isAsset = false,
+    this.verified = false,
+  });
 }
 
 /* =================== Widgets =================== */
@@ -176,22 +270,6 @@ class _SearchField extends StatelessWidget {
   }
 }
 
-class Supplier {
-  final String name;
-  final String subtitle;
-  final String cityCountry;
-  final String imageUrl;
-  final bool verified;
-
-  const Supplier({
-    required this.name,
-    required this.subtitle,
-    required this.cityCountry,
-    required this.imageUrl,
-    this.verified = false,
-  });
-}
-
 class SupplierCard extends StatelessWidget {
   const SupplierCard({super.key, required this.supplier});
   final Supplier supplier;
@@ -202,6 +280,25 @@ class SupplierCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget imageWidget;
+    if (supplier.isAsset) {
+      imageWidget = Image.asset(
+        supplier.image,
+        width: 64,
+        height: 64,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _fallbackImage(),
+      );
+    } else {
+      imageWidget = Image.network(
+        supplier.image,
+        width: 64,
+        height: 64,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _fallbackImage(),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -215,18 +312,7 @@ class SupplierCard extends StatelessWidget {
           // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              supplier.imageUrl,
-              width: 64,
-              height: 64,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                width: 64,
-                height: 64,
-                color: const Color(0xFFF0F1F5),
-                child: const Icon(Icons.image_outlined),
-              ),
-            ),
+            child: imageWidget,
           ),
           const SizedBox(width: 12),
 
@@ -269,9 +355,8 @@ class SupplierCard extends StatelessWidget {
                       child: Text(
                         supplier.verified ? 'Vérifier' : 'Non vérifié',
                         style: TextStyle(
-                          color: supplier.verified
-                              ? const Color(0xFF2F80ED)
-                              : Colors.grey,
+                          color:
+                          supplier.verified ? const Color(0xFF2F80ED) : Colors.grey,
                           fontSize: 13.5,
                           fontWeight: FontWeight.w700,
                         ),
@@ -293,6 +378,13 @@ class SupplierCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _fallbackImage() => Container(
+    width: 64,
+    height: 64,
+    color: const Color(0xFFF0F1F5),
+    child: const Icon(Icons.image_outlined),
+  );
 }
 
 /// Icône image (mêmes assets que tes autres écrans)

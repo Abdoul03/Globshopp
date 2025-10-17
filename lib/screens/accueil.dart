@@ -16,9 +16,8 @@ class _HomePageState extends State<HomePage> {
   static const _chipBg     = Color(0xFFF7F7F9);
   static const _cardBorder = Color(0xFFEDEDED);
 
-  // 👉 Sur Home, on n’a PAS besoin de changer d’index localement.
-  // On laisse 0 (Accueil) et on remplace la page quand on change d’onglet.
-  final int _selectedCategory = 0; // si tu veux gérer la sélection, rends-le mutable
+  // Catégorie sélectionnée (mutable pour changer la couleur)
+  int _selectedCategory = 0;
 
   final _categories = const [
     ('Tous', Icons.grid_view_rounded),
@@ -28,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     ('Electro', Icons.kitchen_rounded),
   ];
 
-  // ✅ Un seul produit
+  // ✅ Un produit exemple
   final _products = const [
     Product(
       title: 'T-shirts coton “Everyday Fit”',
@@ -47,7 +46,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // ------------------ CONTENU ------------------
       body: CustomScrollView(
         slivers: [
           // En-tête + recherche
@@ -93,8 +91,7 @@ class _HomePageState extends State<HomePage> {
                     prefixIcon: const Icon(Icons.search_rounded),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(color: _cardBorder),
@@ -128,7 +125,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Catégories (icône jaune par défaut, bleue si sélectionnée)
+          // Catégories (jaune par défaut, bleu si sélectionnée)
           SliverToBoxAdapter(
             child: SizedBox(
               height: 112,
@@ -141,9 +138,7 @@ class _HomePageState extends State<HomePage> {
                     label: label,
                     icon: icon,
                     selected: i == _selectedCategory,
-                    onTap: () {
-                      // si tu veux gérer un filtre : setState(() => _selectedCategory = i);
-                    },
+                    onTap: () => setState(() => _selectedCategory = i),
                   );
                 },
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
@@ -152,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Grille produits (1 seul item)
+          // Grille produits
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 100),
             sliver: SliverGrid(
@@ -172,7 +167,6 @@ class _HomePageState extends State<HomePage> {
       ),
 
       // ------------------ NAVIGATION BAR BOTTOM ------------------
-      // ⚠️ Sur Home : selectedIndex = 0 et on utilise pushReplacementNamed pour changer d’onglet.
       bottomNavigationBar: NavigationBarTheme(
         data: const NavigationBarThemeData(
           height: 84,
@@ -183,7 +177,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         child: NavigationBar(
-          selectedIndex: 0,
+          selectedIndex: 0, // Accueil
           onDestinationSelected: (i) {
             if (i == 0) return; // déjà sur Accueil
             if (i == 1) {
@@ -238,7 +232,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-//// --------- MODELES & WIDGETS ---------
+//// --------- Modèles & Widgets ---------
 
 class Product {
   final String title;
@@ -258,7 +252,6 @@ class Product {
   });
 }
 
-/// Catégorie : icône dans un cadre + label en dessous
 class CategoryChip extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -269,7 +262,7 @@ class CategoryChip extends StatelessWidget {
     super.key,
     required this.label,
     required this.icon,
-    this.selected = false,
+    required this.selected,
     required this.onTap,
   });
 
@@ -277,43 +270,40 @@ class CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final border = selected ? _HomePageState._blue : Colors.black12;
     final fill   = selected ? const Color(0xFFEAF1FF) : _HomePageState._chipBg;
-
-    // Icône JAUNE par défaut (#E9AB30), BLEUE si sélectionnée
     final Color iconColor = selected ? _HomePageState._blue : _HomePageState._yellow;
-
-    // tailles
-    const double boxSize = 72;
-    const double iconSz  = 28;
-    const double gap     = 6;
-    const double labelW  = boxSize;
-    const double fontSz  = 12;
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: boxSize,
-            height: boxSize,
+            width: 72,
+            height: 72,
             decoration: BoxDecoration(
               color: fill,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: border),
             ),
-            child: Center(child: Icon(icon, size: iconSz, color: iconColor)),
+            child: Center(child: Icon(icon, size: 28, color: iconColor)),
           ),
-          const SizedBox(height: gap),
+          const SizedBox(height: 6),
+          const SizedBox(
+            width: 72,
+            child: Text(
+              '',
+              // (on laisse juste l'icône; si tu veux le texte, remets label ici)
+            ),
+          ),
           SizedBox(
-            width: labelW,
+            width: 72,
             child: Text(
               label,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: fontSz,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: _HomePageState._text,
                 height: 1.1,
@@ -439,18 +429,16 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
 
-              if (product.brand.isNotEmpty) ...[
-                const SizedBox(height: 4),
-                Text(
-                  product.brand,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 11.5,
-                    color: _HomePageState._sub,
-                  ),
+              const SizedBox(height: 4),
+              Text(
+                product.brand,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11.5,
+                  color: _HomePageState._sub,
                 ),
-              ],
+              ),
             ],
           ),
         ),
@@ -459,7 +447,6 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-/// Icône image pour NavigationBar (const-friendly)
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
