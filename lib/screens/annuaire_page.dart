@@ -10,33 +10,32 @@ class AnnuairePage extends StatefulWidget {
 
 class _AnnuairePageState extends State<AnnuairePage> {
   // Couleurs
-  static const _blue = Color(0xFF2F80ED);
   static const _text = Color(0xFF0B0B0B);
-  static const _sub  = Color(0xFF5C5F66);
+  static const _sub = Color(0xFF5C5F66);
   static const _cardBorder = Color(0xFFE6E6EA);
 
   final _searchCtrl = TextEditingController();
   int _currentIndex = 3; // Annuaire actif
+  String _q = '';        // terme de recherche
 
   final _companies = <Company>[
     Company(
       name: 'Global Logistics inc',
       description: 'Spécialisé dans le fret aérien et maritime international.',
       phone: '+223 85 47 47 57',
-      logo: 'assets/icons/global_logistics.png',
+      logo: 'assets/image/e1.png',
     ),
     Company(
       name: 'Swift Cargo Solutions',
-      description:
-      'Votre partenaire fiable pour un transport de marchandises sans faille.',
+      description: 'Votre partenaire fiable pour un transport de marchandises sans faille.',
       phone: '+223 85 47 47 57',
-      logo: 'assets/icons/swift_cargo.png',
+      logo: 'assets/image/e2.png',
     ),
     Company(
       name: 'Sekou Keïta',
       description: 'Un transport de fret efficace et rentable',
       phone: '+223 85 47 47 57',
-      logo: 'assets/icons/trans_express.png',
+      logo: 'assets/image/e3.png',
     ),
   ];
 
@@ -48,38 +47,52 @@ class _AnnuairePageState extends State<AnnuairePage> {
 
   @override
   Widget build(BuildContext context) {
-    final top = MediaQuery.of(context).padding.top;
+    // Filtrage sur nom / description / téléphone
+    final filtered = _companies.where((c) {
+      if (_q.isEmpty) return true;
+      final q = _q.toLowerCase();
+      return c.name.toLowerCase().contains(q) ||
+          c.description.toLowerCase().contains(q) ||
+          c.phone.toLowerCase().contains(q);
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // --------- En-tête bleu + Recherche (même style que Fournisseurs) ---------
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, top + 16, 16, 16),
-              color: _blue,
-              child: _SearchField(controller: _searchCtrl),
+          // --------- En-tête + Recherche ---------
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            pinned: true,
+            floating: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            toolbarHeight: 90,
+            title: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: _SearchField(
+                controller: _searchCtrl,
+                onChanged: (v) => setState(() => _q = v.trim()),
+              ),
             ),
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
-          // --------- Liste des entreprises ---------
+          // --------- Liste des entreprises (filtrée) ---------
           SliverList.separated(
-            itemCount: _companies.length,
+            itemCount: filtered.length,
             separatorBuilder: (_, __) => const SizedBox(height: 14),
             itemBuilder: (context, i) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: CompanyCard(company: _companies[i]),
+              child: CompanyCard(company: filtered[i]),
             ),
           ),
-
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
 
-      // --------- Navigation Bar (exactement la même que FournisseursPage) ---------
+      // --------- Navigation Bar ---------
       bottomNavigationBar: NavigationBarTheme(
         data: const NavigationBarThemeData(
           height: 84,
@@ -93,26 +106,21 @@ class _AnnuairePageState extends State<AnnuairePage> {
           selectedIndex: _currentIndex,
           onDestinationSelected: (i) {
             if (i == 0) {
-              // Accueil
               Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
               return;
             }
             if (i == 1) {
-              // Fournisseurs
               Navigator.pushNamed(context, '/fournisseurs');
               return;
             }
             if (i == 2) {
-              // Commandes
               Navigator.pushNamed(context, '/commandes');
               return;
             }
             if (i == 4) {
-              // Profil
               Navigator.pushNamed(context, '/profil');
               return;
             }
-            // i == 3 => Annuaire (page actuelle) : juste maj visuelle
             setState(() => _currentIndex = i);
           },
           backgroundColor: Colors.white,
@@ -153,8 +161,9 @@ class _AnnuairePageState extends State<AnnuairePage> {
 /* =================== Widgets =================== */
 
 class _SearchField extends StatelessWidget {
-  const _SearchField({required this.controller});
+  const _SearchField({required this.controller, this.onChanged});
   final TextEditingController controller;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -164,9 +173,20 @@ class _SearchField extends StatelessWidget {
       borderRadius: BorderRadius.circular(14),
       child: TextField(
         controller: controller,
+        onChanged: onChanged,
         decoration: InputDecoration(
-          hintText: 'Rechercher',
-          prefixIcon: const Icon(Icons.search_rounded),
+          hintText: 'Rechercher une entreprise...',
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Image.asset(
+              'assets/icons/search.png',
+              width: 20,
+              height: 20,
+              color: Colors.grey[700],
+              errorBuilder: (_, __, ___) =>
+              const Icon(Icons.search_rounded, size: 20),
+            ),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: const BorderSide(color: Colors.white),
@@ -181,7 +201,8 @@ class _SearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         ),
       ),
     );
@@ -207,7 +228,7 @@ class CompanyCard extends StatelessWidget {
   const CompanyCard({super.key, required this.company});
 
   static const _text = Color(0xFF0B0B0B);
-  static const _sub  = Color(0xFF5C5F66);
+  static const _sub = Color(0xFF5C5F66);
   static const _cardBorder = Color(0xFFE6E6EA);
 
   @override
@@ -228,7 +249,6 @@ class CompanyCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // 🖼️ Logo
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
@@ -236,13 +256,14 @@ class CompanyCard extends StatelessWidget {
               width: 56,
               height: 56,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) =>
-              const Icon(Icons.image_not_supported_outlined, size: 40),
+              errorBuilder: (_, __, ___) => const Icon(
+                Icons.image_not_supported_outlined,
+                size: 40,
+              ),
             ),
           ),
           const SizedBox(width: 12),
 
-          // Texte
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,13 +289,30 @@ class CompanyCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  company.phone,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: _text,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Row(
+                  children: [
+                    Image.asset(
+                      'assets/icons/phone.png',
+                      width: 16,
+                      height: 16,
+                      color: Colors.grey[700],
+                      errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.phone, size: 16),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        company.phone,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: _text,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -285,7 +323,6 @@ class CompanyCard extends StatelessWidget {
   }
 }
 
-/// Icône image (mêmes assets que tes autres écrans)
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
@@ -293,6 +330,12 @@ class _NavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(path, width: size, height: size, fit: BoxFit.contain);
+    return Image.asset(
+      path,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) => const Icon(Icons.circle, size: 20),
+    );
   }
 }

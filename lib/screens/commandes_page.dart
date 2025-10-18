@@ -39,6 +39,38 @@ class _CommandesPageState extends State<CommandesPage> {
       imageUrl:
       'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
+    Order(
+      title: 'T-shirts coton “Everyday fit”',
+      price: '1000 Fcfa',
+      status: OrderStatus.done,
+      qty: 144,
+      imageUrl:
+      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+    ),
+    Order(
+      title: 'T-shirts coton “Everyday fit”',
+      price: '1000 Fcfa',
+      status: OrderStatus.done,
+      qty: 144,
+      imageUrl:
+      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+    ),
+    Order(
+      title: 'T-shirts coton “Everyday fit”',
+      price: '1000 Fcfa',
+      status: OrderStatus.done,
+      qty: 144,
+      imageUrl:
+      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+    ),
+    Order(
+      title: 'T-shirts coton “Everyday fit”',
+      price: '1000 Fcfa',
+      status: OrderStatus.done,
+      qty: 144,
+      imageUrl:
+      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+    ),
   ];
 
   @override
@@ -62,18 +94,23 @@ class _CommandesPageState extends State<CommandesPage> {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // --------- Header bleu + champ Recherche ---------
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, top + 16, 16, 16),
-              color: Colors.white,
+          // --------- Header Recherche ---------
+          SliverAppBar(
+            automaticallyImplyLeading: false, // 🚫 enlève le bouton retour auto
+            pinned: true,
+            floating: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            toolbarHeight: 90,
+            title: Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: _SearchField(
                 controller: _searchCtrl,
                 onChanged: (v) => setState(() => _q = v.trim()),
               ),
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+
 
           // --------- Liste des commandes (filtrée) ---------
           SliverList.separated(

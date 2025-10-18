@@ -10,13 +10,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // 🎨 Palette
   static const _blue       = Color(0xFF2F80ED);
-  static const _yellow     = Color(0xFFE9AB30); // jaune demandé
+  static const _yellow     = Color(0xFFE9AB30);
   static const _text       = Color(0xFF0B0B0B);
   static const _sub        = Color(0xFF5C5F66);
   static const _chipBg     = Color(0xFFF7F7F9);
   static const _cardBorder = Color(0xFFEDEDED);
 
-  // Catégorie sélectionnée (mutable pour changer la couleur)
   int _selectedCategory = 0;
 
   final _categories = const [
@@ -27,8 +26,31 @@ class _HomePageState extends State<HomePage> {
     ('Electro', Icons.kitchen_rounded),
   ];
 
-  // ✅ Un produit exemple
   final _products = const [
+    Product(
+      title: 'T-shirts coton “Everyday Fit”',
+      price: '1000 FCFA',
+      moq: 'MOQ: 20 pcs',
+      brand: 'Baba Fashion',
+      image: 'assets/image/tshirt.png',
+      badge: 'Disponible',
+    ),
+    Product(
+      title: 'T-shirts coton “Everyday Fit”',
+      price: '1000 FCFA',
+      moq: 'MOQ: 20 pcs',
+      brand: 'Baba Fashion',
+      image: 'assets/image/tshirt.png',
+      badge: 'Disponible',
+    ),
+    Product(
+      title: 'T-shirts coton “Everyday Fit”',
+      price: '1000 FCFA',
+      moq: 'MOQ: 20 pcs',
+      brand: 'Baba Fashion',
+      image: 'assets/image/tshirt.png',
+      badge: 'Disponible',
+    ),
     Product(
       title: 'T-shirts coton “Everyday Fit”',
       price: '1000 FCFA',
@@ -48,7 +70,7 @@ class _HomePageState extends State<HomePage> {
 
       body: CustomScrollView(
         slivers: [
-          // En-tête + recherche
+          // Barre d’en-tête avec recherche
           SliverAppBar(
             pinned: true,
             backgroundColor: Colors.white,
@@ -91,7 +113,8 @@ class _HomePageState extends State<HomePage> {
                     prefixIcon: const Icon(Icons.search_rounded),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(color: _cardBorder),
@@ -110,10 +133,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Titre
+          // --- Titre Catégories ---
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16, top > 0 ? 6 : 10, 16, 8),
+              // 🔹 Top augmenté : de 6 → 16
+              padding: EdgeInsets.fromLTRB(16, top > 0 ? 16 : 16, 16, 10),
               child: const Text(
                 'Catégories',
                 style: TextStyle(
@@ -125,7 +149,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Catégories (jaune par défaut, bleu si sélectionnée)
+          // --- Liste des catégories ---
           SliverToBoxAdapter(
             child: SizedBox(
               height: 112,
@@ -147,7 +171,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Grille produits
+          // --- Grille de produits ---
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 100),
             sliver: SliverGrid(
@@ -166,7 +190,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
 
-      // ------------------ NAVIGATION BAR BOTTOM ------------------
+      // --- Barre de navigation du bas ---
       bottomNavigationBar: NavigationBarTheme(
         data: const NavigationBarThemeData(
           height: 84,
@@ -177,25 +201,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         child: NavigationBar(
-          selectedIndex: 0, // Accueil
+          selectedIndex: 0,
           onDestinationSelected: (i) {
-            if (i == 0) return; // déjà sur Accueil
-            if (i == 1) {
-              Navigator.pushReplacementNamed(context, '/fournisseurs');
-              return;
-            }
-            if (i == 2) {
-              Navigator.pushReplacementNamed(context, '/commandes');
-              return;
-            }
-            if (i == 3) {
-              Navigator.pushReplacementNamed(context, '/annuaire');
-              return;
-            }
-            if (i == 4) {
-              Navigator.pushReplacementNamed(context, '/profil');
-              return;
-            }
+            if (i == 0) return;
+            if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
+            if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
+            if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
+            if (i == 4) Navigator.pushReplacementNamed(context, '/profil');
           },
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
@@ -232,7 +244,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-//// --------- Modèles & Widgets ---------
+// --------- Classes & Widgets ---------
 
 class Product {
   final String title;
@@ -269,7 +281,7 @@ class CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final border = selected ? _HomePageState._blue : Colors.black12;
-    final fill   = selected ? const Color(0xFFEAF1FF) : _HomePageState._chipBg;
+    final fill = selected ? const Color(0xFFEAF1FF) : _HomePageState._chipBg;
     final Color iconColor = selected ? _HomePageState._blue : _HomePageState._yellow;
 
     return InkWell(
@@ -278,23 +290,16 @@ class CategoryChip extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 72,
-            height: 72,
+            width: 70,
+            height: 70,
             decoration: BoxDecoration(
               color: fill,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: border),
             ),
-            child: Center(child: Icon(icon, size: 28, color: iconColor)),
+            child: Center(child: Icon(icon, size: 26, color: iconColor)),
           ),
           const SizedBox(height: 6),
-          const SizedBox(
-            width: 72,
-            child: Text(
-              '',
-              // (on laisse juste l'icône; si tu veux le texte, remets label ici)
-            ),
-          ),
           SizedBox(
             width: 72,
             child: Text(
@@ -338,7 +343,6 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image + badge
               Expanded(
                 child: Stack(
                   children: [
@@ -361,7 +365,8 @@ class ProductCard extends StatelessWidget {
                         top: 6,
                         right: 6,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFF3CC36C),
                             borderRadius: BorderRadius.circular(12),
@@ -381,9 +386,7 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-
-              // Titre
+              const SizedBox(height: 8),
               Text(
                 product.title,
                 maxLines: 2,
@@ -395,8 +398,6 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-
-              // Prix + MOQ
               Row(
                 children: [
                   Expanded(
@@ -428,7 +429,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ],
               ),
-
               const SizedBox(height: 4),
               Text(
                 product.brand,
