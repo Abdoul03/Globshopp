@@ -1,6 +1,7 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
 import 'product_detail_page.dart'; // ✅ ajoute cet import (chemin relatif au dossier "screens")
+import 'package:globshopp/_base/constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
