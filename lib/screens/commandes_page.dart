@@ -9,13 +9,19 @@ class CommandesPage extends StatefulWidget {
 }
 
 class _CommandesPageState extends State<CommandesPage> {
+  // Palette & styles
+  static const _blue = Color(0xFF2F80ED);
   static const _text = Color(0xFF0B0B0B);
   static const _sub = Color(0xFF5C5F66);
   static const _cardBorder = Color(0xFFE9E9EE);
 
-  // Onglet actif = Commandes
+  // Onglet actif
   int _currentIndex = 2;
 
+  final _searchCtrl = TextEditingController();
+  String _q = '';
+
+  // ✅ Seulement 2 commandes
   final _orders = const [
     Order(
       title: 'T-shirts coton “Everyday fit”',
@@ -28,7 +34,7 @@ class _CommandesPageState extends State<CommandesPage> {
     Order(
       title: 'T-shirts coton “Everyday fit”',
       price: '1000 Fcfa',
-      status: OrderStatus.canceled,
+      status: OrderStatus.done,
       qty: 144,
       imageUrl:
       'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
@@ -44,7 +50,7 @@ class _CommandesPageState extends State<CommandesPage> {
     Order(
       title: 'T-shirts coton “Everyday fit”',
       price: '1000 Fcfa',
-      status: OrderStatus.inProgress,
+      status: OrderStatus.done,
       qty: 144,
       imageUrl:
       'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
@@ -60,7 +66,7 @@ class _CommandesPageState extends State<CommandesPage> {
     Order(
       title: 'T-shirts coton “Everyday fit”',
       price: '1000 Fcfa',
-      status: OrderStatus.inProgress,
+      status: OrderStatus.done,
       qty: 144,
       imageUrl:
       'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
@@ -68,44 +74,58 @@ class _CommandesPageState extends State<CommandesPage> {
   ];
 
   @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
+
+    final filtered = _orders.where((o) {
+      if (_q.isEmpty) return true;
+      final q = _q.toLowerCase();
+      return o.title.toLowerCase().contains(q) ||
+          o.price.toLowerCase().contains(q);
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // Espace status bar
-          SliverToBoxAdapter(child: SizedBox(height: top + 8)),
-          // Bouton recherche à droite
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16, bottom: 8),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  _roundButton(
-                    icon: Icons.search_rounded,
-                    onTap: () {},
-                  ),
-                ],
+          // --------- Header Recherche ---------
+          SliverAppBar(
+            automaticallyImplyLeading: false, // 🚫 enlève le bouton retour auto
+            pinned: true,
+            floating: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            toolbarHeight: 90,
+            title: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: _SearchField(
+                controller: _searchCtrl,
+                onChanged: (v) => setState(() => _q = v.trim()),
               ),
             ),
           ),
-          // Liste de commandes
+
+
+          // --------- Liste des commandes (filtrée) ---------
           SliverList.separated(
-            itemCount: _orders.length,
+            itemCount: filtered.length,
             separatorBuilder: (_, __) => const SizedBox(height: 10),
             itemBuilder: (_, i) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: OrderCard(order: _orders[i]),
+              child: OrderCard(order: filtered[i]),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
 
-      // ------------------ NAVIGATION BAR BOTTOM (même que Accueil) ------------------
+      // ------------------ NAVIGATION BAR ------------------
       bottomNavigationBar: NavigationBarTheme(
         data: const NavigationBarThemeData(
           height: 84,
@@ -118,20 +138,24 @@ class _CommandesPageState extends State<CommandesPage> {
         child: NavigationBar(
           selectedIndex: _currentIndex,
           onDestinationSelected: (i) {
-            // Accueil
-            if (i == 0) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/accueil',
-                    (route) => false,
-              );
-              return;
+            if (i == _currentIndex) return;
+            switch (i) {
+              case 0:
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/accueil', (r) => false);
+                break;
+              case 1:
+                Navigator.pushNamed(context, '/fournisseurs');
+                break;
+              case 2:
+                break; // déjà ici
+              case 3:
+                Navigator.pushNamed(context, '/annuaire');
+                break;
+              case 4:
+                Navigator.pushNamed(context, '/profil');
+                break;
             }
-            // Commandes (déjà ici)
-            if (i == 2) {
-              return;
-            }
-            // Autres onglets : maj visuelle (tu pourras brancher les routes plus tard)
             setState(() => _currentIndex = i);
           },
           backgroundColor: Colors.white,
@@ -169,27 +193,9 @@ class _CommandesPageState extends State<CommandesPage> {
       ),
     );
   }
-
-  Widget _roundButton({required IconData icon, required VoidCallback onTap}) {
-    return Material(
-      color: Colors.white,
-      shape: const CircleBorder(
-        side: BorderSide(color: _cardBorder),
-      ),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Icon(icon, color: _text),
-        ),
-      ),
-    );
-  }
 }
 
-/* --------------------- MODELES --------------------- */
+/* --------------------- MODÈLES --------------------- */
 
 enum OrderStatus { inProgress, canceled, done }
 
@@ -210,6 +216,45 @@ class Order {
 }
 
 /* --------------------- WIDGETS --------------------- */
+
+class _SearchField extends StatelessWidget {
+  const _SearchField({required this.controller, this.onChanged});
+  final TextEditingController controller;
+  final ValueChanged<String>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      elevation: 0,
+      borderRadius: BorderRadius.circular(14),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: 'Rechercher',
+          prefixIcon: const Icon(Icons.search_rounded),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        ),
+      ),
+    );
+  }
+}
 
 class OrderCard extends StatelessWidget {
   const OrderCard({super.key, required this.order});
@@ -362,7 +407,7 @@ class _QtyBadge extends StatelessWidget {
   }
 }
 
-/// Icône image (même helper que sur Accueil)
+/// Icône image (mêmes assets que tes autres écrans)
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;

@@ -1,32 +1,58 @@
+// lib/screens/app_shell.dart
 import 'package:flutter/material.dart';
-import 'accueil_tab.dart';
-import 'commandes_page.dart';
+
+// 🧩 Importation des onglets (contenus sans Scaffold)
+import 'package:globshopp/screens/tabs/home_tab.dart';
+import 'package:globshopp/screens/tabs/fournisseurs_tab.dart';
+import 'package:globshopp/screens/tabs/commandes_tab.dart';
+import 'package:globshopp/screens/tabs/annuaire_tab.dart';
+import 'package:globshopp/screens/tabs/profil_tab.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
+
+  // Permet d’accéder facilement à AppShell.of(context)?.setTab(i)
+  static _AppShellState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_AppShellState>();
+
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  int _index = 0;
-
   static const _blue = Color(0xFF2F80ED);
+  int _index = 0; // Onglet actif
 
-  final _tabs = const <Widget>[
-    AccueilTab(),          // 0
-    Placeholder(),         // 1 Fournisseurs (à remplacer)
-    CommandesPage(),       // 2
-    Placeholder(),         // 3 Annuaire (à remplacer)
-    Placeholder(),         // 4 Profil (à remplacer)
+  // ⚡️ Conserve l’état des pages (scroll, champ texte…)
+  final _bucket = PageStorageBucket();
+
+  // 🔹 Liste des onglets (sans Scaffold)
+  final _tabs = const [
+    HomeTab(key: PageStorageKey('home')),
+    FournisseursTab(key: PageStorageKey('fournisseurs')),
+    CommandesTab(key: PageStorageKey('commandes')),
+    AnnuaireTab(key: PageStorageKey('annuaire')),
+    ProfilTab(key: PageStorageKey('profil')),
   ];
+
+  // 🔄 Méthode pour changer d’onglet
+  void setTab(int i) => setState(() => _index = i);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _index, children: _tabs),
+      backgroundColor: Colors.white,
 
-      // UNE SEULE barre pour toute l’app
+      // 💡 Contenu principal : IndexedStack garde chaque page en mémoire
+      body: PageStorage(
+        bucket: _bucket,
+        child: IndexedStack(
+          index: _index,
+          children: _tabs,
+        ),
+      ),
+
+      // ⚙️ Barre de navigation inférieure partagée
       bottomNavigationBar: NavigationBarTheme(
         data: const NavigationBarThemeData(
           height: 84,
@@ -38,7 +64,7 @@ class _AppShellState extends State<AppShell> {
         ),
         child: NavigationBar(
           selectedIndex: _index,
-          onDestinationSelected: (i) => setState(() => _index = i),
+          onDestinationSelected: setTab,
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           destinations: const [
@@ -74,12 +100,20 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
+// 🖼️ Helper pour charger les icônes de la barre de navigation
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
+
   const _NavIcon(this.path, {this.size = 26, super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Image.asset(path, width: size, height: size, fit: BoxFit.contain);
+    return Image.asset(
+      path,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+    );
   }
 }
