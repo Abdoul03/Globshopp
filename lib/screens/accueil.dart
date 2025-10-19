@@ -1,5 +1,6 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
+import 'product_detail_page.dart'; // ✅ ajoute cet import (chemin relatif au dossier "screens")
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -136,7 +137,6 @@ class _HomePageState extends State<HomePage> {
           // --- Titre Catégories ---
           SliverToBoxAdapter(
             child: Padding(
-              // 🔹 Top augmenté : de 6 → 16
               padding: EdgeInsets.fromLTRB(16, top > 0 ? 16 : 16, 16, 10),
               child: const Text(
                 'Catégories',
@@ -282,7 +282,8 @@ class CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final border = selected ? _HomePageState._blue : Colors.black12;
     final fill = selected ? const Color(0xFFEAF1FF) : _HomePageState._chipBg;
-    final Color iconColor = selected ? _HomePageState._blue : _HomePageState._yellow;
+    final Color iconColor =
+    selected ? _HomePageState._blue : _HomePageState._yellow;
 
     return InkWell(
       onTap: onTap,
@@ -333,7 +334,15 @@ class ProductCard extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: () {},
+        // ✅ Navigation vers la page détail AVEC le produit cliqué
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ProductDetailPage(product: product),
+            ),
+          );
+        },
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(

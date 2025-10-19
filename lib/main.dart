@@ -21,6 +21,7 @@ class GlobalShopperApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       home: const OnboardingCarousel(),
       routes: {
+
         '/login':        (_) => const LoginPage(),
         '/accueil':      (_) => const HomePage(),
         '/fournisseurs': (_) => const FournisseursPage(),
