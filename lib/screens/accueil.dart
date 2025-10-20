@@ -1,6 +1,7 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
-import 'product_detail_page.dart'; // ✅ ajoute cet import (chemin relatif au dossier "screens")
+import 'product_detail_page.dart';               // déjà présent
+import 'notifications_page.dart';               // ✅ AJOUT: page des notifications
 import 'package:globshopp/_base/constant.dart';
 
 class HomePage extends StatefulWidget {
@@ -95,9 +96,15 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             actions: [
+              // ✅ Quand on appuie, on ouvre NotificationsPage
               IconButton(
                 icon: const Icon(Icons.notifications_none_rounded, color: Colors.black87),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                  );
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.history_rounded, color: Colors.black87),
@@ -335,7 +342,7 @@ class ProductCard extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        // ✅ Navigation vers la page détail AVEC le produit cliqué
+        // ✅ Vers le détail produit
         onTap: () {
           Navigator.push(
             context,
@@ -375,8 +382,7 @@ class ProductCard extends StatelessWidget {
                         top: 6,
                         right: 6,
                         child: Container(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFF3CC36C),
                             borderRadius: BorderRadius.circular(12),
