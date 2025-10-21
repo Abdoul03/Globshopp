@@ -1,5 +1,6 @@
 // lib/screens/profile_page.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/widgets/animated_bottom_nav.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -152,54 +153,15 @@ class ProfilePage extends StatelessWidget {
         ],
       ),
 
-      // ====== NAVIGATION BAR ======
-      bottomNavigationBar: NavigationBarTheme(
-        data: const NavigationBarThemeData(
-          height: 76, // 🔹 légèrement plus bas
-          indicatorColor: Color(0x142F80ED),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-          ),
-        ),
-        child: NavigationBar(
-          selectedIndex: 4,
-          onDestinationSelected: (i) {
-            if (i == 0) Navigator.pushReplacementNamed(context, '/accueil');
-            if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
-            if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
-            if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
-          },
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          destinations: const [
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/home.png', size: 26),
-              selectedIcon: _NavIcon('assets/icons/home_active.png', size: 26),
-              label: 'Accueil',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/store.png', size: 26),
-              selectedIcon: _NavIcon('assets/icons/store_active.png', size: 26),
-              label: 'Fournisseurs',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/orders.png', size: 26),
-              selectedIcon: _NavIcon('assets/icons/orders_active.png', size: 26),
-              label: 'Commandes',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/contacts.png', size: 26),
-              selectedIcon: _NavIcon('assets/icons/contacts_active.png', size: 26),
-              label: 'Annuaire',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/profile.png', size: 26),
-              selectedIcon: _NavIcon('assets/icons/profile_active.png', size: 26),
-              label: 'Profil',
-            ),
-          ],
-        ),
+      bottomNavigationBar: AnimatedBottomNavBar(
+        selectedIndex: 4,
+        height: 76,
+        onDestinationSelected: (i) {
+          if (i == 0) Navigator.pushReplacementNamed(context, '/accueil');
+          if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
+          if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
+          if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
+        },
       ),
     );
   }
@@ -271,17 +233,7 @@ class _InfoTile extends StatelessWidget {
   }
 }
 
-/// Icône image pour NavigationBar
-class _NavIcon extends StatelessWidget {
-  final String path;
-  final double size;
-  const _NavIcon(this.path, {Key? key, this.size = 24}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(path, width: size, height: size, fit: BoxFit.contain);
-  }
-}
 
 /// Bouton image rond pour la SliverAppBar
 class _CircleImageButton extends StatelessWidget {

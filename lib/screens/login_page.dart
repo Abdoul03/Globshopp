@@ -1,4 +1,5 @@
 // lib/screens/login_page.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'login_form.dart';
 
@@ -25,8 +26,20 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
-      body: const SafeArea(
-        child: LoginForm(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            if (kDebugMode)
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: TextButton(
+                  onPressed: () => Navigator.pushReplacementNamed(context, '/accueil'),
+                  child: const Text("Ouvrir l'accueil (dev)", style: TextStyle(color: Colors.redAccent)),
+                ),
+              ),
+            const Expanded(child: LoginForm()),
+          ],
+        ),
       ),
     );
   }

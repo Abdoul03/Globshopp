@@ -1,6 +1,7 @@
 // lib/screens/fournisseurs_page.dart
 import 'package:flutter/material.dart';
 import 'supplier_detail_page.dart'; // ✅ pour la navigation vers le détail
+import 'package:globshopp/widgets/animated_bottom_nav.dart';
 
 class FournisseursPage extends StatefulWidget {
   const FournisseursPage({super.key});
@@ -140,74 +141,28 @@ class _FournisseursPageState extends State<FournisseursPage> {
         ],
       ),
 
-      // ------------ NAVIGATION BOTTOM ------------
-      bottomNavigationBar: NavigationBarTheme(
-        data: const NavigationBarThemeData(
-          height: 84,
-          indicatorColor: Color(0x142F80ED),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-          ),
-        ),
-        child: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (i) {
-            if (i == _currentIndex) return;
-            switch (i) {
-              case 0:
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/accueil',
-                      (r) => false,
-                );
-                break;
-              case 1:
-                break; // déjà ici
-              case 2:
-                Navigator.pushNamed(context, '/commandes');
-                break;
-              case 3:
-                Navigator.pushNamed(context, '/annuaire');
-                break;
-              case 4:
-                Navigator.pushNamed(context, '/profil');
-                break;
-            }
-            setState(() => _currentIndex = i);
-          },
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          destinations: const [
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/home.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/home_active.png', size: 28),
-              label: 'Accueil',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/store.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/store_active.png', size: 28),
-              label: 'Fournisseurs',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/orders.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/orders_active.png', size: 28),
-              label: 'Commandes',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/contacts.png', size: 28),
-              selectedIcon:
-              _NavIcon('assets/icons/contacts_active.png', size: 28),
-              label: 'Annuaire',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/profile.png', size: 28),
-              selectedIcon:
-              _NavIcon('assets/icons/profile_active.png', size: 28),
-              label: 'Profil',
-            ),
-          ],
-        ),
+      bottomNavigationBar: AnimatedBottomNavBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (i) {
+          if (i == _currentIndex) return;
+          switch (i) {
+            case 0:
+              Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
+              break;
+            case 1:
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/commandes');
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/annuaire');
+              break;
+            case 4:
+              Navigator.pushNamed(context, '/profil');
+              break;
+          }
+          setState(() => _currentIndex = i);
+        },
       ),
     );
   }
@@ -396,13 +351,4 @@ class SupplierCard extends StatelessWidget {
 }
 
 /// Icône image (mêmes assets que tes autres écrans)
-class _NavIcon extends StatelessWidget {
-  final String path;
-  final double size;
-  const _NavIcon(this.path, {Key? key, this.size = 26}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(path, width: size, height: size, fit: BoxFit.contain);
-  }
-}
