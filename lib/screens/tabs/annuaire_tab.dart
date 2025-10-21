@@ -12,9 +12,7 @@ class _AnnuaireTabState extends State<AnnuaireTab>
     with AutomaticKeepAliveClientMixin {
   // Palette
   static const _blue = Color(0xFF2F80ED);
-  static const _text = Color(0xFF0B0B0B);
-  static const _sub  = Color(0xFF5C5F66);
-  static const _cardBorder = Color(0xFFE6E6EA);
+  // couleurs locales supprimées (utiliser Constant si besoin)
 
   final _searchCtrl = TextEditingController();
   String _q = '';

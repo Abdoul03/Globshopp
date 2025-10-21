@@ -1,5 +1,7 @@
 // lib/screens/login_page.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:globshopp/providers/auth_provider.dart';
 import 'Inscription.dart'; // ou 'inscription.dart' selon la casse
 import 'mdpoublier1.dart'; // ForgotPasswordPage
 import 'accueil.dart'; // ⬅️ HomePage (page d'accueil)
@@ -17,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   static const _text = Color(0xFF0B0B0B);
   static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
-  static const _light = Color(0xFFEFF4FF);
+  // (Le fond des boutons sociaux est défini localement dans _SocialButton)
 
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
@@ -56,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     final size = MediaQuery.of(context).size;
     final isShort = size.height < 720;
 
@@ -150,8 +153,16 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 56,
                   child: ElevatedButton(
-                    onPressed:
-                        _goHome, // ⬅️ redirige vers HomePage (accueil.dart)
+                    onPressed: auth.loading
+                        ? null
+                        : () async {
+                            final ok = await auth.login(_emailCtrl.text.trim(), _passCtrl.text.trim());
+                            if (ok) {
+                              _goHome();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Échec de la connexion')));
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _blue,
                       foregroundColor: Colors.white,
@@ -164,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    child: const Text('Se connecter'),
+                    child: auth.loading ? const CircularProgressIndicator(color: Colors.white) : const Text('Se connecter'),
                   ),
                 ),
 

@@ -20,7 +20,6 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  static const _blue = Color(0xFF2F80ED);
   int _index = 0; // Onglet actif
 
   // ⚡️ Conserve l’état des pages (scroll, champ texte…)
@@ -105,7 +104,7 @@ class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
 
-  const _NavIcon(this.path, {this.size = 26, super.key});
+  const _NavIcon(this.path, {Key? key, this.size = 26}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

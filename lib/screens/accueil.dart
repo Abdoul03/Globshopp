@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'product_detail_page.dart';               // déjà présent
 import 'notifications_page.dart';               // ✅ AJOUT: page des notifications
-import 'package:globshopp/_base/constant.dart';
+// import 'package:globshopp/_base/constant.dart'; // inutilisé ici
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -466,7 +466,7 @@ class ProductCard extends StatelessWidget {
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
-  const _NavIcon(this.path, {this.size = 26, super.key});
+  const _NavIcon(this.path, {Key? key, this.size = 26}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

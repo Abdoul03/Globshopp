@@ -275,7 +275,7 @@ class _InfoTile extends StatelessWidget {
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
-  const _NavIcon(this.path, {this.size = 24, super.key});
+  const _NavIcon(this.path, {Key? key, this.size = 24}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +285,7 @@ class _NavIcon extends StatelessWidget {
 
 /// Bouton image rond pour la SliverAppBar
 class _CircleImageButton extends StatelessWidget {
-  const _CircleImageButton({required this.imagePath, this.onTap, super.key});
+  const _CircleImageButton({required this.imagePath, this.onTap, Key? key}) : super(key: key);
   final String imagePath;
   final VoidCallback? onTap;
 

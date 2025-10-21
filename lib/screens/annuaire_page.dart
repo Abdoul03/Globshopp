@@ -10,9 +10,7 @@ class AnnuairePage extends StatefulWidget {
 
 class _AnnuairePageState extends State<AnnuairePage> {
   // Couleurs
-  static const _text = Color(0xFF0B0B0B);
-  static const _sub = Color(0xFF5C5F66);
-  static const _cardBorder = Color(0xFFE6E6EA);
+  // couleurs locales supprimées (utiliser `Constant` si besoin)
 
   final _searchCtrl = TextEditingController();
   int _currentIndex = 3; // Annuaire actif
@@ -326,7 +324,7 @@ class CompanyCard extends StatelessWidget {
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
-  const _NavIcon(this.path, {this.size = 26, super.key});
+  const _NavIcon(this.path, {Key? key, this.size = 26}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

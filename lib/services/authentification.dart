@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commercant.dart';
@@ -19,10 +18,8 @@ class Authentification {
       final data = jsonDecode(response.body);
       final token = data['token'];
       await storage.write(key: 'jwt', value: token);
-      print('Token sauvegardé');
       return true;
     } else {
-      print('OTP incorrect: ${response.body}');
       return false;
     }
   }

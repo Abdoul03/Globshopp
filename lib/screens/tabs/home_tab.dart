@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:globshopp/app_shell.dart';
+// import 'package:globshopp/app_shell.dart'; // inutilisé
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -8,12 +8,9 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
+  // constantes de couleurs locales (réintroduites pour usage local)
   static const _blue       = Color(0xFF2F80ED);
-  static const _yellow     = Color(0xFFE9AB30);
   static const _text       = Color(0xFF0B0B0B);
-  static const _sub        = Color(0xFF5C5F66);
-  static const _chipBg     = Color(0xFFF7F7F9);
-  static const _cardBorder = Color(0xFFEDEDED);
 
   int _selectedCategory = 0;
 
@@ -91,14 +88,14 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: _cardBorder),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: _cardBorder),
-                  ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFEDEDED)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFEDEDED)),
+                    ),
                   focusedBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                     borderSide: BorderSide(color: _blue),

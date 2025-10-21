@@ -10,10 +10,7 @@ class CommandesPage extends StatefulWidget {
 
 class _CommandesPageState extends State<CommandesPage> {
   // Palette & styles
-  static const _blue = Color(0xFF2F80ED);
-  static const _text = Color(0xFF0B0B0B);
-  static const _sub = Color(0xFF5C5F66);
-  static const _cardBorder = Color(0xFFE9E9EE);
+  // couleurs locales supprimées (utiliser `Constant` si besoin)
 
   // Onglet actif
   int _currentIndex = 2;
@@ -81,7 +78,7 @@ class _CommandesPageState extends State<CommandesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final top = MediaQuery.of(context).padding.top;
+  // final top = MediaQuery.of(context).padding.top; // inutilisé
 
     final filtered = _orders.where((o) {
       if (_q.isEmpty) return true;
@@ -411,7 +408,7 @@ class _QtyBadge extends StatelessWidget {
 class _NavIcon extends StatelessWidget {
   final String path;
   final double size;
-  const _NavIcon(this.path, {this.size = 26, super.key});
+  const _NavIcon(this.path, {Key? key, this.size = 26}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
