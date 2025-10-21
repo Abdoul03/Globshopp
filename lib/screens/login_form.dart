@@ -1,0 +1,226 @@
+// lib/screens/login_form.dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:globshopp/providers/auth_provider.dart';
+import 'accueil.dart';
+import 'Inscription.dart';
+import 'mdpoublier1.dart';
+import '../widgets/login/email_field.dart';
+import '../widgets/login/password_field.dart';
+import '../widgets/login/primary_button.dart';
+
+class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _border = Color(0xFFE6E6E6);
+
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailCtrl.dispose();
+    _passCtrl.dispose();
+    super.dispose();
+  }
+
+  void _goHome() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const HomePage()),
+      (route) => false,
+    );
+  }
+
+  Future<void> _attemptLogin() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final ok = await auth.login(_emailCtrl.text.trim(), _passCtrl.text.trim());
+    if (!mounted) return;
+    if (ok) {
+      _goHome();
+    } else {
+      final message = Provider.of<AuthProvider>(context, listen: false).lastError ?? 'Échec de la connexion';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    final size = MediaQuery.of(context).size;
+    final isShort = size.height < 720;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: size.height - 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: isShort ? 12 : 20),
+
+            const Text(
+              'Email',
+              style: TextStyle(fontSize: 14, color: _text),
+            ),
+            const SizedBox(height: 8),
+            EmailField(controller: _emailCtrl),
+
+            const SizedBox(height: 16),
+
+            const Text(
+              'Mot de passe',
+              style: TextStyle(fontSize: 14, color: _text),
+            ),
+            const SizedBox(height: 8),
+            PasswordField(controller: _passCtrl, onSubmitted: (_) => _attemptLogin()),
+
+            const SizedBox(height: 10),
+
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ForgotPasswordPage(),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                child: const Text(
+                  'Mot de passe oublié ?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13.5, color: Colors.black54),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            PrimaryButton(
+              onPressed: auth.loading ? null : _attemptLogin,
+              child: auth.loading ? const CircularProgressIndicator(color: Colors.white) : const Text('Se connecter'),
+            ),
+
+            const SizedBox(height: 24),
+
+            Row(
+              children: const [
+                Expanded(child: Divider(color: _border, thickness: 1)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Ou',
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+                Expanded(child: Divider(color: _border, thickness: 1)),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            SocialButton(
+              label: 'Connectez-vous avec Google',
+              assetPath: 'assets/icons/google.png',
+              onTap: () {},
+            ),
+            const SizedBox(height: 12),
+
+            SocialButton(
+              label: 'Connectez-vous avec Facebook',
+              assetPath: 'assets/icons/facebook.png',
+              onTap: () {},
+            ),
+
+            const SizedBox(height: 28),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Vous n’avez pas de compte ? ', style: TextStyle(color: Colors.black87)),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignUpPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Inscrivez-vous',
+                    style: TextStyle(color: _blue, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: isShort ? 24 : 40),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SocialButton extends StatelessWidget {
+  final String label;
+  final String assetPath;
+  final VoidCallback onTap;
+
+  const SocialButton({
+    required this.label,
+    required this.assetPath,
+    required this.onTap,
+  });
+
+  static const _light = Color(0xFFEFF4FF);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: Container(
+        height: 54,
+        decoration: BoxDecoration(
+          color: _light,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
+              alignment: Alignment.center,
+              child: Image.asset(
+                assetPath,
+                width: 22,
+                height: 22,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported_outlined, size: 18),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: Colors.black87),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

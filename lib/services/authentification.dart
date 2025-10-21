@@ -20,7 +20,22 @@ class Authentification {
       await storage.write(key: 'jwt', value: token);
       return true;
     } else {
-      return false;
+      // Try to parse a helpful message from the response body (JSON) and throw it
+      String message;
+      try {
+        final bodyJson = jsonDecode(response.body);
+        if (bodyJson is Map && bodyJson['message'] != null) {
+          message = bodyJson['message'].toString();
+        } else if (bodyJson is Map && bodyJson['error'] != null) {
+          message = bodyJson['error'].toString();
+        } else {
+          message = response.body.toString();
+        }
+      } catch (_) {
+        message = response.body.toString();
+      }
+
+      throw Exception(message);
     }
   }
 
