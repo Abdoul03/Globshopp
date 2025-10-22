@@ -1,6 +1,8 @@
 // lib/screens/product_detail_page.dart
 import 'package:flutter/material.dart';
 import 'accueil.dart' show Product;
+// ✅ ajoute l'import vers ta page de commande groupée
+import 'group_order_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
@@ -60,8 +62,7 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Bloc prix + MOQ ───────────
               Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: _chipBeige,
                   borderRadius: BorderRadius.circular(10),
@@ -85,8 +86,7 @@ class ProductDetailPage extends StatelessWidget {
                           const SizedBox(height: 3),
                           const Text(
                             'Prix unitaire',
-                            style:
-                            TextStyle(fontSize: 11, color: _sub),
+                            style: TextStyle(fontSize: 11, color: _sub),
                           ),
                         ],
                       ),
@@ -148,8 +148,7 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Carte Fournisseur ───────────
               Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -214,7 +213,25 @@ class ProductDetailPage extends StatelessWidget {
                     elevation: 0,
                   ),
                   onPressed: () {
-                    // Action commande
+                    // ✅ Navigation vers la page de commande groupée
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => GroupOrderPage(
+                          productTitle: product.title,
+                          // on convertit "1000 FCFA" → 1000.0
+                          unitPrice: double.tryParse(
+                            product.price.replaceAll(RegExp(r'[^0-9.]'), ''),
+                          ) ??
+                              0,
+                          // on convertit "MOQ: 20 pcs" → 20
+                          moq: int.tryParse(
+                            product.moq.replaceAll(RegExp(r'[^0-9]'), ''),
+                          ) ??
+                              0,
+                        ),
+                      ),
+                    );
                   },
                   child: const Text(
                     'Créer une commande',

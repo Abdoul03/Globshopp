@@ -86,13 +86,11 @@ class _ArticleState extends State<Article> {
                   onchange: _onSearchTextChanged,
                   controller: _searchController,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 //Contenaire de produits
                 GestureDetector(
-                  onTap: () {
-                    print("Conteneur tapé !");
-                  },
+                  onTap: () {},
                   child: Container(
                     width: 400,
                     height: 115,

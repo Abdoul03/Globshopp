@@ -1,7 +1,9 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
-import 'product_detail_page.dart'; // ✅ ajoute cet import (chemin relatif au dossier "screens")
-import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/widgets/animated_bottom_nav.dart';
+import 'product_detail_page.dart';               // déjà présent
+import 'notifications_page.dart';               // ✅ AJOUT: page des notifications
+// import 'package:globshopp/_base/constant.dart'; // inutilisé ici
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -95,9 +97,15 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             actions: [
+              // ✅ Quand on appuie, on ouvre NotificationsPage
               IconButton(
                 icon: const Icon(Icons.notifications_none_rounded, color: Colors.black87),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                  );
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.history_rounded, color: Colors.black87),
@@ -191,55 +199,16 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
 
-      // --- Barre de navigation du bas ---
-      bottomNavigationBar: NavigationBarTheme(
-        data: const NavigationBarThemeData(
-          height: 84,
-          indicatorColor: Color(0x142F80ED),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-          ),
-        ),
-        child: NavigationBar(
-          selectedIndex: 0,
-          onDestinationSelected: (i) {
-            if (i == 0) return;
-            if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
-            if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
-            if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
-            if (i == 4) Navigator.pushReplacementNamed(context, '/profil');
-          },
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          destinations: const [
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/home.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/home_active.png', size: 28),
-              label: 'Accueil',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/store.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/store_active.png', size: 28),
-              label: 'Fournisseurs',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/orders.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/orders_active.png', size: 28),
-              label: 'Commandes',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/contacts.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/contacts_active.png', size: 28),
-              label: 'Annuaire',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/profile.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/profile_active.png', size: 28),
-              label: 'Profil',
-            ),
-          ],
-        ),
+      // --- Barre de navigation du bas (réutilisable) ---
+      bottomNavigationBar: AnimatedBottomNavBar(
+        selectedIndex: 0,
+        onDestinationSelected: (i) {
+          if (i == 0) return;
+          if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
+          if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
+          if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
+          if (i == 4) Navigator.pushReplacementNamed(context, '/profil');
+        },
       ),
     );
   }
@@ -335,7 +304,7 @@ class ProductCard extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        // ✅ Navigation vers la page détail AVEC le produit cliqué
+        // ✅ Vers le détail produit
         onTap: () {
           Navigator.push(
             context,
@@ -375,8 +344,7 @@ class ProductCard extends StatelessWidget {
                         top: 6,
                         right: 6,
                         child: Container(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFF3CC36C),
                             borderRadius: BorderRadius.circular(12),
@@ -457,13 +425,9 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class _NavIcon extends StatelessWidget {
-  final String path;
-  final double size;
-  const _NavIcon(this.path, {this.size = 26, super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(path, width: size, height: size, fit: BoxFit.contain);
-  }
-}
+
+// ---------------- Custom Animated Bottom Nav Bar ----------------
+
+// The bottom navigation implementation is now provided by the reusable
+// `AnimatedBottomNavBar` widget in `lib/widgets/animated_bottom_nav.dart`.

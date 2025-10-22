@@ -1,7 +1,6 @@
 // lib/screens/role_selection_page.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/Inscription.dart';
-import 'login_page.dart';
 
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});

@@ -1,5 +1,6 @@
 // lib/screens/annuaire_page.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/widgets/animated_bottom_nav.dart';
 
 class AnnuairePage extends StatefulWidget {
   const AnnuairePage({super.key});
@@ -10,9 +11,7 @@ class AnnuairePage extends StatefulWidget {
 
 class _AnnuairePageState extends State<AnnuairePage> {
   // Couleurs
-  static const _text = Color(0xFF0B0B0B);
-  static const _sub = Color(0xFF5C5F66);
-  static const _cardBorder = Color(0xFFE6E6EA);
+  // couleurs locales supprimées (utiliser `Constant` si besoin)
 
   final _searchCtrl = TextEditingController();
   int _currentIndex = 3; // Annuaire actif
@@ -92,67 +91,27 @@ class _AnnuairePageState extends State<AnnuairePage> {
         ],
       ),
 
-      // --------- Navigation Bar ---------
-      bottomNavigationBar: NavigationBarTheme(
-        data: const NavigationBarThemeData(
-          height: 84,
-          indicatorColor: Color(0x142F80ED),
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-          ),
-        ),
-        child: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (i) {
-            if (i == 0) {
-              Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
-              return;
-            }
-            if (i == 1) {
-              Navigator.pushNamed(context, '/fournisseurs');
-              return;
-            }
-            if (i == 2) {
-              Navigator.pushNamed(context, '/commandes');
-              return;
-            }
-            if (i == 4) {
-              Navigator.pushNamed(context, '/profil');
-              return;
-            }
-            setState(() => _currentIndex = i);
-          },
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          destinations: const [
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/home.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/home_active.png', size: 28),
-              label: 'Accueil',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/store.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/store_active.png', size: 28),
-              label: 'Fournisseurs',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/orders.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/orders_active.png', size: 28),
-              label: 'Commandes',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/contacts.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/contacts_active.png', size: 28),
-              label: 'Annuaire',
-            ),
-            NavigationDestination(
-              icon: _NavIcon('assets/icons/profile.png', size: 28),
-              selectedIcon: _NavIcon('assets/icons/profile_active.png', size: 28),
-              label: 'Profil',
-            ),
-          ],
-        ),
+      bottomNavigationBar: AnimatedBottomNavBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (i) {
+          if (i == 0) {
+            Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
+            return;
+          }
+          if (i == 1) {
+            Navigator.pushNamed(context, '/fournisseurs');
+            return;
+          }
+          if (i == 2) {
+            Navigator.pushNamed(context, '/commandes');
+            return;
+          }
+          if (i == 4) {
+            Navigator.pushNamed(context, '/profil');
+            return;
+          }
+          setState(() => _currentIndex = i);
+        },
       ),
     );
   }
@@ -323,19 +282,4 @@ class CompanyCard extends StatelessWidget {
   }
 }
 
-class _NavIcon extends StatelessWidget {
-  final String path;
-  final double size;
-  const _NavIcon(this.path, {this.size = 26, super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      path,
-      width: size,
-      height: size,
-      fit: BoxFit.contain,
-      errorBuilder: (_, __, ___) => const Icon(Icons.circle, size: 20),
-    );
-  }
-}
