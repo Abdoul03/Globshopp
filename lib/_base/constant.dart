@@ -13,6 +13,7 @@ class Constant {
   static const rougeVif = Color.fromARGB(255, 255, 26, 30);
   static const vert = Color.fromARGB(255, 120, 200, 65);
   static const vertTransparant = Color.fromARGB(38, 120, 200, 65);
+  static const border = Color(0xFFE6E6E6);
   //Url de Base
   static const remoteUrl = "http://localhost:8080/api";
 }

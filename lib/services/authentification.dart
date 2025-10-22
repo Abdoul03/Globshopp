@@ -101,7 +101,7 @@ class Authentification {
     final response = await http.post(
       Uri.parse('${Constant.remoteUrl}/auth/refresh'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({"refreshToken": refresh}),
+      body: refresh,
     );
 
     if (response.statusCode == 200) {

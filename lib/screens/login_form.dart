@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:globshopp/model/tokenPair.dart';
 import 'package:globshopp/screens/fournisseur/navigationBar.dart';
+import 'package:globshopp/screens/role_selection_page.dart';
 import 'package:globshopp/services/authentification.dart';
 import 'package:provider/provider.dart';
 import 'accueil.dart';
@@ -215,7 +216,7 @@ class _LoginFormState extends State<LoginForm> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const SignUpPage()),
+                      MaterialPageRoute(builder: (_) => RoleSelectionPage()),
                     );
                   },
                   child: const Text(

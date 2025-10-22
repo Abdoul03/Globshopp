@@ -26,7 +26,7 @@ class GlobalShopperApp extends StatelessWidget {
         '/fournisseurs': (_) => const FournisseursPage(),
         '/commandes': (_) => const CommandesPage(),
         '/annuaire': (_) => const AnnuairePage(),
-        '/profil': (_) => const ProfilePage(), // ⬅️ AJOUT
+        '/profil': (_) => const Profile(), // ⬅️ AJOUT
       },
     );
   }

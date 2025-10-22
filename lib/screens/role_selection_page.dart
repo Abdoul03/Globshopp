@@ -1,6 +1,8 @@
 // lib/screens/role_selection_page.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/screens/CommercantSignUpPage.dart';
 import 'package:globshopp/screens/Inscription.dart';
+import 'package:globshopp/screens/fournisseurSignUpPage.dart';
 
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});
@@ -140,20 +142,21 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                         onPressed: _selected == null
                             ? null
                             : () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (_) => const LoginPage(),
-                                //   ),
-                                // );
-
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const SignUpPage(),
-                                  ),
-                                );
-                                // Navigator.pushNamed(context, '/login'); // si routes nommées
+                                if (_selected == _UserRole.merchant) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => Commercantsignuppage(),
+                                    ),
+                                  );
+                                } else if (_selected == _UserRole.supplier) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => Fournisseursignuppage(),
+                                    ),
+                                  );
+                                }
                               },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _blue,
