@@ -15,6 +15,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -29,14 +30,14 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            if (kDebugMode)
-              Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
-                child: TextButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, '/accueil'),
-                  child: const Text("Ouvrir l'accueil (dev)", style: TextStyle(color: Colors.redAccent)),
-                ),
-              ),
+            // if (kDebugMode)
+            //   Padding(
+            //     padding: const EdgeInsets.only(top: 8, bottom: 8),
+            //     child: TextButton(
+            //       onPressed: () => Navigator.pushReplacementNamed(context, '/accueil'),
+            //       child: const Text("Ouvrir l'accueil (dev)", style: TextStyle(color: Colors.redAccent)),
+            //     ),
+            //   ),
             const Expanded(child: LoginForm()),
           ],
         ),

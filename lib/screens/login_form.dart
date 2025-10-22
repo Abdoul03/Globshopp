@@ -1,5 +1,7 @@
 // lib/screens/login_form.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/model/tokenPair.dart';
+import 'package:globshopp/services/authentification.dart';
 import 'package:provider/provider.dart';
 import 'package:globshopp/providers/auth_provider.dart';
 import 'accueil.dart';
@@ -21,13 +23,16 @@ class _LoginFormState extends State<LoginForm> {
   static const _text = Color(0xFF0B0B0B);
   static const _border = Color(0xFFE6E6E6);
 
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
+  final Authentification _authentification = Authentification();
+  bool isLoading = false;
+
+  final TextEditingController identifiant = TextEditingController();
+  final TextEditingController motDePasse = TextEditingController();
 
   @override
   void dispose() {
-    _emailCtrl.dispose();
-    _passCtrl.dispose();
+    identifiant.dispose();
+    motDePasse.dispose();
     super.dispose();
   }
 
@@ -39,15 +44,27 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  Future<void> _attemptLogin() async {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-    final ok = await auth.login(_emailCtrl.text.trim(), _passCtrl.text.trim());
-    if (!mounted) return;
-    if (ok) {
-      _goHome();
-    } else {
-      final message = Provider.of<AuthProvider>(context, listen: false).lastError ?? 'Échec de la connexion';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  Future<TokenPair> connexion() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final tokenPair = await _authentification.connexion(
+        identifiant.text.trim(),
+        motDePasse.text.trim(),
+      );
+      setState(() {
+        isLoading = true;
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Connexion Okay")));
+      return tokenPair;
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -67,11 +84,11 @@ class _LoginFormState extends State<LoginForm> {
             SizedBox(height: isShort ? 12 : 20),
 
             const Text(
-              'Email',
+              'Email ou Telephone',
               style: TextStyle(fontSize: 14, color: _text),
             ),
             const SizedBox(height: 8),
-            EmailField(controller: _emailCtrl),
+            EmailField(controller: identifiant),
 
             const SizedBox(height: 16),
 
@@ -80,7 +97,10 @@ class _LoginFormState extends State<LoginForm> {
               style: TextStyle(fontSize: 14, color: _text),
             ),
             const SizedBox(height: 8),
-            PasswordField(controller: _passCtrl, onSubmitted: (_) => _attemptLogin()),
+            PasswordField(
+              controller: motDePasse,
+              // onSubmitted: (_) => _attemptLogin(),
+            ),
 
             const SizedBox(height: 10),
 
@@ -107,8 +127,10 @@ class _LoginFormState extends State<LoginForm> {
             const SizedBox(height: 8),
 
             PrimaryButton(
-              onPressed: auth.loading ? null : _attemptLogin,
-              child: auth.loading ? const CircularProgressIndicator(color: Colors.white) : const Text('Se connecter'),
+              onPressed: connexion,
+              child: isLoading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text('Se connecter'),
             ),
 
             const SizedBox(height: 24),
@@ -118,10 +140,7 @@ class _LoginFormState extends State<LoginForm> {
                 Expanded(child: Divider(color: _border, thickness: 1)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(
-                    'Ou',
-                    style: TextStyle(color: Colors.black54),
-                  ),
+                  child: Text('Ou', style: TextStyle(color: Colors.black54)),
                 ),
                 Expanded(child: Divider(color: _border, thickness: 1)),
               ],
@@ -147,7 +166,10 @@ class _LoginFormState extends State<LoginForm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Vous n’avez pas de compte ? ', style: TextStyle(color: Colors.black87)),
+                const Text(
+                  'Vous n’avez pas de compte ? ',
+                  style: TextStyle(color: Colors.black87),
+                ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -201,21 +223,29 @@ class SocialButton extends StatelessWidget {
             Container(
               width: 34,
               height: 34,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(17),
+              ),
               alignment: Alignment.center,
               child: Image.asset(
                 assetPath,
                 width: 22,
                 height: 22,
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported_outlined, size: 18),
+                errorBuilder: (_, __, ___) =>
+                    const Icon(Icons.image_not_supported_outlined, size: 18),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: Colors.black87),
+                style: const TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ],

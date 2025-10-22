@@ -10,7 +10,7 @@ class EmailField extends StatelessWidget {
   const EmailField({
     Key? key,
     required this.controller,
-    this.hint = 'Entrez votre adresse email',
+    this.hint = 'Entrez votre adresse email ou votre telephone',
     this.textInputAction = TextInputAction.next,
     this.onSubmitted,
   }) : super(key: key);
@@ -23,7 +23,10 @@ class EmailField extends StatelessWidget {
       textInputAction: textInputAction,
       decoration: InputDecoration(
         hintText: hint,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onSubmitted: onSubmitted,

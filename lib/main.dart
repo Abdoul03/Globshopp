@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/screens/onboarding_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:globshopp/providers/auth_provider.dart';
 import 'package:globshopp/screens/login_page.dart';
@@ -22,14 +23,14 @@ class GlobalShopperApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Global Shopper',
         theme: ThemeData(useMaterial3: true),
-  home: const HomePage(),
+        home: OnboardingCarousel(),
         routes: {
-          '/login':        (_) => const LoginPage(),
-          '/accueil':      (_) => const HomePage(),
+          '/login': (_) => const LoginPage(),
+          '/accueil': (_) => const HomePage(),
           '/fournisseurs': (_) => const FournisseursPage(),
-          '/commandes':    (_) => const CommandesPage(),
-          '/annuaire':     (_) => const AnnuairePage(),
-          '/profil':       (_) => const ProfilePage(), // ⬅️ AJOUT
+          '/commandes': (_) => const CommandesPage(),
+          '/annuaire': (_) => const AnnuairePage(),
+          '/profil': (_) => const ProfilePage(), // ⬅️ AJOUT
         },
       ),
     );

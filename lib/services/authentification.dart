@@ -3,22 +3,31 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commercant.dart';
 import 'package:globshopp/model/fournisseur.dart';
+import 'package:globshopp/model/tokenPair.dart';
 import 'package:http/http.dart' as http;
 
 class Authentification {
   final storage = FlutterSecureStorage();
 
-  Future<bool> connexion(String username, String motDePasse) async {
+  Future<TokenPair> connexion(String identifiant, String motDePasse) async {
     final response = await http.post(
       Uri.parse("${Constant.remoteUrl}/auth/login"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({"identifiant": username, "motDePasse": motDePasse}),
+      body: jsonEncode({"identifiant": identifiant, "motDePasse": motDePasse}),
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final token = data['token'];
-      await storage.write(key: 'jwt', value: token);
-      return true;
+      final accessToken = data['accessToken'];
+      final refreshToken = data['refreshToken'];
+
+      if (accessToken == null || refreshToken == null) {
+        throw Exception("Tokens manquants dans la réponse serveur.");
+      }
+
+      await storage.write(key: 'accessToken', value: accessToken);
+      await storage.write(key: 'refreshToken', value: refreshToken);
+
+      return TokenPair(accessToken: accessToken, refreshToken: refreshToken);
     } else {
       // Try to parse a helpful message from the response body (JSON) and throw it
       String message;
@@ -39,31 +48,74 @@ class Authentification {
     }
   }
 
-  Future<String?> registerCommercant(Commercant commercant) async {
-    final response = await http.post(
-      Uri.parse("${Constant.remoteUrl}/auth/commercant/register"),
-      headers: {"Content-Type": "application/json"},
-      // body: jsonEncode(commercant.toJson()),
-    );
-
-    if (response.statusCode == 200) {
-      return "Inscription réussie";
-    } else {
-      return "Erreur: ${response.body}";
-    }
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'accessToken');
   }
 
-  Future<String?> registerFournisseur(Fournisseurs fournisseur) async {
+  Future<String?> getRefreshToken() async {
+    return await storage.read(key: 'refreshToken');
+  }
+
+  Future<void> logout() async {
+    await storage.delete(key: 'accessToken');
+    await storage.delete(key: 'refreshToken');
+  }
+
+  /// Méthode pour faire des requêtes HTTP avec injection du token et rafraîchissement automatique
+  Future<http.Response> getWithAuth(String endpoint) async {
+    String? token = await getAccessToken();
+    final url = Uri.parse('${Constant.remoteUrl}$endpoint');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 401) {
+      // Token expiré : essaye de le rafraîchir
+      final refreshed = await refreshToken();
+      if (refreshed != null) {
+        return await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${refreshed.accessToken}',
+          },
+        );
+      } else {
+        throw Exception('Session expirée. Veuillez vous reconnecter.');
+      }
+    }
+
+    return response;
+  }
+
+  /// Rafraîchissement automatique du token
+  Future<TokenPair?> refreshToken() async {
+    final refresh = await getRefreshToken();
+    if (refresh == null) return null;
+
     final response = await http.post(
-      Uri.parse("${Constant.remoteUrl}/auth/fournisseur/register"),
-      headers: {"Content-Type": "application/json"},
-      // body: jsonEncode(fournisseur.toJson()),
+      Uri.parse('${Constant.remoteUrl}/auth/refresh'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({"refreshToken": refresh}),
     );
 
     if (response.statusCode == 200) {
-      return "Inscription réussie";
-    } else {
-      return "Erreur: ${response.body}";
+      final data = jsonDecode(response.body);
+      final accessToken = data['accessToken'];
+      final refreshToken = data['refreshToken'];
+
+      if (accessToken != null && refreshToken != null) {
+        await storage.write(key: 'accessToken', value: accessToken);
+        await storage.write(key: 'refreshToken', value: refreshToken);
+        return TokenPair(accessToken: accessToken, refreshToken: refreshToken);
+      }
     }
+
+    return null;
   }
 }
