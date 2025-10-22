@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commercant.dart';
 import 'package:globshopp/screens/login_form.dart';
-import 'package:globshopp/screens/login_page.dart';
 import 'package:globshopp/services/Inscription.dart';
 
 class Commercantsignuppage extends StatefulWidget {
@@ -45,7 +44,7 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
-  Future<String?> inscriptionCommercant(Commercant commercant) async {
+  Future<void> inscriptionCommercant(Commercant commercant) async {
     setState(() {
       isLoading = true;
     });

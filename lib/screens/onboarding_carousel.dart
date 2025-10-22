@@ -1,10 +1,9 @@
 // lib/screens/onboarding_carousel.dart
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/login_page.dart';
 
 //destination finale après l’onboarding
-import 'role_selection_page.dart';
+//import 'role_selection_page.dart';
 
 class OnboardingCarousel extends StatefulWidget {
   const OnboardingCarousel({super.key});
@@ -144,15 +143,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
                     ),
                   ),
                   // Debug-only shortcut to accueil
-                  // if (kDebugMode)
-                  //   TextButton(
-                  //     onPressed: () =>
-                  //         Navigator.pushReplacementNamed(context, '/accueil'),
-                  //     child: const Text(
-                  //       'Ouvrir l\'accueil (dev)',
-                  //       style: TextStyle(color: Colors.redAccent),
-                  //     ),
-                  //   ),
                   const Spacer(),
                   Container(
                     width: 50,

@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
-import 'package:globshopp/model/commercant.dart';
-import 'package:globshopp/model/fournisseur.dart';
 import 'package:globshopp/model/tokenPair.dart';
 import 'package:http/http.dart' as http;
 

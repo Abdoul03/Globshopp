@@ -1,7 +1,6 @@
 // lib/screens/role_selection_page.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/CommercantSignUpPage.dart';
-import 'package:globshopp/screens/Inscription.dart';
 import 'package:globshopp/screens/fournisseurSignUpPage.dart';
 
 class RoleSelectionPage extends StatefulWidget {

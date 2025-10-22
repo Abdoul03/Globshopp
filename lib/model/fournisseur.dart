@@ -4,10 +4,10 @@ import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/model/role.dart';
 import 'package:globshopp/model/utilisateur.dart';
 
-class Fournisseurs extends Utilisateur {
+class Fournisseur extends Utilisateur {
   List<Produit>? produit;
   Comptefournisseur? comptefournisseur;
-  Fournisseurs({
+  Fournisseur({
     super.id,
     required super.nom,
     required super.prenom,
@@ -23,8 +23,8 @@ class Fournisseurs extends Utilisateur {
     this.comptefournisseur,
   }) : produit = produit ?? [];
 
-  factory Fournisseurs.fromJson(Map<String, dynamic> json) {
-    return Fournisseurs(
+  factory Fournisseur.fromJson(Map<String, dynamic> json) {
+    return Fournisseur(
       id: json['id'],
       nom: json['nom'],
       prenom: json['prenom'],
