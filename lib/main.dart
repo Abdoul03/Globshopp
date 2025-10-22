@@ -1,8 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/onboarding_carousel.dart';
-import 'package:provider/provider.dart';
-import 'package:globshopp/providers/auth_provider.dart';
 import 'package:globshopp/screens/login_page.dart';
 import 'package:globshopp/screens/accueil.dart';
 import 'package:globshopp/screens/fournisseurs_page.dart';
@@ -17,22 +15,19 @@ class GlobalShopperApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Global Shopper',
-        theme: ThemeData(useMaterial3: true),
-        home: OnboardingCarousel(),
-        routes: {
-          '/login': (_) => const LoginPage(),
-          '/accueil': (_) => const HomePage(),
-          '/fournisseurs': (_) => const FournisseursPage(),
-          '/commandes': (_) => const CommandesPage(),
-          '/annuaire': (_) => const AnnuairePage(),
-          '/profil': (_) => const ProfilePage(), // ⬅️ AJOUT
-        },
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Global Shopper',
+      theme: ThemeData(useMaterial3: true),
+      home: OnboardingCarousel(),
+      routes: {
+        '/login': (_) => const LoginPage(),
+        '/accueil': (_) => const HomePage(),
+        '/fournisseurs': (_) => const FournisseursPage(),
+        '/commandes': (_) => const CommandesPage(),
+        '/annuaire': (_) => const AnnuairePage(),
+        '/profil': (_) => const ProfilePage(), // ⬅️ AJOUT
+      },
     );
   }
 }

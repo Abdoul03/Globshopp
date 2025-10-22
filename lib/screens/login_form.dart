@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/model/tokenPair.dart';
 import 'package:globshopp/services/authentification.dart';
 import 'package:provider/provider.dart';
-import 'package:globshopp/providers/auth_provider.dart';
 import 'accueil.dart';
 import 'Inscription.dart';
 import 'mdpoublier1.dart';
@@ -60,6 +59,7 @@ class _LoginFormState extends State<LoginForm> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Connexion Okay")));
+      print(tokenPair);
       return tokenPair;
     } finally {
       setState(() {
@@ -70,7 +70,6 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
     final size = MediaQuery.of(context).size;
     final isShort = size.height < 720;
 
@@ -84,7 +83,7 @@ class _LoginFormState extends State<LoginForm> {
             SizedBox(height: isShort ? 12 : 20),
 
             const Text(
-              'Email ou Telephone',
+              'Identifiant',
               style: TextStyle(fontSize: 14, color: _text),
             ),
             const SizedBox(height: 8),
