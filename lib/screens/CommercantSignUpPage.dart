@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commercant.dart';
+import 'package:globshopp/screens/login_form.dart';
+import 'package:globshopp/screens/login_page.dart';
 import 'package:globshopp/services/Inscription.dart';
 
 class Commercantsignuppage extends StatefulWidget {
@@ -51,6 +53,10 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
       final resultat = await _inscription.registerCommercant(commercant);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(resultat ?? "Inscription réussie")),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => LoginForm()),
       );
     } catch (e) {
       setState(() => isLoading = false);
@@ -226,12 +232,23 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
                         return;
                       }
 
-                      // TODO: logique d’inscription (appel API, etc.)
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (_) => const LoginPage()),
-                      // );
-                      _showSnack('Formulaire valide ');
+                      final user = Commercant(
+                        nom: name,
+                        prenom: first,
+                        username: userName,
+                        email: email,
+                        telephone: tel,
+                        motDePasse: pass,
+                      );
+                      inscriptionCommercant(user);
+
+                      _nom.clear();
+                      _prenom.clear();
+                      _userName.clear();
+                      _telephone.clear();
+                      _email.clear();
+                      _motDePasse.clear();
+                      _confirmCtrl.clear();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Constant.blue,
@@ -245,7 +262,9 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    child: const Text("S'inscrire"),
+                    child: isLoading
+                        ? CircularProgressIndicator(color: Constant.colorsWhite)
+                        : const Text("S'inscrire"),
                   ),
                 ),
 
