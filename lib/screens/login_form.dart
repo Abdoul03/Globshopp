@@ -1,6 +1,9 @@
 // lib/screens/login_form.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:globshopp/model/tokenPair.dart';
+import 'package:globshopp/screens/fournisseur/navigationBar.dart';
 import 'package:globshopp/services/authentification.dart';
 import 'package:provider/provider.dart';
 import 'accueil.dart';
@@ -43,6 +46,25 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  String? extractRoleFromToken(String accessToken) {
+    try {
+      // Le token a la forme header.payload.signature
+      final parts = accessToken.split('.');
+      if (parts.length != 3) return null;
+
+      final payload = parts[1];
+      // Base64Url decoding
+      var normalized = base64Url.normalize(payload);
+      final payloadMap = jsonDecode(utf8.decode(base64Url.decode(normalized)));
+
+      if (payloadMap is! Map<String, dynamic>) return null;
+      return payloadMap['role']
+          as String?; // Assumes backend put the role claim as 'role'
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<TokenPair> connexion() async {
     setState(() {
       isLoading = true;
@@ -54,12 +76,32 @@ class _LoginFormState extends State<LoginForm> {
         motDePasse.text.trim(),
       );
       setState(() {
-        isLoading = true;
+        isLoading = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Connexion Okay")));
-      print(tokenPair);
+      final role = extractRoleFromToken(tokenPair.accessToken);
+      if (role == 'ROLE_COMMERCANT') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Bienvenue")));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => HomePage()),
+        );
+      } else if (role == 'ROLE_FOURNISSEUR') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Bienvenue")));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => Navigationbar()),
+        );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Rôle inconnu")));
+      }
+      print(tokenPair.accessToken);
+      print(tokenPair.refreshToken);
       return tokenPair;
     } finally {
       setState(() {
