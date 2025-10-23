@@ -30,11 +30,19 @@ class _PasswordFieldState extends State<PasswordField> {
       textInputAction: widget.textInputAction,
       decoration: InputDecoration(
         hintText: widget.hint,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         suffixIcon: IconButton(
           onPressed: () => setState(() => _obscure = !_obscure),
-          icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black54),
+          icon: Icon(
+            _obscure
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+            color: Colors.black54,
+          ),
         ),
       ),
       onSubmitted: widget.onSubmitted,

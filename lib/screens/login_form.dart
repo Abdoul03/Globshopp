@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/tokenPair.dart';
 import 'package:globshopp/screens/fournisseur/navigationBar.dart';
 import 'package:globshopp/screens/role_selection_page.dart';
@@ -35,14 +36,6 @@ class _LoginFormState extends State<LoginForm> {
     identifiant.dispose();
     motDePasse.dispose();
     super.dispose();
-  }
-
-  void _goHome() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
-      (route) => false,
-    );
   }
 
   String? extractRoleFromToken(String accessToken) {
@@ -114,119 +107,134 @@ class _LoginFormState extends State<LoginForm> {
     final size = MediaQuery.of(context).size;
     final isShort = size.height < 720;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: size.height - 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: isShort ? 12 : 20),
-
-            const Text(
-              'Identifiant',
-              style: TextStyle(fontSize: 14, color: _text),
-            ),
-            const SizedBox(height: 8),
-            EmailField(controller: identifiant),
-
-            const SizedBox(height: 16),
-
-            const Text(
-              'Mot de passe',
-              style: TextStyle(fontSize: 14, color: _text),
-            ),
-            const SizedBox(height: 8),
-            PasswordField(
-              controller: motDePasse,
-              // onSubmitted: (_) => _attemptLogin(),
-            ),
-
-            const SizedBox(height: 10),
-
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ForgotPasswordPage(),
-                    ),
-                  );
-                },
-                style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                child: const Text(
-                  'Mot de passe oublié ?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13.5, color: Colors.black54),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            PrimaryButton(
-              onPressed: connexion,
-              child: isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
-                  : Text('Se connecter'),
-            ),
-
-            const SizedBox(height: 24),
-
-            Row(
-              children: const [
-                Expanded(child: Divider(color: _border, thickness: 1)),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('Ou', style: TextStyle(color: Colors.black54)),
-                ),
-                Expanded(child: Divider(color: _border, thickness: 1)),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            SocialButton(
-              label: 'Connectez-vous avec Google',
-              assetPath: 'assets/icons/google.png',
-              onTap: () {},
-            ),
-            const SizedBox(height: 12),
-
-            SocialButton(
-              label: 'Connectez-vous avec Facebook',
-              assetPath: 'assets/icons/facebook.png',
-              onTap: () {},
-            ),
-
-            const SizedBox(height: 28),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: Constant.colorsWhite,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: size.height - 24),
+          child: IntrinsicHeight(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: isShort ? 12 : 20),
+
                 const Text(
-                  'Vous n’avez pas de compte ? ',
-                  style: TextStyle(color: Colors.black87),
+                  'Identifiant',
+                  style: TextStyle(fontSize: 14, color: _text),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => RoleSelectionPage()),
-                    );
-                  },
-                  child: const Text(
-                    'Inscrivez-vous',
-                    style: TextStyle(color: _blue, fontWeight: FontWeight.w600),
+                const SizedBox(height: 8),
+                EmailField(controller: identifiant),
+
+                const SizedBox(height: 16),
+
+                const Text(
+                  'Mot de passe',
+                  style: TextStyle(fontSize: 14, color: _text),
+                ),
+                const SizedBox(height: 8),
+                PasswordField(
+                  controller: motDePasse,
+                  // onSubmitted: (_) => _attemptLogin(),
+                ),
+
+                const SizedBox(height: 10),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ForgotPasswordPage(),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    child: const Text(
+                      'Mot de passe oublié ?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13.5, color: Colors.black54),
+                    ),
                   ),
                 ),
+
+                const SizedBox(height: 8),
+
+                PrimaryButton(
+                  onPressed: connexion,
+                  child: isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text('Se connecter'),
+                ),
+
+                const SizedBox(height: 24),
+
+                Row(
+                  children: const [
+                    Expanded(child: Divider(color: _border, thickness: 1)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'Ou',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                    Expanded(child: Divider(color: _border, thickness: 1)),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                SocialButton(
+                  label: 'Connectez-vous avec Google',
+                  assetPath: 'assets/icons/google.png',
+                  onTap: () {},
+                ),
+                const SizedBox(height: 12),
+
+                SocialButton(
+                  label: 'Connectez-vous avec Facebook',
+                  assetPath: 'assets/icons/facebook.png',
+                  onTap: () {},
+                ),
+
+                const SizedBox(height: 28),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Vous n’avez pas de compte ? ',
+                        style: TextStyle(color: Colors.black87),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => RoleSelectionPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Inscrivez-vous',
+                        style: TextStyle(
+                          color: _blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: isShort ? 24 : 40),
               ],
             ),
-
-            SizedBox(height: isShort ? 24 : 40),
-          ],
+          ),
         ),
       ),
     );

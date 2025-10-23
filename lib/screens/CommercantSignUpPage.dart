@@ -53,10 +53,7 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(resultat ?? "Inscription réussie")),
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginForm()),
-      );
+      Navigator.pop(context, MaterialPageRoute(builder: (_) => LoginForm()));
     } catch (e) {
       setState(() => isLoading = false);
       print("On a une erreur : $e");
