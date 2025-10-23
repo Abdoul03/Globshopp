@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 class Comptefournisseur {
-  final Long? id;
+  final int? id;
   Comptefournisseur({this.id});
 
   factory Comptefournisseur.fromJson(Map<String, dynamic> json) {

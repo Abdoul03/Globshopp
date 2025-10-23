@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 class Produit {
-  final Long? id;
+  final int? id;
   final String nom;
 
   Produit({this.id, required this.nom});

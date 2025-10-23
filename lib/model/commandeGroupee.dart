@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 class CommandeGroupee {
-  final Long? id;
+  final int? id;
   CommandeGroupee({this.id});
 
   factory CommandeGroupee.fromJson(Map<String, dynamic> json) {

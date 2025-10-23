@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:globshopp/model/pays.dart';
 import 'package:globshopp/model/role.dart';
 
 abstract class Utilisateur {
   // Propriétés
-  final Long? id;
+  final int? id;
   String nom;
   String prenom;
   String username;
