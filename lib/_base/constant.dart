@@ -9,6 +9,7 @@ class Constant {
   static const colorsgray = Color.fromARGB(255, 209, 201, 201);
   static const colorsWhite = Color.fromARGB(255, 255, 255, 255);
   static const colorsBlack = Color.fromARGB(255, 0, 0, 0);
+  static const grisClaire = Color(0xFF5C5F66);
   static const rougeTransparant = Color.fromARGB(51, 255, 26, 30);
   static const rougeVif = Color.fromARGB(255, 255, 26, 30);
   static const vert = Color.fromARGB(255, 120, 200, 65);

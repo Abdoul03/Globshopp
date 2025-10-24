@@ -1,7 +1,7 @@
 import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/pays.dart';
-import 'package:globshopp/model/role.dart';
+import 'package:globshopp/model/enum/role.dart';
 import 'package:globshopp/model/utilisateur.dart';
 
 class Commercant extends Utilisateur {

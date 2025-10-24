@@ -1,0 +1,1 @@
+enum OrderStatus { ENCOURS, EXPEDIER, TERMINER, ANNULER }

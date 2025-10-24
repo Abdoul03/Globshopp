@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/fournisseur.dart';
-import 'package:globshopp/screens/login_form.dart';
+import 'package:globshopp/screens/login_page.dart';
 import 'package:globshopp/services/Inscription.dart';
 
 class Fournisseursignuppage extends StatefulWidget {
@@ -53,7 +53,7 @@ class _FournisseursignuppageState extends State<Fournisseursignuppage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(resultat ?? "Inscription réussie")),
       );
-      Navigator.pop(context, MaterialPageRoute(builder: (_) => LoginForm()));
+      Navigator.pop(context, MaterialPageRoute(builder: (_) => LoginPage()));
     } catch (e) {
       setState(() => isLoading = false);
       print("On a une erreur : $e");

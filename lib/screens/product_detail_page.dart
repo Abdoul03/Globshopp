@@ -1,25 +1,17 @@
 // lib/screens/product_detail_page.dart
 import 'package:flutter/material.dart';
-import 'accueil.dart' show Product;
+import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/produit.dart';
 // ✅ ajoute l'import vers ta page de commande groupée
 import 'group_order_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
-  final Product product;
-  const ProductDetailPage({super.key, required this.product});
-
-  // 🎨 Palette
-  static const _blue        = Color(0xFF2F80ED);
-  static const _text        = Color(0xFF0B0B0B);
-  static const _sub         = Color(0xFF6B6F76);
-  static const _muted       = Color(0xFF9AA0A6);
-  static const _chipBeige   = Color(0xFFF6EBD7);
-  static const _beigeBorder = Color(0xFFE9D9BD);
-  static const _tileBorder  = Color(0xFFEAEAEA);
-  static const _yellow      = Color(0xFFE9AB30);
+  final Produit produit;
+  const ProductDetailPage({super.key, required this.produit});
 
   @override
   Widget build(BuildContext context) {
+    final urls = produit.mediaUrls;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -31,8 +23,11 @@ class ProductDetailPage extends StatelessWidget {
             children: [
               // ─────────── AppBar (retour) ───────────
               IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                    color: Colors.black87, size: 20),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black87,
+                  size: 20,
+                ),
                 onPressed: () => Navigator.maybePop(context),
               ),
               const SizedBox(height: 6),
@@ -44,17 +39,26 @@ class ProductDetailPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     color: const Color(0xFFF7F7F9),
-                    child: Hero(
-                      tag: product.image,
-                      child: Image.asset(
-                        product.image,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Center(
-                          child: Icon(Icons.image_outlined,
-                              size: 48, color: _muted),
-                        ),
-                      ),
-                    ),
+                    child: urls.isNotEmpty
+                        ? PageView.builder(
+                            itemCount: urls.length,
+                            itemBuilder: (_, index) {
+                              final imageUrl = urls[index];
+                              return Hero(
+                                tag: imageUrl,
+                                child: Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) => const Center(
+                                    child: Icon(Icons.image_outlined, size: 48),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Icon(Icons.image_outlined, size: 48),
+                          ),
                   ),
                 ),
               ),
@@ -62,11 +66,14 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Bloc prix + MOQ ───────────
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color: _chipBeige,
+                  color: Constant.colorsgray,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: _beigeBorder),
+                  border: Border.all(color: Constant.border),
                 ),
                 child: Row(
                   children: [
@@ -76,17 +83,20 @@ class ProductDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            product.price,
+                            "${produit.prix}",
                             style: const TextStyle(
                               fontSize: 15.5,
                               fontWeight: FontWeight.w800,
-                              color: _text,
+                              color: Constant.colorsBlack,
                             ),
                           ),
                           const SizedBox(height: 3),
                           const Text(
                             'Prix unitaire',
-                            style: TextStyle(fontSize: 11, color: _sub),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Constant.grisClaire,
+                            ),
                           ),
                         ],
                       ),
@@ -100,17 +110,17 @@ class ProductDetailPage extends StatelessWidget {
                             'MOQ:',
                             style: TextStyle(
                               fontSize: 11,
-                              color: _muted,
+                              color: Constant.colorsgray,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            product.moq,
+                            "${produit.moq}",
                             style: const TextStyle(
                               fontSize: 15.5,
                               fontWeight: FontWeight.w900,
-                              color: _yellow,
+                              color: Constant.jaune,
                             ),
                             textAlign: TextAlign.right,
                           ),
@@ -125,22 +135,22 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Titre produit ───────────
               Text(
-                product.title,
+                produit.nom,
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
-                  color: _text,
+                  color: Constant.colorsBlack,
                 ),
               ),
               const SizedBox(height: 6),
 
               // ─────────── Description ───────────
-              const Text(
-                'Produit fabriqué à partir de coton de haute qualité, idéal pour un usage quotidien. Léger, confortable et durable.',
+              Text(
+                produit.description,
                 style: TextStyle(
                   fontSize: 12,
                   height: 1.4,
-                  color: _sub,
+                  color: Constant.colorsgray,
                 ),
               ),
 
@@ -148,11 +158,14 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Carte Fournisseur ───────────
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: _tileBorder),
+                  border: Border.all(color: Constant.border),
                 ),
                 child: Row(
                   children: [
@@ -164,8 +177,11 @@ class ProductDetailPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       alignment: Alignment.center,
-                      child: const Icon(Icons.store_mall_directory_outlined,
-                          size: 17, color: _blue),
+                      child: const Icon(
+                        Icons.store_mall_directory_outlined,
+                        size: 17,
+                        color: Constant.blue,
+                      ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -173,13 +189,13 @@ class ProductDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            product.brand,
+                            produit.fournisseur!.nom,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
-                              color: _text,
+                              color: Constant.colorsBlack,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -187,7 +203,7 @@ class ProductDetailPage extends StatelessWidget {
                             'Fournisseur Grossiste',
                             style: TextStyle(
                               fontSize: 11,
-                              color: _yellow,
+                              color: Constant.jaune,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -206,7 +222,7 @@ class ProductDetailPage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _blue,
+                    backgroundColor: Constant.blue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -218,17 +234,11 @@ class ProductDetailPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (_) => GroupOrderPage(
-                          productTitle: product.title,
+                          productTitle: produit.nom,
                           // on convertit "1000 FCFA" → 1000.0
-                          unitPrice: double.tryParse(
-                            product.price.replaceAll(RegExp(r'[^0-9.]'), ''),
-                          ) ??
-                              0,
+                          unitPrice: double.tryParse("${produit.prix}") ?? 0,
                           // on convertit "MOQ: 20 pcs" → 20
-                          moq: int.tryParse(
-                            product.moq.replaceAll(RegExp(r'[^0-9]'), ''),
-                          ) ??
-                              0,
+                          moq: int.tryParse("${produit.moq}") ?? 0,
                         ),
                       ),
                     );
