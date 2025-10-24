@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
-import 'package:globshopp/model/fournisseur.dart';
-import 'package:globshopp/screens/login_page.dart';
+import 'package:globshopp/model/commercant.dart';
+import 'package:globshopp/screens/auth/login_page.dart';
 import 'package:globshopp/services/Inscription.dart';
 
-class Fournisseursignuppage extends StatefulWidget {
-  const Fournisseursignuppage({super.key});
+class Commercantsignuppage extends StatefulWidget {
+  const Commercantsignuppage({super.key});
 
   @override
-  State<Fournisseursignuppage> createState() => _FournisseursignuppageState();
+  State<Commercantsignuppage> createState() => _CommercantsignuppageState();
 }
 
-class _FournisseursignuppageState extends State<Fournisseursignuppage> {
+class _CommercantsignuppageState extends State<Commercantsignuppage> {
   final TextEditingController _nom = TextEditingController();
   final TextEditingController _prenom = TextEditingController();
   final TextEditingController _userName = TextEditingController();
@@ -44,12 +44,12 @@ class _FournisseursignuppageState extends State<Fournisseursignuppage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
-  Future<void> inscriptionFournisseur(Fournisseur fournisseur) async {
+  Future<void> inscriptionCommercant(Commercant commercant) async {
     setState(() {
       isLoading = true;
     });
     try {
-      final resultat = await _inscription.registerFournisseur(fournisseur);
+      final resultat = await _inscription.registerCommercant(commercant);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(resultat ?? "Inscription réussie")),
       );
@@ -228,7 +228,7 @@ class _FournisseursignuppageState extends State<Fournisseursignuppage> {
                         return;
                       }
 
-                      final user = Fournisseur(
+                      final user = Commercant(
                         nom: name,
                         prenom: first,
                         username: userName,
@@ -236,8 +236,7 @@ class _FournisseursignuppageState extends State<Fournisseursignuppage> {
                         telephone: tel,
                         motDePasse: pass,
                       );
-
-                      inscriptionFournisseur(user);
+                      inscriptionCommercant(user);
 
                       _nom.clear();
                       _prenom.clear();

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
-import '../../group_order_page.dart';
+import '../group_order_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Produit produit;

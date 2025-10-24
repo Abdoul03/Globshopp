@@ -1,43 +1,42 @@
-// lib/screens/inscription.dart
 import 'package:flutter/material.dart';
-import 'package:globshopp/screens/login_page.dart';
+import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/fournisseur.dart';
+import 'package:globshopp/screens/auth/login_page.dart';
+import 'package:globshopp/services/Inscription.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class Fournisseursignuppage extends StatefulWidget {
+  const Fournisseursignuppage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<Fournisseursignuppage> createState() => _FournisseursignuppageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  // 🎨 Palette
-  static const _blue = Color(0xFF2F80ED);
-  static const _text = Color(0xFF0B0B0B);
-  static const _hint = Color(0xFF9CA3AF);
-  static const _border = Color(0xFFE6E6E6);
+class _FournisseursignuppageState extends State<Fournisseursignuppage> {
+  final TextEditingController _nom = TextEditingController();
+  final TextEditingController _prenom = TextEditingController();
+  final TextEditingController _userName = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _telephone = TextEditingController();
+  final TextEditingController _motDePasse = TextEditingController();
+  final TextEditingController _confirmCtrl = TextEditingController();
 
-  // 🔹 Contrôleurs
-  final _nameCtrl = TextEditingController();
-  final _firstCtrl = TextEditingController();
-  final _phoneCtrl = TextEditingController();
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
-  final _confirmCtrl = TextEditingController(); // nouveau: confirmation
+  final Inscription _inscription = Inscription();
 
   bool _obscure = true;
-  bool _obscureConfirm = true; // œil pour le champ de confirmation
+  bool _obscureConfirm = true;
+  bool isLoading = false;
 
   InputDecoration _decoration(String hint) => InputDecoration(
     hintText: hint,
-    hintStyle: const TextStyle(color: _hint),
+    hintStyle: const TextStyle(color: Constant.colorsgray),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: _border, width: 1.2),
+      borderSide: const BorderSide(color: Constant.border, width: 1.2),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: _blue, width: 1.4),
+      borderSide: const BorderSide(color: Constant.blue, width: 1.4),
     ),
   );
 
@@ -45,13 +44,35 @@ class _SignUpPageState extends State<SignUpPage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
+  Future<void> inscriptionFournisseur(Fournisseur fournisseur) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final resultat = await _inscription.registerFournisseur(fournisseur);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(resultat ?? "Inscription réussie")),
+      );
+      Navigator.pop(context, MaterialPageRoute(builder: (_) => LoginPage()));
+    } catch (e) {
+      setState(() => isLoading = false);
+      print("On a une erreur : $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erreur serveur, veuillez réessayer.")),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
   @override
   void dispose() {
-    _nameCtrl.dispose();
-    _firstCtrl.dispose();
-    _phoneCtrl.dispose();
-    _emailCtrl.dispose();
-    _passCtrl.dispose();
+    _nom.dispose();
+    _prenom.dispose();
+    _userName.dispose();
+    _email.dispose();
+    _telephone.dispose();
+    _motDePasse.dispose();
     _confirmCtrl.dispose();
     super.dispose();
   }
@@ -59,9 +80,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Constant.colorsWhite,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
@@ -70,16 +90,14 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 24),
-
-                // 🔹 Titre
+                //Titre
                 const Center(
                   child: Text(
                     'Inscription',
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w800,
-                      color: _text,
+                      color: Constant.colorsBlack,
                       letterSpacing: 0.2,
                     ),
                   ),
@@ -87,43 +105,52 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 const SizedBox(height: 36),
 
-                // 🔸 Nom
+                //Nom
                 TextField(
-                  controller: _nameCtrl,
+                  controller: _nom,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration('Entrez votre nom'),
                 ),
                 const SizedBox(height: 16),
 
-                // 🔸 Prénom
+                //Prénom
                 TextField(
-                  controller: _firstCtrl,
+                  controller: _prenom,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration('Entrez votre prénom'),
                 ),
                 const SizedBox(height: 16),
 
-                // 🔸 Téléphone
+                // UserName
                 TextField(
-                  controller: _phoneCtrl,
+                  controller: _userName,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.phone,
+                  decoration: _decoration('Entrez votre username'),
+                ),
+                const SizedBox(height: 16),
+
+                // telephone
+                TextField(
+                  controller: _telephone,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.phone,
                   decoration: _decoration('Entrez votre numéro de téléphone'),
                 ),
                 const SizedBox(height: 16),
 
-                // 🔸 Email
+                //Email
                 TextField(
-                  controller: _emailCtrl,
+                  controller: _email,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.emailAddress,
                   decoration: _decoration('Entrez votre adresse email'),
                 ),
                 const SizedBox(height: 16),
 
-                // 🔸 Mot de passe
+                // Mot de passe
                 TextField(
-                  controller: _passCtrl,
+                  controller: _motDePasse,
                   textInputAction: TextInputAction.next,
                   obscureText: _obscure,
                   decoration: _decoration('Entrez votre mot de passe').copyWith(
@@ -140,7 +167,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // ✅ 🔸 Confirmer le mot de passe
+                //Confirmer le mot de passe
                 TextField(
                   controller: _confirmCtrl,
                   textInputAction: TextInputAction.done,
@@ -163,25 +190,27 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 const SizedBox(height: 28),
 
-                // 🔵 Bouton S’inscrire
+                //Bouton S’inscrire
                 SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      final name = _nameCtrl.text.trim();
-                      final first = _firstCtrl.text.trim();
-                      final phone = _phoneCtrl.text.trim();
-                      final email = _emailCtrl.text.trim();
-                      final pass = _passCtrl.text.trim();
+                      final name = _nom.text.trim();
+                      final first = _prenom.text.trim();
+                      final userName = _userName.text.trim();
+                      final email = _email.text.trim();
+                      final tel = _telephone.text.trim();
+                      final pass = _motDePasse.text.trim();
                       final confirm = _confirmCtrl.text.trim();
 
                       // Petites validations côté UI
                       if ([
                         name,
                         first,
-                        phone,
+                        userName,
                         email,
+                        tel,
                         pass,
                         confirm,
                       ].any((e) => e.isEmpty)) {
@@ -199,15 +228,27 @@ class _SignUpPageState extends State<SignUpPage> {
                         return;
                       }
 
-                      // TODO: logique d’inscription (appel API, etc.)
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                      final user = Fournisseur(
+                        nom: name,
+                        prenom: first,
+                        username: userName,
+                        email: email,
+                        telephone: tel,
+                        motDePasse: pass,
                       );
-                      _showSnack('Formulaire valide ');
+
+                      inscriptionFournisseur(user);
+
+                      _nom.clear();
+                      _prenom.clear();
+                      _userName.clear();
+                      _telephone.clear();
+                      _email.clear();
+                      _motDePasse.clear();
+                      _confirmCtrl.clear();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _blue,
+                      backgroundColor: Constant.blue,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -218,7 +259,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    child: const Text("S'inscrire"),
+                    child: isLoading
+                        ? CircularProgressIndicator(color: Constant.colorsWhite)
+                        : const Text("S'inscrire"),
                   ),
                 ),
 
@@ -227,7 +270,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 // 🔹 Séparateur "Ou"
                 Row(
                   children: const [
-                    Expanded(child: Divider(color: _border, thickness: 1)),
+                    Expanded(
+                      child: Divider(color: Constant.border, thickness: 1),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
@@ -235,7 +280,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: TextStyle(color: Colors.black54),
                       ),
                     ),
-                    Expanded(child: Divider(color: _border, thickness: 1)),
+                    Expanded(
+                      child: Divider(color: Constant.border, thickness: 1),
+                    ),
                   ],
                 ),
 

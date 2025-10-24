@@ -2,13 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_page.dart';
-import 'changer_mdp.dart'; // ✅ destination après "Vérifier" (ResetPasswordPage)
+import 'changer_mdp.dart';
 
 class VerificationPage extends StatefulWidget {
-  const VerificationPage({
-    super.key,
-    this.email = 'samabdoul03@gmail.com',
-  });
+  const VerificationPage({super.key, this.email = 'samabdoul03@gmail.com'});
 
   final String email;
 
@@ -18,9 +15,9 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   // 🎨 Palette
-  static const _blue   = Color(0xFF2F80ED);
-  static const _text   = Color(0xFF0B0B0B);
-  static const _sub    = Color(0xFF5C5F66);
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _sub = Color(0xFF5C5F66);
   static const _border = Color(0xFFE6E6E6);
 
   final _f1 = FocusNode();
@@ -35,8 +32,14 @@ class _VerificationPageState extends State<VerificationPage> {
 
   @override
   void dispose() {
-    _f1.dispose(); _f2.dispose(); _f3.dispose(); _f4.dispose();
-    _c1.dispose(); _c2.dispose(); _c3.dispose(); _c4.dispose();
+    _f1.dispose();
+    _f2.dispose();
+    _f3.dispose();
+    _f4.dispose();
+    _c1.dispose();
+    _c2.dispose();
+    _c3.dispose();
+    _c4.dispose();
     super.dispose();
   }
 
@@ -74,9 +77,9 @@ class _VerificationPageState extends State<VerificationPage> {
 
   void _resend() {
     // TODO: renvoi du code
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Code renvoyé 📩')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Code renvoyé 📩')));
   }
 
   InputDecoration _otpDecoration() => InputDecoration(
@@ -129,14 +132,19 @@ class _VerificationPageState extends State<VerificationPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.black87,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: size.height - (isShort ? 120 : 160)),
+          constraints: BoxConstraints(
+            minHeight: size.height - (isShort ? 120 : 160),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -145,7 +153,11 @@ class _VerificationPageState extends State<VerificationPage> {
               const Text(
                 'Verification',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: _text),
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  color: _text,
+                ),
               ),
               const SizedBox(height: 6),
               const Text(
@@ -184,8 +196,13 @@ class _VerificationPageState extends State<VerificationPage> {
                     backgroundColor: _blue,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   child: const Text('Verifier'),
                 ),
@@ -197,10 +214,19 @@ class _VerificationPageState extends State<VerificationPage> {
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text('Vous n’avez pas reçu le code ? ', style: TextStyle(color: Colors.black87)),
+                    const Text(
+                      'Vous n’avez pas reçu le code ? ',
+                      style: TextStyle(color: Colors.black87),
+                    ),
                     InkWell(
                       onTap: _resend,
-                      child: const Text('Renvoyer', style: TextStyle(color: _blue, fontWeight: FontWeight.w600)),
+                      child: const Text(
+                        'Renvoyer',
+                        style: TextStyle(
+                          color: _blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -212,7 +238,10 @@ class _VerificationPageState extends State<VerificationPage> {
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text('Retour a la page de ', style: TextStyle(color: Colors.black87)),
+                    const Text(
+                      'Retour a la page de ',
+                      style: TextStyle(color: Colors.black87),
+                    ),
                     InkWell(
                       onTap: () {
                         Navigator.pushReplacement(
@@ -220,8 +249,13 @@ class _VerificationPageState extends State<VerificationPage> {
                           MaterialPageRoute(builder: (_) => const LoginPage()),
                         );
                       },
-                      child: const Text('connexion',
-                          style: TextStyle(color: _blue, fontWeight: FontWeight.w600)),
+                      child: const Text(
+                        'connexion',
+                        style: TextStyle(
+                          color: _blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                     const Text(' ?', style: TextStyle(color: Colors.black87)),
                   ],

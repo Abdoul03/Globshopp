@@ -1,6 +1,6 @@
 // lib/screens/onboarding_carousel.dart
 import 'package:flutter/material.dart';
-import 'package:globshopp/screens/login_page.dart';
+import 'package:globshopp/screens/auth/login_page.dart';
 
 //destination finale après l’onboarding
 //import 'role_selection_page.dart';

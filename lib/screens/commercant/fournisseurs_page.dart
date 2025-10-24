@@ -1,7 +1,7 @@
 // lib/screens/fournisseurs_page.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
-import '../supplier_detail_page.dart';
+import 'supplier_detail_page.dart';
 
 class FournisseursPage extends StatefulWidget {
   const FournisseursPage({super.key});

@@ -12,9 +12,9 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   // 🎨 Palette
-  static const _blue   = Color(0xFF2F80ED);
-  static const _text   = Color(0xFF0B0B0B);
-  static const _hint   = Color(0xFF9CA3AF);
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
 
   final _emailCtrl = TextEditingController();
@@ -49,9 +49,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     // 👉 navigation vers la page de vérification + passage de l'email
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => VerificationPage(email: email),
-      ),
+      MaterialPageRoute(builder: (_) => VerificationPage(email: email)),
     );
   }
 
@@ -71,7 +69,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.black87,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -84,7 +85,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center, // centrage vertical
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // centrage vertical
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
@@ -117,7 +119,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const SizedBox(height: 28),
 
                   // 📨 Email
-                  const Text('Email', style: TextStyle(fontSize: 14, color: _text)),
+                  const Text(
+                    'Email',
+                    style: TextStyle(fontSize: 14, color: _text),
+                  ),
                   const SizedBox(height: 8),
 
                   TextField(
@@ -158,20 +163,31 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        const Text('Retour à la page de ', style: TextStyle(color: Colors.black87)),
+                        const Text(
+                          'Retour à la page de ',
+                          style: TextStyle(color: Colors.black87),
+                        ),
                         InkWell(
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (_) => const LoginPage()),
+                              MaterialPageRoute(
+                                builder: (_) => const LoginPage(),
+                              ),
                             );
                           },
                           child: const Text(
                             'connexion',
-                            style: TextStyle(color: _blue, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              color: _blue,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                        const Text(' ?', style: TextStyle(color: Colors.black87)),
+                        const Text(
+                          ' ?',
+                          style: TextStyle(color: Colors.black87),
+                        ),
                       ],
                     ),
                   ),

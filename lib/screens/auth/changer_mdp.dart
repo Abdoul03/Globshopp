@@ -11,9 +11,9 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   // 🎨 Palette
-  static const _blue   = Color(0xFF2F80ED);
-  static const _text   = Color(0xFF0B0B0B);
-  static const _hint   = Color(0xFF9CA3AF);
+  static const _blue = Color(0xFF2F80ED);
+  static const _text = Color(0xFF0B0B0B);
+  static const _hint = Color(0xFF9CA3AF);
   static const _border = Color(0xFFE6E6E6);
 
   final _newCtrl = TextEditingController();
@@ -48,26 +48,30 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
     if (newPass.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Le mot de passe doit contenir au moins 6 caractères.')),
+        const SnackBar(
+          content: Text('Le mot de passe doit contenir au moins 6 caractères.'),
+        ),
       );
       return;
     }
     if (newPass != confirm) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Les mots de passe ne correspondent pas.')),
+        const SnackBar(
+          content: Text('Les mots de passe ne correspondent pas.'),
+        ),
       );
       return;
     }
 
     // TODO: appel API pour enregistrer le nouveau mot de passe
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Mot de passe modifié ✅')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Mot de passe modifié ✅')));
 
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const LoginPage()),
-          (_) => false,
+      (_) => false,
     );
   }
 
@@ -92,14 +96,19 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.black87,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: size.height - (isShort ? 120 : 160)),
+          constraints: BoxConstraints(
+            minHeight: size.height - (isShort ? 120 : 160),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -120,26 +129,36 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
               const SizedBox(height: 36),
 
-              const Text('Nouveau mot de passe', style: TextStyle(fontSize: 14, color: _text)),
+              const Text(
+                'Nouveau mot de passe',
+                style: TextStyle(fontSize: 14, color: _text),
+              ),
               const SizedBox(height: 8),
               TextField(
                 controller: _newCtrl,
                 obscureText: _obscureNew,
                 textInputAction: TextInputAction.next,
-                decoration: _decoration('Creer un nouveau mot de passe').copyWith(
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureNew ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: Colors.black54,
+                decoration: _decoration('Creer un nouveau mot de passe')
+                    .copyWith(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureNew
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: Colors.black54,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscureNew = !_obscureNew),
+                      ),
                     ),
-                    onPressed: () => setState(() => _obscureNew = !_obscureNew),
-                  ),
-                ),
               ),
 
               const SizedBox(height: 24),
 
-              const Text('Confirmer le mot de passe', style: TextStyle(fontSize: 14, color: _text)),
+              const Text(
+                'Confirmer le mot de passe',
+                style: TextStyle(fontSize: 14, color: _text),
+              ),
               const SizedBox(height: 8),
               TextField(
                 controller: _confirmCtrl,
@@ -148,10 +167,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 decoration: _decoration('Re-entrer le mot de passe').copyWith(
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      _obscureConfirm
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                       color: Colors.black54,
                     ),
-                    onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                    onPressed: () =>
+                        setState(() => _obscureConfirm = !_obscureConfirm),
                   ),
                 ),
                 onSubmitted: (_) => _confirm(),
@@ -167,8 +189,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     backgroundColor: _blue,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   child: const Text('Confirmer'),
                 ),
@@ -180,7 +207,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text('Retour a la page de ', style: TextStyle(color: Colors.black87)),
+                    const Text(
+                      'Retour a la page de ',
+                      style: TextStyle(color: Colors.black87),
+                    ),
                     InkWell(
                       onTap: () {
                         Navigator.pushReplacement(
@@ -190,7 +220,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       },
                       child: const Text(
                         'connexion',
-                        style: TextStyle(color: _blue, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          color: _blue,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const Text(' ?', style: TextStyle(color: Colors.black87)),
