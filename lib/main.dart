@@ -1,7 +1,7 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/screens/onboarding_carousel.dart';
-import 'package:globshopp/screens/login_page.dart';
+import 'package:globshopp/screens/auth/login_page.dart';
 import 'package:globshopp/screens/commercant/accueil.dart';
 import 'package:globshopp/screens/commercant/fournisseurs_page.dart';
 import 'package:globshopp/screens/commercant/commandes_page.dart';

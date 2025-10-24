@@ -4,6 +4,7 @@ import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/categoryChip.dart';
 import 'package:globshopp/screens/commercant/custom/productCard.dart';
+import 'package:globshopp/screens/commercant/custom/product_detail_page.dart';
 import 'package:globshopp/services/produitService.dart';
 import '../notifications_page.dart';
 
@@ -25,7 +26,9 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final Produitservice _produitservice = Produitservice();
+  final TextEditingController _searchContoller = TextEditingController();
   List<Produit> _produits = [];
+  List<Produit> _searchResults = [];
   bool _loading = true;
 
   @override
@@ -39,6 +42,7 @@ class _HomePageState extends State<HomePage> {
       final produit = await _produitservice.getAllProduits();
       setState(() {
         _produits = produit;
+        _searchResults = produit;
         _loading = false;
       });
     } catch (e) {
@@ -47,11 +51,37 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _onSearchTextChanged(String text) {
+    setState(() {
+      if (text.isEmpty) {
+        setState(() {
+          _searchResults = _produits;
+        });
+        return;
+      }
+
+      setState(() {
+        _searchResults = _produits.where((produit) {
+          final titreMatch = produit.nom.toLowerCase().contains(
+            text.toLowerCase(),
+          );
+          final descMatch = produit.description.toLowerCase().contains(
+            text.toLowerCase(),
+          );
+          return titreMatch || descMatch;
+        }).toList();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
     if (_loading) {
-      return Center(child: CircularProgressIndicator(color: Constant.blue));
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator(color: Constant.blue)),
+      );
     }
 
     return Scaffold(
@@ -108,6 +138,7 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                 child: TextField(
+                  controller: _searchContoller,
                   decoration: InputDecoration(
                     hintText: 'Rechercher',
                     prefixIcon: const Icon(Icons.search_rounded),
@@ -130,6 +161,7 @@ class _HomePageState extends State<HomePage> {
                       borderSide: BorderSide(color: Constant.blue),
                     ),
                   ),
+                  onChanged: _onSearchTextChanged,
                 ),
               ),
             ),
@@ -142,7 +174,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 'Catégories',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.w800,
                   color: Constant.colorsBlack,
                 ),
@@ -183,7 +215,71 @@ class _HomePageState extends State<HomePage> {
                 crossAxisSpacing: 12,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => Productcard(produit: _produits[index]),
+                (context, index) => _searchContoller.text.isEmpty
+                    ? Productcard(produit: _produits[index])
+                    : _searchResults.isEmpty
+                    ? Center(child: Text("Aucun projet trouvé"))
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _searchResults.length,
+                        itemBuilder: (context, index) {
+                          final produit = _searchResults[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigation vers la page de détails
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDetailPage(produit: produit),
+                                ),
+                              );
+                            },
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 1.0,
+                              child: Card(
+                                elevation: 4,
+                                color: Color.fromARGB(237, 28, 31, 51),
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        produit.nom,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        produit.description,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                 childCount: _produits.length,
               ),
             ),

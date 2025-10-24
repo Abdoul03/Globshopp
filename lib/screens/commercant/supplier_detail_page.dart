@@ -1,7 +1,7 @@
 // lib/screens/supplier_detail_page.dart
 import 'package:flutter/material.dart';
 // On réutilise le modèle Supplier défini dans fournisseurs_page.dart
-import 'commercant/fournisseurs_page.dart' show Supplier;
+import 'fournisseurs_page.dart' show Supplier;
 
 class SupplierDetailPage extends StatelessWidget {
   final Supplier supplier;

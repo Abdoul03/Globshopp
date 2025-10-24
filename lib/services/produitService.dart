@@ -15,7 +15,6 @@ class Produitservice {
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        print(jsonDecode(response.body));
         return data.map((json) => Produit.fromJson(json)).toList();
       } else {
         throw Exception('Échec du chargement des produits');
