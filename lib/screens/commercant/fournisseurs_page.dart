@@ -1,7 +1,7 @@
 // lib/screens/fournisseurs_page.dart
 import 'package:flutter/material.dart';
-import 'supplier_detail_page.dart'; // ✅ pour la navigation vers le détail
-import 'package:globshopp/widgets/animated_bottom_nav.dart';
+import 'package:globshopp/_base/constant.dart';
+import '../supplier_detail_page.dart';
 
 class FournisseursPage extends StatefulWidget {
   const FournisseursPage({super.key});
@@ -11,12 +11,7 @@ class FournisseursPage extends StatefulWidget {
 }
 
 class _FournisseursPageState extends State<FournisseursPage> {
-  // Couleurs
-  static const _blue = Color(0xFF2F80ED);
-  // couleurs locales supprimées (utiliser `Constant` si besoin)
-
   final _searchCtrl = TextEditingController();
-  int _currentIndex = 1; // Fournisseurs actif
 
   // ----- Données démo -----
   final List<Supplier> _items = const [
@@ -95,7 +90,7 @@ class _FournisseursPageState extends State<FournisseursPage> {
           // Bandeau bleu fixe avec champ de recherche
           SliverAppBar(
             pinned: true,
-            backgroundColor: _blue,
+            backgroundColor: Constant.blue,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
             scrolledUnderElevation: 0,
@@ -104,7 +99,7 @@ class _FournisseursPageState extends State<FournisseursPage> {
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(88),
               child: Container(
-                color: _blue,
+                color: Constant.blue,
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 52),
@@ -124,7 +119,6 @@ class _FournisseursPageState extends State<FournisseursPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SupplierCard(
                 supplier: _items[i],
-                // ✅ Navigation au tap vers SupplierDetailPage
                 onTap: () {
                   Navigator.push(
                     context,
@@ -139,30 +133,6 @@ class _FournisseursPageState extends State<FournisseursPage> {
 
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
-      ),
-
-      bottomNavigationBar: AnimatedBottomNavBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) {
-          if (i == _currentIndex) return;
-          switch (i) {
-            case 0:
-              Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
-              break;
-            case 1:
-              break;
-            case 2:
-              Navigator.pushNamed(context, '/commandes');
-              break;
-            case 3:
-              Navigator.pushNamed(context, '/annuaire');
-              break;
-            case 4:
-              Navigator.pushNamed(context, '/profil');
-              break;
-          }
-          setState(() => _currentIndex = i);
-        },
       ),
     );
   }
@@ -219,8 +189,10 @@ class _SearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -240,19 +212,19 @@ class SupplierCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageWidget = supplier.isAsset
         ? Image.asset(
-      supplier.image,
-      width: 64,
-      height: 64,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => _fallbackImage(),
-    )
+            supplier.image,
+            width: 64,
+            height: 64,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _fallbackImage(),
+          )
         : Image.network(
-      supplier.image,
-      width: 64,
-      height: 64,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => _fallbackImage(),
-    );
+            supplier.image,
+            width: 64,
+            height: 64,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _fallbackImage(),
+          );
 
     return Material(
       color: Colors.white,
@@ -325,10 +297,7 @@ class SupplierCard extends StatelessWidget {
                         ),
                         Text(
                           supplier.cityCountry,
-                          style: const TextStyle(
-                            color: _sub,
-                            fontSize: 13.5,
-                          ),
+                          style: const TextStyle(color: _sub, fontSize: 13.5),
                         ),
                       ],
                     ),
@@ -351,4 +320,3 @@ class SupplierCard extends StatelessWidget {
 }
 
 /// Icône image (mêmes assets que tes autres écrans)
-

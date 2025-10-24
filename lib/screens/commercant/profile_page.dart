@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/services/authentification.dart';
-import 'package:globshopp/widgets/animated_bottom_nav.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -165,17 +164,6 @@ class _ProfileState extends State<Profile> {
             ),
           ),
         ],
-      ),
-
-      bottomNavigationBar: AnimatedBottomNavBar(
-        selectedIndex: 4,
-        height: 76,
-        onDestinationSelected: (i) {
-          if (i == 0) Navigator.pushReplacementNamed(context, '/accueil');
-          if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
-          if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
-          if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
-        },
       ),
     );
   }

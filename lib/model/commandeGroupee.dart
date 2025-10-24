@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:globshopp/model/commercant.dart';
 import 'package:globshopp/model/enum/orderStatus.dart';
 import 'package:globshopp/model/participation.dart';

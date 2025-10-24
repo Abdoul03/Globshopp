@@ -1,6 +1,5 @@
 // lib/screens/annuaire_page.dart
 import 'package:flutter/material.dart';
-import 'package:globshopp/widgets/animated_bottom_nav.dart';
 
 class AnnuairePage extends StatefulWidget {
   const AnnuairePage({super.key});
@@ -14,8 +13,7 @@ class _AnnuairePageState extends State<AnnuairePage> {
   // couleurs locales supprimées (utiliser `Constant` si besoin)
 
   final _searchCtrl = TextEditingController();
-  int _currentIndex = 3; // Annuaire actif
-  String _q = '';        // terme de recherche
+  String _q = ''; // terme de recherche
 
   final _companies = <Company>[
     Company(
@@ -26,7 +24,8 @@ class _AnnuairePageState extends State<AnnuairePage> {
     ),
     Company(
       name: 'Swift Cargo Solutions',
-      description: 'Votre partenaire fiable pour un transport de marchandises sans faille.',
+      description:
+          'Votre partenaire fiable pour un transport de marchandises sans faille.',
       phone: '+223 85 47 47 57',
       logo: 'assets/image/e2.png',
     ),
@@ -90,29 +89,6 @@ class _AnnuairePageState extends State<AnnuairePage> {
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
-
-      bottomNavigationBar: AnimatedBottomNavBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) {
-          if (i == 0) {
-            Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
-            return;
-          }
-          if (i == 1) {
-            Navigator.pushNamed(context, '/fournisseurs');
-            return;
-          }
-          if (i == 2) {
-            Navigator.pushNamed(context, '/commandes');
-            return;
-          }
-          if (i == 4) {
-            Navigator.pushNamed(context, '/profil');
-            return;
-          }
-          setState(() => _currentIndex = i);
-        },
-      ),
     );
   }
 }
@@ -143,7 +119,7 @@ class _SearchField extends StatelessWidget {
               height: 20,
               color: Colors.grey[700],
               errorBuilder: (_, __, ___) =>
-              const Icon(Icons.search_rounded, size: 20),
+                  const Icon(Icons.search_rounded, size: 20),
             ),
           ),
           border: OutlineInputBorder(
@@ -160,8 +136,10 @@ class _SearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -203,7 +181,7 @@ class CompanyCard extends StatelessWidget {
             color: Color(0x11000000),
             blurRadius: 6,
             offset: Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Row(
@@ -215,10 +193,8 @@ class CompanyCard extends StatelessWidget {
               width: 56,
               height: 56,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(
-                Icons.image_not_supported_outlined,
-                size: 40,
-              ),
+              errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.image_not_supported_outlined, size: 40),
             ),
           ),
           const SizedBox(width: 12),
@@ -242,10 +218,7 @@ class CompanyCard extends StatelessWidget {
                   company.description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: _sub,
-                  ),
+                  style: const TextStyle(fontSize: 13, color: _sub),
                 ),
                 const SizedBox(height: 6),
                 Row(
@@ -256,7 +229,7 @@ class CompanyCard extends StatelessWidget {
                       height: 16,
                       color: Colors.grey[700],
                       errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.phone, size: 16),
+                          const Icon(Icons.phone, size: 16),
                     ),
                     const SizedBox(width: 6),
                     Expanded(
@@ -281,5 +254,3 @@ class CompanyCard extends StatelessWidget {
     );
   }
 }
-
-

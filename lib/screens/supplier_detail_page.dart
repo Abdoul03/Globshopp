@@ -1,7 +1,7 @@
 // lib/screens/supplier_detail_page.dart
 import 'package:flutter/material.dart';
 // On réutilise le modèle Supplier défini dans fournisseurs_page.dart
-import 'fournisseurs_page.dart' show Supplier;
+import 'commercant/fournisseurs_page.dart' show Supplier;
 
 class SupplierDetailPage extends StatelessWidget {
   final Supplier supplier;
@@ -16,11 +16,16 @@ class SupplierDetailPage extends StatelessWidget {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.black87,
+          ),
           onPressed: () => Navigator.maybePop(context),
         ),
-        title: const Text('Détail fournisseur',
-            style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w700)),
+        title: const Text(
+          'Détail fournisseur',
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w700),
+        ),
         centerTitle: false,
       ),
       body: ListView(
@@ -55,15 +60,21 @@ class SupplierDetailPage extends StatelessWidget {
           Row(
             children: [
               Icon(
-                supplier.verified ? Icons.verified_rounded : Icons.verified_outlined,
-                color: supplier.verified ? const Color(0xFF2F80ED) : Colors.grey,
+                supplier.verified
+                    ? Icons.verified_rounded
+                    : Icons.verified_outlined,
+                color: supplier.verified
+                    ? const Color(0xFF2F80ED)
+                    : Colors.grey,
                 size: 18,
               ),
               const SizedBox(width: 6),
               Text(
                 supplier.verified ? 'Vérifié' : 'Non vérifié',
                 style: TextStyle(
-                  color: supplier.verified ? const Color(0xFF2F80ED) : Colors.grey,
+                  color: supplier.verified
+                      ? const Color(0xFF2F80ED)
+                      : Colors.grey,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -71,7 +82,10 @@ class SupplierDetailPage extends StatelessWidget {
           ),
 
           const SizedBox(height: 24),
-          const Text('Produits', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const Text(
+            'Produits',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 12),
 
           // Placeholder de produits du fournisseur (à remplacer par tes données)
@@ -92,18 +106,26 @@ class SupplierDetailPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
                         child: _imageWidget(supplier),
                       ),
                     ),
                     const SizedBox(height: 8),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 8,
+                      ),
                       child: const Text(
                         'Produit du fournisseur',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -118,10 +140,20 @@ class SupplierDetailPage extends StatelessWidget {
 
   Widget _imageWidget(Supplier s) {
     return s.isAsset
-        ? Image.asset(s.image, height: 180, width: double.infinity, fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _fallback())
-        : Image.network(s.image, height: 180, width: double.infinity, fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _fallback());
+        ? Image.asset(
+            s.image,
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _fallback(),
+          )
+        : Image.network(
+            s.image,
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _fallback(),
+          );
   }
 
   Widget _fallback() => Container(

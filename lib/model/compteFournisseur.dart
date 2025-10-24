@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:globshopp/model/enum/methodeDePayement.dart';
 import 'package:globshopp/model/fournisseur.dart';
 import 'package:globshopp/model/transaction.dart';

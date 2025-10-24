@@ -1,6 +1,5 @@
 // lib/screens/commandes_page.dart
 import 'package:flutter/material.dart';
-import 'package:globshopp/widgets/animated_bottom_nav.dart';
 
 class CommandesPage extends StatefulWidget {
   const CommandesPage({super.key});
@@ -10,12 +9,6 @@ class CommandesPage extends StatefulWidget {
 }
 
 class _CommandesPageState extends State<CommandesPage> {
-  // Palette & styles
-  // couleurs locales supprimées (utiliser `Constant` si besoin)
-
-  // Onglet actif
-  int _currentIndex = 2;
-
   final _searchCtrl = TextEditingController();
   String _q = '';
 
@@ -27,7 +20,7 @@ class _CommandesPageState extends State<CommandesPage> {
       status: OrderStatus.inProgress,
       qty: 144,
       imageUrl:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
     Order(
       title: 'T-shirts coton “Everyday fit”',
@@ -35,7 +28,7 @@ class _CommandesPageState extends State<CommandesPage> {
       status: OrderStatus.done,
       qty: 144,
       imageUrl:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
     Order(
       title: 'T-shirts coton “Everyday fit”',
@@ -43,7 +36,7 @@ class _CommandesPageState extends State<CommandesPage> {
       status: OrderStatus.done,
       qty: 144,
       imageUrl:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
     Order(
       title: 'T-shirts coton “Everyday fit”',
@@ -51,7 +44,7 @@ class _CommandesPageState extends State<CommandesPage> {
       status: OrderStatus.done,
       qty: 144,
       imageUrl:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
     Order(
       title: 'T-shirts coton “Everyday fit”',
@@ -59,7 +52,7 @@ class _CommandesPageState extends State<CommandesPage> {
       status: OrderStatus.done,
       qty: 144,
       imageUrl:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
     Order(
       title: 'T-shirts coton “Everyday fit”',
@@ -67,7 +60,7 @@ class _CommandesPageState extends State<CommandesPage> {
       status: OrderStatus.done,
       qty: 144,
       imageUrl:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
+          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
     ),
   ];
 
@@ -79,7 +72,7 @@ class _CommandesPageState extends State<CommandesPage> {
 
   @override
   Widget build(BuildContext context) {
-  // final top = MediaQuery.of(context).padding.top; // inutilisé
+    // final top = MediaQuery.of(context).padding.top; // inutilisé
 
     final filtered = _orders.where((o) {
       if (_q.isEmpty) return true;
@@ -109,7 +102,6 @@ class _CommandesPageState extends State<CommandesPage> {
             ),
           ),
 
-
           // --------- Liste des commandes (filtrée) ---------
           SliverList.separated(
             itemCount: filtered.length,
@@ -121,30 +113,6 @@ class _CommandesPageState extends State<CommandesPage> {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
-      ),
-
-      bottomNavigationBar: AnimatedBottomNavBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) {
-          if (i == _currentIndex) return;
-          switch (i) {
-            case 0:
-              Navigator.pushNamedAndRemoveUntil(context, '/accueil', (r) => false);
-              break;
-            case 1:
-              Navigator.pushNamed(context, '/fournisseurs');
-              break;
-            case 2:
-              break;
-            case 3:
-              Navigator.pushNamed(context, '/annuaire');
-              break;
-            case 4:
-              Navigator.pushNamed(context, '/profil');
-              break;
-          }
-          setState(() => _currentIndex = i);
-        },
       ),
     );
   }
@@ -203,8 +171,10 @@ class _SearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -233,7 +203,7 @@ class OrderCard extends StatelessWidget {
             blurRadius: 2,
             offset: Offset(0, 1),
             color: Color(0x0F000000),
-          )
+          ),
         ],
       ),
       padding: const EdgeInsets.all(12),
@@ -327,11 +297,7 @@ class _StatusPill extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         label,
-        style: TextStyle(
-          color: fg,
-          fontWeight: FontWeight.w700,
-          fontSize: 12,
-        ),
+        style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 12),
       ),
     );
   }
@@ -361,5 +327,3 @@ class _QtyBadge extends StatelessWidget {
     );
   }
 }
-
-

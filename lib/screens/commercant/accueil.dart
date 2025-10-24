@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/categoryChip.dart';
-import 'package:globshopp/screens/productCard.dart';
+import 'package:globshopp/screens/commercant/custom/productCard.dart';
 import 'package:globshopp/services/produitService.dart';
-import 'package:globshopp/widgets/animated_bottom_nav.dart';
-import 'notifications_page.dart';
-// import 'package:globshopp/_base/constant.dart'; // inutilisé ici
+import '../notifications_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -191,18 +189,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
-
-      // --- Barre de navigation du bas (réutilisable) ---
-      bottomNavigationBar: AnimatedBottomNavBar(
-        selectedIndex: 0,
-        onDestinationSelected: (i) {
-          if (i == 0) return;
-          if (i == 1) Navigator.pushReplacementNamed(context, '/fournisseurs');
-          if (i == 2) Navigator.pushReplacementNamed(context, '/commandes');
-          if (i == 3) Navigator.pushReplacementNamed(context, '/annuaire');
-          if (i == 4) Navigator.pushReplacementNamed(context, '/profil');
-        },
       ),
     );
   }

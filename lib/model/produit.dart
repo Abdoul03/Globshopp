@@ -95,4 +95,6 @@ class Produit {
         .map((m) => "${Constant.remoteUrl}/images/${m.filePath}")
         .toList();
   }
+
+  String? get firstImageUrl => mediaUrls.isNotEmpty ? mediaUrls.first : null;
 }

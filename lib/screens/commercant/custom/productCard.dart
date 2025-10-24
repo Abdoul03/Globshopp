@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
-import 'package:globshopp/screens/product_detail_page.dart';
-import 'package:globshopp/services/produitService.dart';
+import 'package:globshopp/screens/commercant/custom/product_detail_page.dart';
 
 class Productcard extends StatefulWidget {
   final Produit produit;
@@ -15,8 +14,7 @@ class Productcard extends StatefulWidget {
 class _ProductcardState extends State<Productcard> {
   @override
   Widget build(BuildContext context) {
-    final urls = widget.produit.mediaUrls;
-    final imageUrl = urls.isNotEmpty ? urls.first : null;
+    final imageUrl = widget.produit.firstImageUrl;
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(14),

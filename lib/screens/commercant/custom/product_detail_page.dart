@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
-// ✅ ajoute l'import vers ta page de commande groupée
-import 'group_order_page.dart';
+import '../../group_order_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Produit produit;
@@ -33,35 +32,52 @@ class ProductDetailPage extends StatelessWidget {
               const SizedBox(height: 6),
 
               // ─────────── Image produit ───────────
-              AspectRatio(
-                aspectRatio: 3 / 3.5,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    color: const Color(0xFFF7F7F9),
-                    child: urls.isNotEmpty
-                        ? PageView.builder(
-                            itemCount: urls.length,
-                            itemBuilder: (_, index) {
-                              final imageUrl = urls[index];
-                              return Hero(
-                                tag: imageUrl,
-                                child: Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (_, __, ___) => const Center(
-                                    child: Icon(Icons.image_outlined, size: 48),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : const Center(
-                            child: Icon(Icons.image_outlined, size: 48),
-                          ),
+              if (produit.mediaUrls.isNotEmpty)
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: produit.mediaUrls.length,
+                    itemBuilder: (context, index) {
+                      final url = produit.mediaUrls[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Image.network(url, fit: BoxFit.cover),
+                      );
+                    },
                   ),
-                ),
-              ),
+                )
+              else
+                const Center(child: Icon(Icons.image_outlined, size: 36)),
+              // AspectRatio(
+              //   aspectRatio: 3 / 3.5,
+              //   child: ClipRRect(
+              //     borderRadius: BorderRadius.circular(8),
+              //     child: Container(
+              //       color: const Color(0xFFF7F7F9),
+              //       child: urls.isNotEmpty
+              //           ? PageView.builder(
+              //               itemCount: urls.length,
+              //               itemBuilder: (_, index) {
+              //                 final imageUrl = urls[index];
+              //                 return Hero(
+              //                   tag: imageUrl,
+              //                   child: Image.network(
+              //                     imageUrl,
+              //                     fit: BoxFit.contain,
+              //                     errorBuilder: (_, __, ___) => const Center(
+              //                       child: Icon(Icons.image_outlined, size: 48),
+              //                     ),
+              //                   ),
+              //                 );
+              //               },
+              //             )
+              //           : const Center(
+              //               child: Icon(Icons.image_outlined, size: 48),
+              //             ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 12),
 
               // ─────────── Bloc prix + MOQ ───────────

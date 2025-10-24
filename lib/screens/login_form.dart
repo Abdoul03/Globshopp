@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/tokenPair.dart';
+import 'package:globshopp/screens/commercant/commercantNavigation.dart';
 import 'package:globshopp/screens/fournisseur/navigationBar.dart';
 import 'package:globshopp/screens/role_selection_page.dart';
 import 'package:globshopp/services/authentification.dart';
-import 'accueil.dart';
+import 'commercant/accueil.dart';
 import 'mdpoublier1.dart';
 import '../widgets/login/email_field.dart';
 import '../widgets/login/password_field.dart';
@@ -77,7 +78,7 @@ class _LoginFormState extends State<LoginForm> {
         ).showSnackBar(SnackBar(content: Text("Bienvenue")));
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => HomePage()),
+          MaterialPageRoute(builder: (_) => Commercantnavigation()),
         );
       } else if (role == 'ROLE_FOURNISSEUR') {
         ScaffoldMessenger.of(
