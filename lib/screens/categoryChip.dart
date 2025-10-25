@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 
 class CategoryChip extends StatelessWidget {
-  final String label;
+  final String nom;
   final IconData icon;
   final bool selected;
   final VoidCallback onTap;
 
   const CategoryChip({
     super.key,
-    required this.label,
+    required this.nom,
     required this.icon,
     required this.selected,
     required this.onTap,
@@ -40,12 +40,12 @@ class CategoryChip extends StatelessWidget {
           SizedBox(
             width: 72,
             child: Text(
-              label,
+              nom,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: FontWeight.w600,
                 color: Constant.colorsBlack,
                 height: 1.1,

@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:globshopp/model/produit.dart';
 
 class Categorie {
   final int? id;
   String nom;
+  final IconData? icone;
   List<Produit> produit;
 
-  Categorie({this.id, required this.nom, List<Produit>? produit})
+  Categorie({this.id, required this.nom, this.icone, List<Produit>? produit})
     : produit = produit ?? [];
 
   // --- fromJson ---

@@ -8,6 +8,7 @@ import 'package:globshopp/screens/commercant/custom/productCard.dart';
 import 'package:globshopp/screens/commercant/custom/product_detail_page.dart';
 import 'package:globshopp/services/categorieService.dart';
 import 'package:globshopp/services/produitService.dart';
+import 'package:remixicon/remixicon.dart';
 import '../notifications_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,6 +36,8 @@ class _HomePageState extends State<HomePage> {
   List<Produit> _produits = [];
   List<Produit> _searchResults = [];
   List<Categorie> categories = [];
+
+  // List<Map<String, Object?>> categories = [];
   bool _loading = true;
 
   @override
@@ -47,12 +50,36 @@ class _HomePageState extends State<HomePage> {
     try {
       final categorie = await _categorieService.getAllCategoeri();
       setState(() {
-        categories = categorie;
+        categories = [
+          Categorie(id: 0, nom: "Tout"),
+          ...categorie.map(
+            (cat) => Categorie(
+              id: cat.id,
+              nom: cat.nom,
+              icone: _getIconForCategory(cat.nom),
+            ),
+          ),
+        ];
         _loading = false;
       });
     } catch (e) {
       setState(() => _loading = false);
       throw Exception('Erreur lors de la récupération des categories : $e');
+    }
+  }
+
+  IconData _getIconForCategory(String nomCategorie) {
+    switch (nomCategorie.toLowerCase()) {
+      case "Accessoir":
+        return RemixIcons.headphone_line;
+      case "électronique":
+        return RemixIcons.device_recover_line;
+      case "habits":
+        return RemixIcons.t_shirt_line;
+      case "Electro":
+        return Icons.kitchen_outlined;
+      default:
+        return Icons.grid_view_rounded; // icône par défaut
     }
   }
 
@@ -209,16 +236,16 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
-                  final (label, icon) = _categories[i];
+                  final categorie = categories[i];
                   return CategoryChip(
-                    label: label,
-                    icon: icon,
+                    nom: categorie.nom,
+                    icon: categorie.icone!,
                     selected: i == _selectedCategory,
                     onTap: () => setState(() => _selectedCategory = i),
                   );
                 },
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemCount: _categories.length,
+                itemCount: categories.length,
               ),
             ),
           ),
