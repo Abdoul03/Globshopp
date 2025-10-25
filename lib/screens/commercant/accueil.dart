@@ -1,10 +1,12 @@
 // lib/screens/accueil.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/categorie.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/categoryChip.dart';
 import 'package:globshopp/screens/commercant/custom/productCard.dart';
 import 'package:globshopp/screens/commercant/custom/product_detail_page.dart';
+import 'package:globshopp/services/categorieService.dart';
 import 'package:globshopp/services/produitService.dart';
 import '../notifications_page.dart';
 
@@ -26,15 +28,32 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final Produitservice _produitservice = Produitservice();
+  final CategorieService _categorieService = CategorieService();
+
   final TextEditingController _searchContoller = TextEditingController();
+
   List<Produit> _produits = [];
   List<Produit> _searchResults = [];
+  List<Categorie> categories = [];
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
     chargerProduits();
+  }
+
+  Future<void> chargerCategorie() async {
+    try {
+      final categorie = await _categorieService.getAllCategoeri();
+      setState(() {
+        categories = categorie;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() => _loading = false);
+      throw Exception('Erreur lors de la récupération des categories : $e');
+    }
   }
 
   Future<void> chargerProduits() async {
@@ -46,8 +65,8 @@ class _HomePageState extends State<HomePage> {
         _loading = false;
       });
     } catch (e) {
-      print("Erreur de chargement : $e");
       setState(() => _loading = false);
+      throw Exception('Erreur lors de la récupération des categories : $e');
     }
   }
 
@@ -77,6 +96,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
+
     if (_loading) {
       return Scaffold(
         backgroundColor: Colors.white,
@@ -86,7 +106,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: CustomScrollView(
         slivers: [
           // Barre d’en-tête avec recherche
@@ -215,72 +234,37 @@ class _HomePageState extends State<HomePage> {
                 crossAxisSpacing: 12,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => _searchContoller.text.isEmpty
-                    ? Productcard(produit: _produits[index])
+                (context, index) {
+                  // Liste source : produits normaux ou résultats de recherche
+                  final List produitsAffiches = _searchContoller.text.isEmpty
+                      ? _produits
+                      : _searchResults;
+
+                  // Si recherche active et aucun résultat
+                  if (_searchContoller.text.isNotEmpty &&
+                      produitsAffiches.isEmpty) {
+                    return const Center(child: Text("Aucun produit trouvé"));
+                  }
+
+                  final produit = produitsAffiches[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProductDetailPage(produit: produit),
+                        ),
+                      );
+                    },
+                    child: Productcard(produit: produit),
+                  );
+                },
+                childCount: _searchContoller.text.isEmpty
+                    ? _produits.length
                     : _searchResults.isEmpty
-                    ? Center(child: Text("Aucun projet trouvé"))
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _searchResults.length,
-                        itemBuilder: (context, index) {
-                          final produit = _searchResults[index];
-                          return GestureDetector(
-                            onTap: () {
-                              // Navigation vers la page de détails
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProductDetailPage(produit: produit),
-                                ),
-                              );
-                            },
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 1.0,
-                              child: Card(
-                                elevation: 4,
-                                color: Color.fromARGB(237, 28, 31, 51),
-                                margin: EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 12,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        produit.nom,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        produit.description,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                childCount: _produits.length,
+                    ? 1 // Pour afficher le message "Aucun produit trouvé"
+                    : _searchResults.length,
               ),
             ),
           ),
