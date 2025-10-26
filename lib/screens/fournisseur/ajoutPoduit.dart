@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/categorie.dart';
 import 'package:globshopp/model/enum/uniteProduit.dart';
+import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/services/categorieService.dart';
+import 'package:globshopp/services/produitService.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Ajoutpoduit extends StatefulWidget {
@@ -14,6 +17,9 @@ class Ajoutpoduit extends StatefulWidget {
 }
 
 class _AjoutpoduitState extends State<Ajoutpoduit> {
+  final Produitservice _produitservice = Produitservice();
+  final CategorieService _categorieService = CategorieService();
+
   final TextEditingController _nom = TextEditingController();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _prix = TextEditingController();
@@ -52,6 +58,37 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
       borderSide: const BorderSide(color: Constant.blue, width: 1.4),
     ),
   );
+
+  Future<void> chargerCategorie() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final categorie = await _categorieService.getAllCategoeri();
+      setState(() {
+        _categories = categorie;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      throw Exception('Erreur lors de la récupération des categories : $e');
+    }
+  }
+
+  Future<void> ajouterUnProduit(Produit produit, List<File>? images) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final response = await _produitservice.createProduit(produit, images);
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      throw Exception('Erreur lors de la récupération des categories : $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -348,7 +385,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                     ),
                     child: isLoading
                         ? CircularProgressIndicator(color: Constant.colorsWhite)
-                        : const Text("S'inscrire"),
+                        : const Text("Enregistrer"),
                   ),
                 ),
               ],

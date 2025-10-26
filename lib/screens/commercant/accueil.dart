@@ -20,13 +20,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedCategory = 0;
 
-  final _categories = const [
-    ('Tous', Icons.grid_view_rounded),
-    ('Accessoires', Icons.headphones_rounded),
-    ('Electronique', Icons.devices_other_rounded),
-    ('Habits', Icons.checkroom_rounded),
-    ('Electro', Icons.kitchen_rounded),
-  ];
+  // final _categories = const [
+  //   ('Tous', Icons.grid_view_rounded),
+  //   ('Accessoires', Icons.headphones_rounded),
+  //   ('Electronique', Icons.devices_other_rounded),
+  //   ('Habits', Icons.checkroom_rounded),
+  //   ('Electro', Icons.kitchen_rounded),
+  // ];
 
   final Produitservice _produitservice = Produitservice();
   final CategorieService _categorieService = CategorieService();
@@ -237,24 +237,24 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
-                  final (label, icon) = _categories[i];
-                  return CategoryChip(
-                    nom: label,
-                    icon: icon,
-                    selected: i == _selectedCategory,
-                    onTap: () => setState(() => _selectedCategory = i),
-                  );
-                  // final categorie = categories[i];
+                  // final (label, icon) = _categories[i];
                   // return CategoryChip(
-                  //   nom: categorie.nom,
-                  //   icon: categorie.icone!,
+                  //   nom: label,
+                  //   icon: icon,
                   //   selected: i == _selectedCategory,
                   //   onTap: () => setState(() => _selectedCategory = i),
                   // );
+                  final categorie = categories[i];
+                  return CategoryChip(
+                    nom: categorie.nom,
+                    icon: categorie.icone!,
+                    selected: i == _selectedCategory,
+                    onTap: () => setState(() => _selectedCategory = i),
+                  );
                 },
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
-                // itemCount: categories.length,
-                itemCount: _categories.length,
+                itemCount: categories.length,
+                // itemCount: _categories.length,
               ),
             ),
           ),
