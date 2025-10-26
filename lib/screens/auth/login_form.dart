@@ -9,9 +9,9 @@ import 'package:globshopp/screens/fournisseur/navigationBar.dart';
 import 'package:globshopp/screens/role_selection_page.dart';
 import 'package:globshopp/services/authentification.dart';
 import 'mdpoublier1.dart';
-import '../../widgets/login/email_field.dart';
-import '../../widgets/login/password_field.dart';
-import '../../widgets/login/primary_button.dart';
+import '../custom/login/email_field.dart';
+import '../custom/login/password_field.dart';
+import '../custom/login/primary_button.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);

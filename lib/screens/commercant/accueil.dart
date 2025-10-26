@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/categorie.dart';
 import 'package:globshopp/model/produit.dart';
-import 'package:globshopp/screens/categoryChip.dart';
+import 'package:globshopp/screens/custom/categoryChip.dart';
 import 'package:globshopp/screens/commercant/custom/productCard.dart';
 import 'package:globshopp/screens/commercant/custom/product_detail_page.dart';
 import 'package:globshopp/services/categorieService.dart';
