@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     chargerProduits();
+    chargerCategorie();
   }
 
   Future<void> chargerCategorie() async {
@@ -236,16 +237,24 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
-                  final categorie = categories[i];
+                  final (label, icon) = _categories[i];
                   return CategoryChip(
-                    nom: categorie.nom,
-                    icon: categorie.icone!,
+                    nom: label,
+                    icon: icon,
                     selected: i == _selectedCategory,
                     onTap: () => setState(() => _selectedCategory = i),
                   );
+                  // final categorie = categories[i];
+                  // return CategoryChip(
+                  //   nom: categorie.nom,
+                  //   icon: categorie.icone!,
+                  //   selected: i == _selectedCategory,
+                  //   onTap: () => setState(() => _selectedCategory = i),
+                  // );
                 },
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemCount: categories.length,
+                // itemCount: categories.length,
+                itemCount: _categories.length,
               ),
             ),
           ),

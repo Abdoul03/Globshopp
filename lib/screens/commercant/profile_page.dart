@@ -1,6 +1,9 @@
 // lib/screens/profile_page.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/screens/custom/circleImageButton.dart';
+import 'package:globshopp/screens/custom/fieldLabel.dart';
+import 'package:globshopp/screens/custom/infoTile.dart';
 import 'package:globshopp/services/authentification.dart';
 
 class Profile extends StatefulWidget {
@@ -13,14 +16,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final Authentification _authentification = Authentification();
   bool isLoading = false;
-
-  // Palette
-  static const blue = Color(0xFF2F80ED);
-  static const text = Color(0xFF0B0B0B);
-  static const sub = Color(0xFF7C7E85);
-  static const tileBg = Color(0xFFF3F4F6);
-  static const dangerBg = Color(0xFFFFE2E0);
-  static const danger = Color(0xFFE94A45);
 
   Future<void> logOut() async {
     setState(() {
@@ -50,19 +45,19 @@ class _ProfileState extends State<Profile> {
             floating: true,
             backgroundColor: Colors.white,
             elevation: 0,
-            toolbarHeight: 64, // 🔹 plus compact
+            toolbarHeight: 64, //
             title: const Text(
               'Profil',
               style: TextStyle(
-                color: text,
-                fontSize: 18, // 🔹 taille réduite
+                color: Constant.colorsBlack,
+                fontSize: 18, //
                 fontWeight: FontWeight.w700,
               ),
             ),
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 12),
-                child: _CircleImageButton(
+                child: CircleImageButton(
                   imagePath: 'assets/icons/edit.png',
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -93,8 +88,11 @@ class _ProfileState extends State<Profile> {
                           width: 84,
                           height: 84,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              const Icon(Icons.person, size: 48, color: blue),
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.person,
+                            size: 48,
+                            color: Constant.blue,
+                          ),
                         ),
                       ),
                     ),
@@ -102,33 +100,30 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(height: 14),
 
                   // Champs info
-                  const _FieldLabel('Nom'),
-                  const _InfoTile(
+                  FieldLabel('Nom'),
+                  InfoTile(
                     icon: Icons.person_outline_rounded,
                     text: 'Abdoul Ibrahima Samaké',
                   ),
                   const SizedBox(height: 12),
 
-                  const _FieldLabel('Téléphone'),
-                  const _InfoTile(icon: Icons.phone_outlined, text: '71267813'),
+                  FieldLabel('Téléphone'),
+                  InfoTile(icon: Icons.phone_outlined, text: '71267813'),
                   const SizedBox(height: 12),
 
-                  const _FieldLabel('Email'),
-                  const _InfoTile(
+                  FieldLabel('Email'),
+                  InfoTile(
                     icon: Icons.mail_outline_rounded,
                     text: 'Samabdoul03@gmail.com',
                   ),
                   const SizedBox(height: 12),
 
-                  const _FieldLabel('Rôle'),
-                  const _InfoTile(
-                    icon: Icons.vpn_key_outlined,
-                    text: 'Commerçant',
-                  ),
+                  FieldLabel('Rôle'),
+                  InfoTile(icon: Icons.vpn_key_outlined, text: 'Commerçant'),
                   const SizedBox(height: 12),
 
-                  const _FieldLabel('Adresse'),
-                  const _InfoTile(
+                  FieldLabel('Adresse'),
+                  InfoTile(
                     icon: Icons.location_city_outlined,
                     text: 'Bamako / Mali / Grand marché',
                   ),
@@ -141,7 +136,7 @@ class _ProfileState extends State<Profile> {
                     height: 46, // 🔹 plus fin
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: dangerBg,
+                        backgroundColor: Constant.rougeTransparant,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -152,7 +147,7 @@ class _ProfileState extends State<Profile> {
                           : const Text(
                               'Déconnexion',
                               style: TextStyle(
-                                color: danger,
+                                color: Constant.rougeVif,
                                 fontSize: 14.5, // 🔹 réduit
                                 fontWeight: FontWeight.w600,
                               ),
@@ -164,113 +159,6 @@ class _ProfileState extends State<Profile> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/* ---------- WIDGETS ---------- */
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.text);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6, left: 2),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Constant.blue,
-          fontSize: 12, // 🔹 réduit
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-class _InfoTile extends StatelessWidget {
-  const _InfoTile({required this.icon, required this.text});
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 46, // 🔹 plus compact
-      decoration: BoxDecoration(
-        color: Constant.colorsgray,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            alignment: Alignment.center,
-            child: Icon(icon, color: Constant.blue, size: 18),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Constant.colorsBlack,
-                fontSize: 13, // 🔹 réduit
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Bouton image rond pour la SliverAppBar
-class _CircleImageButton extends StatelessWidget {
-  const _CircleImageButton({required this.imagePath, this.onTap, Key? key})
-    : super(key: key);
-  final String imagePath;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(22),
-      onTap: onTap,
-      child: Container(
-        width: 36, // 🔹 plus petit
-        height: 36,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFFE0E0E0)),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 3,
-              offset: Offset(0, 1.5),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(7),
-          child: Image.asset(
-            imagePath,
-            fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) =>
-                const Icon(Icons.edit, size: 18, color: Constant.blue),
-          ),
-        ),
       ),
     );
   }
