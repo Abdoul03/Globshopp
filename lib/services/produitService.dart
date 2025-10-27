@@ -46,6 +46,23 @@ class Produitservice {
     }
   }
 
+  Future<List<Produit>> getFournisseurProduits() async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "Get",
+        "/produits/fournisseur",
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => Produit.fromJson(json)).toList();
+      } else {
+        throw Exception('Échec du chargement des produits');
+      }
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération du produit : $e');
+    }
+  }
+
   Future<Produit> createProduit(Produit produit, List<File>? images) async {
     try {
       String? token = await getAccessToken();

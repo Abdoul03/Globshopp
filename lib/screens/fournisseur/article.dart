@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/fournisseur/custom/custumSearchBar.dart';
+import 'package:globshopp/services/produitService.dart';
 import 'package:remixicon/remixicon.dart';
 
 class Article extends StatefulWidget {
@@ -13,14 +15,48 @@ class Article extends StatefulWidget {
 class _ArticleState extends State<Article> {
   final _searchController = TextEditingController();
 
+  List<Produit> _produits = [];
+  List<Produit> _searchResults = [];
+  bool isLoading = false;
+
+  final Produitservice _produitservice = Produitservice();
+
+  Future<void> getSupplierProduct() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final produits = await _produitservice.getFournisseurProduits();
+      setState(() {
+        _produits = produits;
+        _searchResults = produits;
+        isLoading = false;
+      });
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération des produits : $e');
+    }
+  }
+
   void _onSearchTextChanged(String text) {
     setState(() {
       if (text.isEmpty) {
         setState(() {
-          //_searchResults;
+          _searchResults = _produits;
         });
         return;
       }
+
+      setState(() {
+        _searchResults = _produits.where((produit) {
+          final titreMatch = produit.nom.toLowerCase().contains(
+            text.toLowerCase(),
+          );
+          final descMatch = produit.description.toLowerCase().contains(
+            text.toLowerCase(),
+          );
+          return titreMatch || descMatch;
+        }).toList();
+      });
     });
   }
 

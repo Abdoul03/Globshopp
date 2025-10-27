@@ -20,14 +20,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedCategory = 0;
 
-  // final _categories = const [
-  //   ('Tous', Icons.grid_view_rounded),
-  //   ('Accessoires', Icons.headphones_rounded),
-  //   ('Electronique', Icons.devices_other_rounded),
-  //   ('Habits', Icons.checkroom_rounded),
-  //   ('Electro', Icons.kitchen_rounded),
-  // ];
-
   final Produitservice _produitservice = Produitservice();
   final CategorieService _categorieService = CategorieService();
 
@@ -42,9 +34,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
-    chargerProduits();
     chargerCategorie();
+    chargerProduits();
+    super.initState();
   }
 
   Future<void> chargerCategorie() async {

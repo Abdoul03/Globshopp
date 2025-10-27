@@ -402,6 +402,8 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                 const SizedBox(height: 16),
 
                 DropdownButtonFormField<Categorie>(
+                  dropdownColor: Colors.white,
+                  focusColor: Constant.blue,
                   value: _selectedCategorie,
                   items: _categories.map((categorie) {
                     return DropdownMenuItem(
@@ -415,6 +417,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                     });
                   },
                   decoration: InputDecoration(
+                    focusColor: Constant.blue,
                     labelText: 'Catégorie',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
