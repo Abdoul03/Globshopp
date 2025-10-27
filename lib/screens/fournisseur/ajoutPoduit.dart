@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/caracteristique.dart';
 import 'package:globshopp/model/categorie.dart';
 import 'package:globshopp/model/enum/uniteProduit.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/services/categorieService.dart';
 import 'package:globshopp/services/produitService.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:remixicon/remixicon.dart';
 
 class Ajoutpoduit extends StatefulWidget {
   const Ajoutpoduit({super.key});
@@ -25,11 +27,12 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
   final TextEditingController _prix = TextEditingController();
   final TextEditingController _moq = TextEditingController();
   final TextEditingController _stock = TextEditingController();
-  final TextEditingController _unite = TextEditingController();
+  // final TextEditingController _unite = TextEditingController();
 
   final TextEditingController _caracteristiqueNom = TextEditingController();
   final TextEditingController _caracteristiqueValeur = TextEditingController();
 
+  List<Caracteristique> _caracteristique = [];
   List<Categorie> _categories = [];
   Categorie? _selectedCategorie;
   bool isLoading = false;
@@ -56,6 +59,17 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: Constant.blue, width: 1.4),
+    ),
+  );
+
+  //Style du button Ajouter
+  final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+    foregroundColor: Colors.white,
+    backgroundColor: Constant.blue,
+    minimumSize: Size(88, 36),
+    padding: EdgeInsets.symmetric(horizontal: 16),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(52)),
     ),
   );
 
@@ -90,6 +104,51 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
     }
   }
 
+  void _ajouterCaracteristique() {
+    final nom = _caracteristiqueNom.text.trim();
+    final value = _caracteristiqueValeur.text.trim();
+
+    if (nom.isEmpty || value.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Constant.colorsWhite,
+          content: Text(
+            "Tous les champs de la contrepartie doivent être remplis.",
+            style: TextStyle(color: Constant.blue),
+          ),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _caracteristique.add(Caracteristique(nom: nom, valeur: value));
+
+      // Réinitialiser les champs
+      _caracteristiqueNom.clear();
+      _caracteristiqueValeur.clear();
+    });
+  }
+
+  @override
+  void initState() {
+    chargerCategorie();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nom.dispose();
+    _description.dispose();
+    _prix.dispose();
+    _moq.dispose();
+    _stock.dispose();
+    _caracteristiqueNom.dispose();
+    _caracteristiqueValeur.dispose();
+    // _unite.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -119,7 +178,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                   ),
                   child: Stack(
                     children: [
-                      // Zone principale pour afficher l'image en grand si tu veux
+                      // Zone principale pour afficher l'image en grand
                       Positioned.fill(
                         child: medias.isNotEmpty
                             ? Image.file(medias.last, fit: BoxFit.cover)
@@ -168,7 +227,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                                       ),
                                     ),
                                     child: const Icon(
-                                      Icons.add_a_photo,
+                                      RemixIcons.folder_image_fill,
                                       color: Constant.blue,
                                     ),
                                   ),
@@ -292,7 +351,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                   controller: _stock,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: _decoration('Entrez votre adresse email'),
+                  decoration: _decoration('Entrez la quantitée en stock'),
                 ),
                 const SizedBox(height: 16),
 
@@ -363,6 +422,43 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                   ),
                 ),
 
+                const SizedBox(height: 16),
+                _buildCaracteristique(),
+
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: 120,
+                  height: 40,
+                  child: ElevatedButton.icon(
+                    icon: Icon(Icons.add),
+                    onPressed: _ajouterCaracteristique,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Constant.blue,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                    label: Text("Ajouter"),
+                  ),
+                ),
+                SizedBox(height: 10),
+                ..._caracteristique.map(
+                  (c) => ListTile(
+                    title: Text(c.nom),
+                    subtitle: Text("Nom: ${c.nom} | valeur: ${c.valeur}"),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          _caracteristique.remove(c);
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 28),
 
                 //Bouton S’inscrire
@@ -370,7 +466,63 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final nom = _nom.text.trim();
+                      final description = _description.text.trim();
+                      final prix = double.tryParse(_prix.text.trim());
+                      final moq = int.tryParse(_moq.text.trim());
+                      final stock = int.tryParse(_stock.text.trim());
+
+                      final nomCaracteristique = _caracteristiqueNom.text
+                          .trim();
+                      final valueCaracteristique = _caracteristiqueValeur.text
+                          .trim();
+
+                      if (nom.isEmpty ||
+                          prix == null ||
+                          description.isEmpty ||
+                          moq == null ||
+                          stock == null ||
+                          _selectedCategorie == null ||
+                          _uniteproduit == null ||
+                          nomCaracteristique.isEmpty ||
+                          valueCaracteristique.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Tous les champs doivent être remplis .",
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (medias.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Ajoutez au moins un média.")),
+                        );
+                        return;
+                      }
+                      _caracteristique.add(
+                        Caracteristique(
+                          nom: nomCaracteristique,
+                          valeur: valueCaracteristique,
+                        ),
+                      );
+
+                      final produit = Produit(
+                        nom: nom,
+                        description: description,
+                        prix: prix,
+                        moq: moq,
+                        stock: stock,
+                        unite: _uniteproduit!,
+                        categorieId: _selectedCategorie!.id!,
+                        caracteristiques: _caracteristique,
+                      );
+
+                      _produitservice.createProduit(produit, medias);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Constant.blue,
                       foregroundColor: Colors.white,
@@ -393,6 +545,36 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCaracteristique() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Nom',
+          style: TextStyle(fontSize: 14, color: Constant.colorsBlack),
+        ),
+        SizedBox(height: 8),
+        TextField(
+          controller: _caracteristiqueValeur,
+          textInputAction: TextInputAction.next,
+          decoration: _decoration('Entrez le nom'),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Valeur',
+          style: TextStyle(fontSize: 14, color: Constant.colorsBlack),
+        ),
+        SizedBox(height: 8),
+        TextField(
+          controller: _caracteristiqueValeur,
+          textInputAction: TextInputAction.next,
+          decoration: _decoration('Entrez la valeur'),
+        ),
+      ],
     );
   }
 }

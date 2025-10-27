@@ -17,6 +17,7 @@ class Constant {
   static const vertTransparant = Color.fromARGB(38, 120, 200, 65);
   static const border = Color(0xFFE6E6E6);
 
+  // static const remoteUrl = "http://localhost:8080/api";
   //Url de Base
   static String get remoteUrl {
     if (Platform.isAndroid) {

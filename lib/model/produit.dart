@@ -14,7 +14,7 @@ class Produit {
   int moq;
   int stock;
   Uniteproduit unite;
-  List<Media>? media;
+  List<Media> media;
   List<Caracteristique> caracteristiques;
   Fournisseur? fournisseur;
   Categorie? categorie;
@@ -29,8 +29,8 @@ class Produit {
     required this.moq,
     required this.stock,
     required this.unite,
-    this.media,
-    this.caracteristiques = const [],
+    this.media = const [],
+    required this.caracteristiques,
     this.fournisseur,
     this.categorie,
     required this.categorieId,
@@ -49,12 +49,10 @@ class Produit {
         (e) => e.name == (json['unite'] ?? '').toUpperCase(),
         orElse: () => Uniteproduit.PIECES, // valeur par défaut
       ),
-      media: (json['media'] as List?)?.map((m) => Media.fromJson(m)).toList(),
-      caracteristiques:
-          (json['caracteristiques'] as List?)
-              ?.map((c) => Caracteristique.fromJson(c))
-              .toList() ??
-          [],
+      media: (json['media'] as List).map((m) => Media.fromJson(m)).toList(),
+      caracteristiques: (json['caracteristiques'] as List)
+          .map((c) => Caracteristique.fromJson(c))
+          .toList(),
       fournisseur: json['fournisseur'] != null
           ? Fournisseur.fromJson(json['fournisseur'])
           : null,

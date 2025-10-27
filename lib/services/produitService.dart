@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,7 +29,7 @@ class Produitservice {
     }
   }
 
-  Future<Produit> getProduit(Long id) async {
+  Future<Produit> getProduit(int id) async {
     try {
       final response = await _apiservice.requestWithAuthentification(
         "GET",

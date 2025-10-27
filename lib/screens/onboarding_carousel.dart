@@ -105,7 +105,7 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
 
               // --- Indicateurs (points) ---
               Padding(
-                padding: const EdgeInsets.only(bottom: 150),
+                padding: const EdgeInsets.only(bottom: 100),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_slides.length, (i) {
@@ -240,9 +240,11 @@ class _Slide extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Paragraphe
-        Text(
-          data.text,
-          style: TextStyle(fontSize: 13, height: 1.50, color: textColor),
+        Expanded(
+          child: Text(
+            data.text,
+            style: TextStyle(fontSize: 13, height: 1.50, color: textColor),
+          ),
         ),
       ],
     );
