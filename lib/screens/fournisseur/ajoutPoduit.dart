@@ -522,6 +522,30 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                       );
 
                       _produitservice.createProduit(produit, medias);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Constant.colorsWhite,
+                          content: Text(
+                            "Produit Ajouter avec succes.",
+                            style: TextStyle(color: Constant.blue),
+                          ),
+                        ),
+                      );
+
+                      _nom.clear();
+                      _description.clear();
+                      _prix.clear();
+                      _moq.clear();
+                      _stock.clear();
+
+                      _caracteristiqueNom.clear();
+                      _caracteristiqueValeur.clear();
+
+                      setState(() {
+                        _selectedCategorie = null;
+                        medias.clear();
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Constant.blue,
