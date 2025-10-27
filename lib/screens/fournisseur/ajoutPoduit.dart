@@ -559,7 +559,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
         ),
         SizedBox(height: 8),
         TextField(
-          controller: _caracteristiqueValeur,
+          controller: _caracteristiqueNom,
           textInputAction: TextInputAction.next,
           decoration: _decoration('Entrez le nom'),
         ),
