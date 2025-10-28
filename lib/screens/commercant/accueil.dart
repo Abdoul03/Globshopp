@@ -61,20 +61,29 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  IconData _getIconForCategory(String nomCategorie) {
-    switch (nomCategorie.toLowerCase()) {
-      case "Tout":
+  IconData _getIconForCategory(String? nomCategorie) {
+    if (nomCategorie == null) return Icons.grid_view_rounded;
+
+    final nom = nomCategorie.toLowerCase().trim();
+
+    switch (nom) {
+      case 'tout':
         return RemixIcons.menu_2_line;
-      case "Accessoir":
-        return RemixIcons.headphone_line;
-      case "électronique":
-        return RemixIcons.device_recover_line;
-      case "habits":
-        return RemixIcons.t_shirt_line;
-      case "Electro":
+      case 'accessoire':
+      case 'accesoire':
+      case 'accessoir': // au cas où ton back envoie sans le 'e'
+        return Icons.headphones_rounded;
+      case 'electronique':
+      case 'électronique': // pour couvrir les deux orthographes
+        return Icons.devices_other_rounded;
+      case 'habit':
+      case 'habits':
+        return Icons.checkroom_rounded;
+      case 'electro':
+      case 'electromenager':
         return Icons.kitchen_outlined;
       default:
-        return Icons.grid_view_rounded; // icône par défaut
+        return Icons.grid_view_rounded;
     }
   }
 
@@ -231,17 +240,10 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (c, i) {
-                  // final (label, icon) = _categories[i];
-                  // return CategoryChip(
-                  //   nom: label,
-                  //   icon: icon,
-                  //   selected: i == _selectedCategory,
-                  //   onTap: () => setState(() => _selectedCategory = i),
-                  // );
                   final categorie = categories[i];
                   return CategoryChip(
                     nom: categorie.nom,
-                    icon: categorie.icone!,
+                    icon: categorie.icone ?? Icons.grid_view_rounded,
                     selected: i == _selectedCategory,
                     onTap: () => setState(() => _selectedCategory = i),
                   );

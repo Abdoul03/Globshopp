@@ -6,7 +6,7 @@ import 'package:globshopp/screens/commercant/accueil.dart';
 import 'package:globshopp/screens/commercant/fournisseurs_page.dart';
 import 'package:globshopp/screens/commercant/commandes_page.dart';
 import 'package:globshopp/screens/commercant/annuaire_page.dart';
-import 'package:globshopp/screens/commercant/profile_page.dart'; // ⬅️ AJOUT
+import 'package:globshopp/screens/commercant/profile_page.dart';
 
 void main() => runApp(const GlobalShopperApp());
 
@@ -26,7 +26,7 @@ class GlobalShopperApp extends StatelessWidget {
         '/fournisseurs': (_) => const FournisseursPage(),
         '/commandes': (_) => const CommandesPage(),
         '/annuaire': (_) => const AnnuairePage(),
-        '/profil': (_) => const Profile(), // ⬅️ AJOUT
+        '/profil': (_) => const Profile(),
       },
     );
   }
