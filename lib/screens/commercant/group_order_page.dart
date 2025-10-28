@@ -1,8 +1,4 @@
-// lib/screens/group_order_page.dart
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
-import 'package:globshopp/model/enum/uniteProduit.dart';
 import 'package:globshopp/model/produit.dart';
 
 class GroupOrderPage extends StatefulWidget {
@@ -276,10 +272,9 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
 /* ------------------ Widgets ------------------ */
 
 class _KVLine extends StatelessWidget {
-  _KVLine({required this.k, required this.v, this.d});
+  const _KVLine({required this.k, required this.v});
   final String k;
   final String v;
-  double? d = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -294,7 +289,7 @@ class _KVLine extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(width: d),
+        SizedBox(width: 10),
         Text(
           v,
           style: const TextStyle(

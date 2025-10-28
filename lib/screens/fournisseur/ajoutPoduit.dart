@@ -100,7 +100,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
       });
     } catch (e) {
       setState(() => isLoading = false);
-      throw Exception('Erreur lors de la récupération des categories : $e');
+      throw Exception("Erreur lors de l'ajout du produit : $e");
     }
   }
 
