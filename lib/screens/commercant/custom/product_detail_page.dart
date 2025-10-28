@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/screens/commercant/custom/fournisseurDetailPage.dart';
 import '../group_order_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
@@ -14,7 +15,6 @@ class ProductDetailPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        // ✅ Scrollable
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           child: Column(
@@ -200,30 +200,40 @@ class ProductDetailPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            produit.fournisseur!.nom,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                              color: Constant.colorsBlack,
-                            ),
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => FournisseurDetailPage(
+                            fournisseur: produit.fournisseur!,
                           ),
-                          const SizedBox(height: 2),
-                          const Text(
-                            'Fournisseur Grossiste',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Constant.jaune,
-                              fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      child: Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${produit.fournisseur!.prenom} ${produit.fournisseur!.nom}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                color: Constant.colorsBlack,
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 2),
+                            const Text(
+                              'Fournisseur Grossiste',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Constant.jaune,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -233,42 +243,75 @@ class ProductDetailPage extends StatelessWidget {
               const SizedBox(height: 18),
 
               // ─────────── Bouton principal ───────────
-              SizedBox(
-                height: 44,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Constant.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    elevation: 0,
-                  ),
-                  onPressed: () {
-                    // ✅ Navigation vers la page de commande groupée
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => GroupOrderPage(
-                          productTitle: produit.nom,
-                          // on convertit "1000 FCFA" → 1000.0
-                          unitPrice: double.tryParse("${produit.prix}") ?? 0,
-                          // on convertit "MOQ: 20 pcs" → 20
-                          moq: int.tryParse("${produit.moq}") ?? 0,
+              produit.commandeGroupees != null
+                  ? SizedBox(
+                      height: 44,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constant.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        onPressed: () {
+                          //Navigation vers la page de commande groupée
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => GroupOrderPage(produit: produit),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Créer une commande',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13.5,
+                          ),
                         ),
                       ),
-                    );
-                  },
-                  child: const Text(
-                    'Créer une commande',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13.5,
+                    )
+                  : SizedBox(
+                      height: 44,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constant.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        onPressed: () {
+                          //Navigation vers la page de commande groupée
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (_) => GroupOrderPage(
+                          //       productTitle: produit.nom,
+                          //       // on convertit "1000 FCFA" → 1000.0
+                          //       unitPrice:
+                          //           double.tryParse("${produit.prix}") ?? 0,
+                          //       // on convertit "MOQ: 20 pcs" → 20
+                          //       moq: int.tryParse("${produit.moq}") ?? 0,
+                          //       unite: produit.unite,
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                        child: const Text(
+                          'Rejoindre la commande',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13.5,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

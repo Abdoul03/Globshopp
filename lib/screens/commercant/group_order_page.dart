@@ -1,17 +1,13 @@
 // lib/screens/group_order_page.dart
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
+import 'package:globshopp/model/enum/uniteProduit.dart';
+import 'package:globshopp/model/produit.dart';
 
 class GroupOrderPage extends StatefulWidget {
-  const GroupOrderPage({
-    super.key,
-    this.productTitle = 'T-shirts coton “Everyday fit”',
-    this.unitPrice = 12000.0, // fcfa
-    this.moq = 144,
-  });
-
-  final String productTitle;
-  final double unitPrice;
-  final int moq;
+  const GroupOrderPage({super.key, required this.produit});
+  final Produit produit;
 
   @override
   State<GroupOrderPage> createState() => _GroupOrderPageState();
@@ -19,14 +15,14 @@ class GroupOrderPage extends StatefulWidget {
 
 /* ---------- Palette ---------- */
 class _G {
-  static const text   = Color(0xFF0B0B0B);
-  static const sub    = Color(0xFF6F737A);
+  static const text = Color(0xFF0B0B0B);
+  static const sub = Color(0xFF6F737A);
   static const border = Color(0xFFE6E6EA);
-  static const blue   = Color(0xFF3B6DB8);
+  static const blue = Color(0xFF3B6DB8);
 }
 
 class _GroupOrderPageState extends State<GroupOrderPage> {
-  final _qtyCtrl  = TextEditingController();
+  final _qtyCtrl = TextEditingController();
   final _dateCtrl = TextEditingController();
 
   @override
@@ -40,7 +36,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
   String _fmtMoney(num v) {
     final s = v.toStringAsFixed(0);
     final reg = RegExp(r'\B(?=(\d{3})+(?!\d))');
-    return s.replaceAllMapped(reg, (m) => '.') + ' fcfa';
+    return '${s.replaceAllMapped(reg, (m) => '.')} fcfa';
   }
 
   String _fmtInt(int n) {
@@ -62,10 +58,9 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: _G.blue,
-              onPrimary: Colors.white,
-            ),
+            colorScheme: Theme.of(
+              context,
+            ).colorScheme.copyWith(primary: _G.blue, onPrimary: Colors.white),
           ),
           child: child!,
         );
@@ -80,6 +75,12 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
     }
   }
 
+  void calcul(String text) {
+    setState(() {
+      if (text.isEmpty) {}
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +88,6 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            // ▲ Bouton retour en haut à gauche
             Positioned(
               left: 8,
               top: 4,
@@ -99,7 +99,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
               ),
             ),
 
-            // 🎯 Contenu principal
+            // Contenu principal
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
@@ -123,7 +123,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                       const SizedBox(height: 12),
 
                       Text(
-                        'Cette commande groupée sera créée pour le\nproduit : ${widget.productTitle}',
+                        'Cette commande groupée sera créée pour le\nproduit : ${widget.produit.nom}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: _G.sub,
@@ -139,12 +139,12 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                         children: [
                           _KVLine(
                             k: 'Prix unitaire :',
-                            v: _fmtMoney(widget.unitPrice),
+                            v: _fmtMoney(widget.produit.prix),
                           ),
                           const SizedBox(height: 8),
                           _KVLine(
                             k: 'Moq :',
-                            v: '${_fmtInt(widget.moq)} pièces',
+                            v: '${_fmtInt(widget.produit.moq)} ',
                           ),
                         ],
                       ),
@@ -155,6 +155,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
                           controller: _qtyCtrl,
+                          onChanged: calcul,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             labelText: 'Quantité',
@@ -167,13 +168,14 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                              const BorderSide(color: _G.border),
+                              borderSide: const BorderSide(color: _G.border),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                              const BorderSide(color: _G.blue, width: 1.4),
+                              borderSide: const BorderSide(
+                                color: _G.blue,
+                                width: 1.4,
+                              ),
                             ),
                           ),
                         ),
@@ -201,13 +203,14 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                              const BorderSide(color: _G.border),
+                              borderSide: const BorderSide(color: _G.border),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                              const BorderSide(color: _G.blue, width: 1.4),
+                              borderSide: const BorderSide(
+                                color: _G.blue,
+                                width: 1.4,
+                              ),
                             ),
                           ),
                         ),
@@ -218,21 +221,12 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                       // Montant à payer
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text(
-                            'Montant à payer',
+                            "Montant Total",
                             style: TextStyle(
-                              color: _G.text,
+                              fontWeight: FontWeight.w700,
                               fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            'P x Quantité',
-                            style: TextStyle(
-                              color: _G.text,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -252,6 +246,9 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             ),
                           ),
                           onPressed: () {
+                            final quantite = int.parse(_qtyCtrl.text.trim());
+
+                            final Montant = widget.produit.prix * quantite;
                             // Action à faire ici
                           },
                           child: const Text(
@@ -279,9 +276,10 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
 /* ------------------ Widgets ------------------ */
 
 class _KVLine extends StatelessWidget {
-  const _KVLine({required this.k, required this.v});
+  _KVLine({required this.k, required this.v, this.d});
   final String k;
   final String v;
+  double? d = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +294,7 @@ class _KVLine extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(width: 10),
+        SizedBox(width: d),
         Text(
           v,
           style: const TextStyle(

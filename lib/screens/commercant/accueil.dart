@@ -63,6 +63,8 @@ class _HomePageState extends State<HomePage> {
 
   IconData _getIconForCategory(String nomCategorie) {
     switch (nomCategorie.toLowerCase()) {
+      case "Tout":
+        return RemixIcons.menu_2_line;
       case "Accessoir":
         return RemixIcons.headphone_line;
       case "électronique":
