@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/commandeGroupee.dart';
+import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/services/commandeGroupeeService.dart';
 
 class GroupOrderPage extends StatefulWidget {
   const GroupOrderPage({super.key, required this.produit});
@@ -18,8 +22,12 @@ class _G {
 }
 
 class _GroupOrderPageState extends State<GroupOrderPage> {
+  final CommandeGroupeeService _commandeGroupeeService =
+      CommandeGroupeeService();
+
   final _qtyCtrl = TextEditingController();
   final _dateCtrl = TextEditingController();
+  bool _isLoading = false;
 
   double _montantTotal = 0;
 
@@ -69,7 +77,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
       final dd = picked.day.toString().padLeft(2, '0');
       final mm = picked.month.toString().padLeft(2, '0');
       final yy = picked.year.toString();
-      _dateCtrl.text = '$dd/$mm/$yy';
+      _dateCtrl.text = '$yy-$mm-$dd';
       setState(() {});
     }
   }
@@ -83,6 +91,41 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
         _montantTotal = qte * widget.produit.prix;
       }
     });
+  }
+
+  Future<void> createGroupeOrder(
+    int produitId,
+    DateTime deadline,
+    Participation participation,
+  ) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      final create = await _commandeGroupeeService.createGroupOrder(
+        produitId,
+        deadline,
+        participation,
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Constant.blue,
+          content: Text(
+            "Tous les champs doivent être remplis .",
+            style: TextStyle(color: Constant.colorsWhite),
+          ),
+        ),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      throw Exception("Erreur de creation de la commande : $e");
+    }
   }
 
   @override
@@ -258,17 +301,51 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             ),
                           ),
                           onPressed: () {
-                            final quantite = int.parse(_qtyCtrl.text.trim());
+                            final quantite = int.tryParse(_qtyCtrl.text.trim());
+                            final date = DateTime.tryParse(
+                              _dateCtrl.text.trim(),
+                            );
+
+                            if (quantite == null || date == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Constant.blue,
+                                  content: Text(
+                                    "Tous les champs doivent être remplis .",
+                                    style: TextStyle(
+                                      color: Constant.colorsWhite,
+                                    ),
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            final participation = Participation(
+                              quantite: quantite,
+                              montant: _montantTotal,
+                            );
+
+                            createGroupeOrder(
+                              widget.produit.id!,
+                              date,
+                              participation,
+                            );
+
                             // Action à faire ici
                           },
-                          child: const Text(
-                            'Créer',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? CircularProgressIndicator(
+                                  color: Constant.colorsWhite,
+                                )
+                              : Text(
+                                  'Créer',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15,
+                                  ),
+                                ),
                         ),
                       ),
                     ],

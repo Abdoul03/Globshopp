@@ -92,56 +92,58 @@ class ProductDetailPage extends StatelessWidget {
                   border: Border.all(color: Constant.border),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Prix
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${produit.prix}",
-                            style: const TextStyle(
-                              fontSize: 15.5,
-                              fontWeight: FontWeight.w800,
-                              color: Constant.colorsBlack,
-                            ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${produit.prix}",
+                          style: const TextStyle(
+                            fontSize: 15.5,
+                            fontWeight: FontWeight.w800,
+                            color: Constant.colorsBlack,
                           ),
-                          const SizedBox(height: 3),
-                          const Text(
-                            'Prix unitaire',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Constant.grisClaire,
-                            ),
+                        ),
+
+                        const SizedBox(height: 3),
+
+                        Text(
+                          'Prix unitaire',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Constant.grisClaire,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+
                     // MOQ
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'MOQ:',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Constant.colorsgray,
-                              fontWeight: FontWeight.w700,
-                            ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          'MOQ:',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Constant.colorsgray,
+                            fontWeight: FontWeight.w700,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "${produit.moq}",
-                            style: const TextStyle(
-                              fontSize: 15.5,
-                              fontWeight: FontWeight.w900,
-                              color: Constant.jaune,
-                            ),
-                            textAlign: TextAlign.right,
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        Text(
+                          "${produit.moq}",
+                          style: const TextStyle(
+                            fontSize: 15.5,
+                            fontWeight: FontWeight.w900,
+                            color: Constant.jaune,
                           ),
-                        ],
-                      ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -260,8 +262,7 @@ class ProductDetailPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  GroupOrderPage(produit: produit),
+                              builder: (_) => GroupOrderPage(produit: produit),
                             ),
                           );
                         },
