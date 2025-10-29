@@ -1,5 +1,7 @@
 // lib/screens/login_form.dart
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
@@ -57,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  Future<TokenPair> connexion() async {
+  Future<TokenPair?> connexion() async {
     setState(() {
       isLoading = true;
     });
@@ -67,6 +69,8 @@ class _LoginFormState extends State<LoginForm> {
         identifiant.text.trim(),
         motDePasse.text.trim(),
       );
+
+      if (!mounted) return null;
       setState(() {
         isLoading = false;
       });
@@ -77,7 +81,7 @@ class _LoginFormState extends State<LoginForm> {
         ).showSnackBar(SnackBar(content: Text("Bienvenue")));
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => Commercantnavigation()),
+          MaterialPageRoute(builder: (context) => Commercantnavigation()),
         );
       } else if (role == 'ROLE_FOURNISSEUR') {
         ScaffoldMessenger.of(
@@ -85,21 +89,40 @@ class _LoginFormState extends State<LoginForm> {
         ).showSnackBar(SnackBar(content: Text("Bienvenue")));
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => Navigationbar()),
+          MaterialPageRoute(builder: (context) => Navigationbar()),
         );
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Rôle inconnu")));
       }
-      print(tokenPair.accessToken);
-      print(tokenPair.refreshToken);
       return tokenPair;
+    } on SocketException {
+      if (!mounted) return null;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Vérifiez votre connexion Internet."),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    } on TimeoutException {
+      if (!mounted) return null;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("La connexion a expiré. Réessayez."),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return null;
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) setState(() => isLoading = false);
     }
+    return null;
   }
 
   @override

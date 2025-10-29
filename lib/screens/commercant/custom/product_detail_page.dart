@@ -260,7 +260,8 @@ class ProductDetailPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => GroupOrderPage(produit: produit),
+                              builder: (context) =>
+                                  GroupOrderPage(produit: produit),
                             ),
                           );
                         },
@@ -285,23 +286,7 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                           elevation: 0,
                         ),
-                        onPressed: () {
-                          //Navigation vers la page de commande groupée
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) => GroupOrderPage(
-                          //       productTitle: produit.nom,
-                          //       // on convertit "1000 FCFA" → 1000.0
-                          //       unitPrice:
-                          //           double.tryParse("${produit.prix}") ?? 0,
-                          //       // on convertit "MOQ: 20 pcs" → 20
-                          //       moq: int.tryParse("${produit.moq}") ?? 0,
-                          //       unite: produit.unite,
-                          //     ),
-                          //   ),
-                          // );
-                        },
+                        onPressed: () {},
                         child: const Text(
                           'Rejoindre la commande',
                           style: TextStyle(

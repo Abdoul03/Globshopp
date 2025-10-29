@@ -8,11 +8,16 @@ class Authentification {
   final storage = FlutterSecureStorage();
 
   Future<TokenPair> connexion(String identifiant, String motDePasse) async {
-    final response = await http.post(
-      Uri.parse("${Constant.remoteUrl}/auth/login"),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({"identifiant": identifiant, "motDePasse": motDePasse}),
-    );
+    final response = await http
+        .post(
+          Uri.parse("${Constant.remoteUrl}/auth/login"),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            "identifiant": identifiant,
+            "motDePasse": motDePasse,
+          }),
+        )
+        .timeout(const Duration(seconds: 10));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final accessToken = data['accessToken'];

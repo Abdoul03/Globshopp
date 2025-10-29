@@ -21,6 +21,8 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
   final _qtyCtrl = TextEditingController();
   final _dateCtrl = TextEditingController();
 
+  double _montantTotal = 0;
+
   @override
   void dispose() {
     _qtyCtrl.dispose();
@@ -28,7 +30,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
     super.dispose();
   }
 
-  // 🔹 Formatage manuel
+  //Formatage manuel
   String _fmtMoney(num v) {
     final s = v.toStringAsFixed(0);
     final reg = RegExp(r'\B(?=(\d{3})+(?!\d))');
@@ -41,7 +43,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
     return s.replaceAllMapped(reg, (m) => '.');
   }
 
-  // 🔹 Sélecteur de date
+  //Sélecteur de date
   Future<void> _pickDate() async {
     final now = DateTime.now();
     final picked = await showDatePicker(
@@ -73,7 +75,12 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
 
   void calcul(String text) {
     setState(() {
-      if (text.isEmpty) {}
+      if (text.isEmpty) {
+        _montantTotal = 0;
+      } else {
+        final qte = double.tryParse(text) ?? 0;
+        _montantTotal = qte * widget.produit.prix;
+      }
     });
   }
 
@@ -146,7 +153,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                       ),
                       const SizedBox(height: 28),
 
-                      // 🔹 Champ Quantité (même style que date)
+                      //Champ Quantité (même style que date)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
@@ -177,7 +184,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                         ),
                       ),
 
-                      // 🔹 Champ Date (même style + icône calendrier)
+                      //Champ Date (même style + icône calendrier)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextField(
@@ -225,6 +232,14 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                               fontSize: 15,
                             ),
                           ),
+                          Text(
+                            _fmtMoney(_montantTotal),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: _G.blue,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 36),
@@ -243,8 +258,6 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                           ),
                           onPressed: () {
                             final quantite = int.parse(_qtyCtrl.text.trim());
-
-                            final Montant = widget.produit.prix * quantite;
                             // Action à faire ici
                           },
                           child: const Text(
