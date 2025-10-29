@@ -43,16 +43,16 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
     return s.replaceAllMapped(reg, (m) => '.');
   }
 
-  //Sélecteur de date
   Future<void> _pickDate() async {
-    final now = DateTime.now();
+    final now = DateTime.now(); // récupère un contexte sûr sous MaterialApp
     final picked = await showDatePicker(
       context: context,
-      initialDate: now,
+      initialDate: DateTime.now(),
       firstDate: now,
       lastDate: DateTime(now.year + 3),
       helpText: 'Choisir la date limite',
       locale: const Locale('fr', 'FR'),
+      barrierColor: Colors.white,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -64,6 +64,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
         );
       },
     );
+
     if (picked != null) {
       final dd = picked.day.toString().padLeft(2, '0');
       final mm = picked.month.toString().padLeft(2, '0');

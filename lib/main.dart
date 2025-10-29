@@ -7,6 +7,7 @@ import 'package:globshopp/screens/commercant/fournisseurs_page.dart';
 import 'package:globshopp/screens/commercant/commandes_page.dart';
 import 'package:globshopp/screens/commercant/annuaire_page.dart';
 import 'package:globshopp/screens/commercant/profile_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(const GlobalShopperApp());
 
@@ -20,6 +21,11 @@ class GlobalShopperApp extends StatelessWidget {
       title: 'Global Shopper',
       theme: ThemeData(useMaterial3: true),
       home: OnboardingCarousel(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       routes: {
         '/login': (_) => const LoginPage(),
         '/accueil': (_) => const HomePage(),
