@@ -1,6 +1,9 @@
 // lib/screens/fournisseurs_page.dart
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/fournisseur.dart';
+import 'package:globshopp/screens/custom/custumSearchBar.dart';
+import 'package:globshopp/services/fournisseurService.dart';
 import 'supplier_detail_page.dart';
 
 class FournisseursPage extends StatefulWidget {
@@ -12,66 +15,50 @@ class FournisseursPage extends StatefulWidget {
 
 class _FournisseursPageState extends State<FournisseursPage> {
   final _searchCtrl = TextEditingController();
+  final FournisseurService _fournisseurService = FournisseurService();
+  List<Fournisseur> _fournisseur = [];
+  List<Fournisseur> _searchResultats = [];
+  bool isLoading = false;
 
-  // ----- Données démo -----
-  final List<Supplier> _items = const [
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-    Supplier(
-      name: 'Aminata Traoré',
-      subtitle: 'Ustensiles de cuisine',
-      cityCountry: 'Bamako / Mali',
-      image: 'assets/image/ustensils.png',
-      isAsset: true,
-      verified: true,
-    ),
-  ];
+  Future<void> chargerFournisseur() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final fournisseurs = await _fournisseurService.getAllFournisseur();
+      setState(() {
+        _fournisseur = fournisseurs;
+        _searchResultats = fournisseurs;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      throw Exception('Erreur lors de la récupération des categories : $e');
+    }
+  }
+
+  void _onSearchTextChanged(String text) {
+    setState(() {
+      if (text.isEmpty) {
+        setState(() {
+          _searchResultats = _fournisseur;
+        });
+        return;
+      }
+
+      setState(() {
+        _searchResultats = _fournisseur.where((fournisseur) {
+          final titreMatch = fournisseur.nom.toLowerCase().contains(
+            text.toLowerCase(),
+          );
+          final descMatch = fournisseur.prenom.toLowerCase().contains(
+            text.toLowerCase(),
+          );
+          return titreMatch || descMatch;
+        }).toList();
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -81,127 +68,78 @@ class _FournisseursPageState extends State<FournisseursPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return isLoading
+        ? CircularProgressIndicator(color: Constant.blue)
+        : Scaffold(
+            backgroundColor: Colors.white,
 
-      // ------------ CONTENU ------------
-      body: CustomScrollView(
-        slivers: [
-          // Bandeau bleu fixe avec champ de recherche
-          SliverAppBar(
-            pinned: true,
-            backgroundColor: Constant.blue,
-            surfaceTintColor: Colors.transparent,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            automaticallyImplyLeading: false,
-            toolbarHeight: 0, // on n'affiche que la partie "bottom"
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(88),
-              child: Container(
-                color: Constant.blue,
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 52),
-                  child: _SearchField(controller: _searchCtrl),
-                ),
-              ),
-            ),
-          ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 10)),
-
-          // Liste des fournisseurs
-          SliverList.separated(
-            itemCount: _items.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 14),
-            itemBuilder: (context, i) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SupplierCard(
-                supplier: _items[i],
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SupplierDetailPage(supplier: _items[i]),
+            // ------------ CONTENU ------------
+            body: CustomScrollView(
+              slivers: [
+                // Bandeau bleu fixe avec champ de recherche
+                SliverAppBar(
+                  pinned: true,
+                  backgroundColor: Constant.blue,
+                  surfaceTintColor: Colors.transparent,
+                  elevation: 0,
+                  scrolledUnderElevation: 0,
+                  automaticallyImplyLeading: false,
+                  toolbarHeight: 0, // on n'affiche que la partie "bottom"
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(88),
+                    child: Container(
+                      color: Constant.blue,
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 52),
+                        // child: _SearchField(controller: _searchCtrl),
+                        child: Custumsearchbar(
+                          hintText: "Rechercher",
+                          onchange: _onSearchTextChanged,
+                          controller: _searchCtrl,
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 10)),
+
+                // Liste des fournisseurs
+                SliverList.separated(
+                  itemCount: _searchCtrl.text.isEmpty
+                      ? _fournisseur.length
+                      : _searchResultats.isEmpty
+                      ? 1
+                      : _searchResultats.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 14),
+                  itemBuilder: (context, i) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SupplierCard(
+                      supplier: _fournisseur[i],
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                SupplierDetailPage(supplier: _fournisseur[i]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              ],
             ),
-          ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
-        ],
-      ),
-    );
-  }
-}
-
-/* =================== Modèle =================== */
-
-class Supplier {
-  final String name;
-  final String subtitle;
-  final String cityCountry;
-  final String image; // asset ou URL
-  final bool isAsset;
-  final bool verified;
-
-  const Supplier({
-    required this.name,
-    required this.subtitle,
-    required this.cityCountry,
-    required this.image,
-    this.isAsset = false,
-    this.verified = false,
-  });
-}
-
-/* =================== Widgets =================== */
-
-class _SearchField extends StatelessWidget {
-  const _SearchField({required this.controller});
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      elevation: 0,
-      borderRadius: BorderRadius.circular(14),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: 'Rechercher',
-          prefixIcon: const Icon(Icons.search_rounded),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Colors.white),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Colors.white),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Colors.white),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 14,
-          ),
-        ),
-      ),
-    );
+          );
   }
 }
 
 class SupplierCard extends StatelessWidget {
   const SupplierCard({super.key, required this.supplier, this.onTap});
-  final Supplier supplier;
+  final Fournisseur supplier;
   final VoidCallback? onTap;
 
   static const _text = Color(0xFF0B0B0B);
@@ -210,16 +148,29 @@ class SupplierCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageWidget = supplier.isAsset
-        ? Image.asset(
-            supplier.image,
-            width: 64,
-            height: 64,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => _fallbackImage(),
+    final String firstNameInitial = supplier.prenom.isNotEmpty
+        ? supplier.prenom[0].toUpperCase()
+        : '';
+    final String lastNameInitial = supplier.nom.isNotEmpty
+        ? supplier.nom[0].toUpperCase()
+        : '';
+    final String initials = firstNameInitial + lastNameInitial;
+    final imageWidget = supplier.photoUrl == null
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Text(
+              initials,
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
           )
+        // Image.asset(
+        //     supplier.image,
+        //     width: 64,
+        //     height: 64,
+        //     fit: BoxFit.cover,
+        //   )
         : Image.network(
-            supplier.image,
+            supplier.photoUrl!,
             width: 64,
             height: 64,
             fit: BoxFit.cover,
@@ -245,7 +196,7 @@ class SupplierCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Hero(
-                  tag: 'supplier:${supplier.image}_${supplier.name}',
+                  tag: 'supplier:${supplier.photoUrl}_${supplier.nom}',
                   child: imageWidget,
                 ),
               ),
@@ -258,7 +209,7 @@ class SupplierCard extends StatelessWidget {
                   children: [
                     // Nom
                     Text(
-                      supplier.name,
+                      "${supplier.prenom} ${supplier.nom}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -270,7 +221,7 @@ class SupplierCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     // Sous-titre
                     Text(
-                      supplier.subtitle,
+                      supplier.username,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -285,18 +236,18 @@ class SupplierCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // Text(
+                        //   supplier.verified ? 'Vérifier' : 'Non vérifié',
+                        //   style: TextStyle(
+                        //     color: supplier.verified
+                        //         ? const Color(0xFF2F80ED)
+                        //         : Colors.grey,
+                        //     fontSize: 13.5,
+                        //     fontWeight: FontWeight.w700,
+                        //   ),
+                        // ),
                         Text(
-                          supplier.verified ? 'Vérifier' : 'Non vérifié',
-                          style: TextStyle(
-                            color: supplier.verified
-                                ? const Color(0xFF2F80ED)
-                                : Colors.grey,
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          supplier.cityCountry,
+                          "${supplier.pays != null ? supplier.pays?.nom : "Bamako/Mali"}",
                           style: const TextStyle(color: _sub, fontSize: 13.5),
                         ),
                       ],

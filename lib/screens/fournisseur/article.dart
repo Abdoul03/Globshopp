@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
-import 'package:globshopp/screens/fournisseur/custom/custumSearchBar.dart';
+import 'package:globshopp/screens/custom/custumSearchBar.dart';
 import 'package:globshopp/services/produitService.dart';
 import 'package:remixicon/remixicon.dart';
 

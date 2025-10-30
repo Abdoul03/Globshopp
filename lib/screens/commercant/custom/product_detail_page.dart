@@ -1,17 +1,47 @@
-// lib/screens/product_detail_page.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
-import 'package:globshopp/screens/commercant/custom/fournisseurDetailPage.dart';
+import 'package:globshopp/screens/commercant/supplier_detail_page.dart';
 import '../group_order_page.dart';
 
-class ProductDetailPage extends StatelessWidget {
+class ProductDetailPage extends StatefulWidget {
   final Produit produit;
   const ProductDetailPage({super.key, required this.produit});
 
   @override
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState extends State<ProductDetailPage> {
+  final storage = FlutterSecureStorage();
+
+  String? extractIdFromToken(String accessToken) {
+    try {
+      // Le token a la forme header.payload.signature
+      final parts = accessToken.split('.');
+      if (parts.length != 3) return null;
+
+      final payload = parts[1];
+      // Base64Url decoding
+      var normalized = base64Url.normalize(payload);
+      final payloadMap = jsonDecode(utf8.decode(base64Url.decode(normalized)));
+
+      if (payloadMap is! Map<String, dynamic>) return null;
+      return payloadMap['sub'] as String?;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'accessToken');
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final urls = produit.mediaUrls;
+    final urls = widget.produit.mediaUrls;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -99,7 +129,7 @@ class ProductDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${produit.prix}",
+                          "${widget.produit.prix}",
                           style: const TextStyle(
                             fontSize: 15.5,
                             fontWeight: FontWeight.w800,
@@ -135,7 +165,7 @@ class ProductDetailPage extends StatelessWidget {
                         const SizedBox(height: 4),
 
                         Text(
-                          "${produit.moq}",
+                          "${widget.produit.moq}",
                           style: const TextStyle(
                             fontSize: 15.5,
                             fontWeight: FontWeight.w900,
@@ -153,7 +183,7 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Titre produit ───────────
               Text(
-                produit.nom,
+                widget.produit.nom,
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
@@ -164,7 +194,7 @@ class ProductDetailPage extends StatelessWidget {
 
               // ─────────── Description ───────────
               Text(
-                produit.description,
+                widget.produit.description,
                 style: TextStyle(
                   fontSize: 12,
                   height: 1.4,
@@ -207,8 +237,8 @@ class ProductDetailPage extends StatelessWidget {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => FournisseurDetailPage(
-                              fournisseur: produit.fournisseur!,
+                            builder: (_) => SupplierDetailPage(
+                              supplier: widget.produit.fournisseur!,
                             ),
                           ),
                         ),
@@ -216,7 +246,7 @@ class ProductDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${produit.fournisseur!.prenom} ${produit.fournisseur!.nom}",
+                              "${widget.produit.fournisseur!.prenom} ${widget.produit.fournisseur!.nom}",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -257,8 +287,8 @@ class ProductDetailPage extends StatelessWidget {
                     elevation: 0,
                   ),
                   onPressed: () {
-                    if (produit.commandeGroupees != null &&
-                        produit.commandeGroupees!.isNotEmpty) {
+                    if (widget.produit.commandeGroupees != null &&
+                        widget.produit.commandeGroupees!.isNotEmpty) {
                       // Rejoindre la commande existante
                       // TODO : Ajouter la logique pour rejoindre
                     } else {
@@ -266,14 +296,15 @@ class ProductDetailPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => GroupOrderPage(produit: produit),
+                          builder: (_) =>
+                              GroupOrderPage(produit: widget.produit),
                         ),
                       );
                     }
                   },
                   child: Text(
-                    produit.commandeGroupees != null &&
-                            produit.commandeGroupees!.isNotEmpty
+                    widget.produit.commandeGroupees != null &&
+                            widget.produit.commandeGroupees!.isNotEmpty
                         ? 'Rejoindre la commande'
                         : 'Créer une commande',
                     style: const TextStyle(

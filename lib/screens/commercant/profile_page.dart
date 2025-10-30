@@ -1,5 +1,6 @@
 // lib/screens/profile_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/screens/custom/circleImageButton.dart';
 import 'package:globshopp/screens/custom/fieldLabel.dart';
@@ -14,6 +15,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final storage = FlutterSecureStorage();
   final Authentification _authentification = Authentification();
   bool isLoading = false;
 
@@ -29,6 +31,10 @@ class _ProfileState extends State<Profile> {
       context,
     ).showSnackBar(SnackBar(content: Text("Deconnecter avec succes")));
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'accessToken');
   }
 
   @override

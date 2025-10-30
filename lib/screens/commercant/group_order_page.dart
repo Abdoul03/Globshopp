@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
-import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';

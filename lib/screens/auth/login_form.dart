@@ -52,8 +52,7 @@ class _LoginFormState extends State<LoginForm> {
       final payloadMap = jsonDecode(utf8.decode(base64Url.decode(normalized)));
 
       if (payloadMap is! Map<String, dynamic>) return null;
-      return payloadMap['role']
-          as String?; // Assumes backend put the role claim as 'role'
+      return payloadMap['role'] as String?;
     } catch (e) {
       return null;
     }

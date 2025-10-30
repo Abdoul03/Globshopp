@@ -1,10 +1,11 @@
 // lib/screens/supplier_detail_page.dart
 import 'package:flutter/material.dart';
+import 'package:globshopp/model/fournisseur.dart';
 // On réutilise le modèle Supplier défini dans fournisseurs_page.dart
 import 'fournisseurs_page.dart' show Supplier;
 
 class SupplierDetailPage extends StatelessWidget {
-  final Supplier supplier;
+  final Fournisseur supplier;
   const SupplierDetailPage({super.key, required this.supplier});
 
   @override
@@ -34,53 +35,53 @@ class SupplierDetailPage extends StatelessWidget {
           // Image d’en-tête avec Hero (même tag que la carte)
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Hero(
-              tag: 'supplier:${supplier.image}_${supplier.name}',
-              child: _imageWidget(supplier),
-            ),
+            // child: Hero(
+            //   tag: 'supplier:${supplier.photoUrl}_${supplier.nom}',
+            //   child: _imageWidget(supplier),
+            // ),
           ),
           const SizedBox(height: 16),
 
           // Infos fournisseur
           Text(
-            supplier.name,
+            "${supplier.prenom} ${supplier.nom}",
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(
-            supplier.subtitle,
+            supplier.telephone,
             style: const TextStyle(fontSize: 14, color: Color(0xFF5C5F66)),
           ),
           const SizedBox(height: 4),
           Text(
-            supplier.cityCountry,
+            "${supplier.pays != null ? supplier.pays?.nom : "Bamako/Mali"}",
             style: const TextStyle(fontSize: 13.5, color: Color(0xFF5C5F66)),
           ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Icon(
-                supplier.verified
-                    ? Icons.verified_rounded
-                    : Icons.verified_outlined,
-                color: supplier.verified
-                    ? const Color(0xFF2F80ED)
-                    : Colors.grey,
-                size: 18,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                supplier.verified ? 'Vérifié' : 'Non vérifié',
-                style: TextStyle(
-                  color: supplier.verified
-                      ? const Color(0xFF2F80ED)
-                      : Colors.grey,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
 
+          // Row(
+          //   children: [
+          //     Icon(
+          //       supplier.verified
+          //           ? Icons.verified_rounded
+          //           : Icons.verified_outlined,
+          //       color: supplier.verified
+          //           ? const Color(0xFF2F80ED)
+          //           : Colors.grey,
+          //       size: 18,
+          //     ),
+          //     const SizedBox(width: 6),
+          //     Text(
+          //       supplier.verified ? 'Vérifié' : 'Non vérifié',
+          //       style: TextStyle(
+          //         color: supplier.verified
+          //             ? const Color(0xFF2F80ED)
+          //             : Colors.grey,
+          //         fontWeight: FontWeight.w700,
+          //       ),
+          //     ),
+          //   ],
+          // ),
           const SizedBox(height: 24),
           const Text(
             'Produits',
@@ -109,7 +110,7 @@ class SupplierDetailPage extends StatelessWidget {
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(12),
                         ),
-                        child: _imageWidget(supplier),
+                        // child: _imageWidget(supplier),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -138,17 +139,17 @@ class SupplierDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _imageWidget(Supplier s) {
-    return s.isAsset
+  Widget _imageWidget(Fournisseur s) {
+    return s.photoUrl == null
         ? Image.asset(
-            s.image,
+            s.photoUrl!,
             height: 180,
             width: double.infinity,
             fit: BoxFit.cover,
             errorBuilder: (_, __, ___) => _fallback(),
           )
         : Image.network(
-            s.image,
+            s.photoUrl!,
             height: 180,
             width: double.infinity,
             fit: BoxFit.cover,
