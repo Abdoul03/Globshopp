@@ -202,16 +202,16 @@ class ProductDetailPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => FournisseurDetailPage(
-                            fournisseur: produit.fournisseur!,
+                    Flexible(
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => FournisseurDetailPage(
+                              fournisseur: produit.fournisseur!,
+                            ),
                           ),
                         ),
-                      ),
-                      child: Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -245,59 +245,45 @@ class ProductDetailPage extends StatelessWidget {
               const SizedBox(height: 18),
 
               // ─────────── Bouton principal ───────────
-              produit.commandeGroupees != null
-                  ? SizedBox(
-                      height: 44,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Constant.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () {
-                          //Navigation vers la page de commande groupée
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => GroupOrderPage(produit: produit),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Créer une commande',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13.5,
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                      height: 44,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Constant.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          'Rejoindre la commande',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13.5,
-                          ),
-                        ),
-                      ),
+              SizedBox(
+                height: 44,
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Constant.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    if (produit.commandeGroupees != null &&
+                        produit.commandeGroupees!.isNotEmpty) {
+                      // Rejoindre la commande existante
+                      // TODO : Ajouter la logique pour rejoindre
+                    } else {
+                      // Créer une nouvelle commande
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => GroupOrderPage(produit: produit),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(
+                    produit.commandeGroupees != null &&
+                            produit.commandeGroupees!.isNotEmpty
+                        ? 'Rejoindre la commande'
+                        : 'Créer une commande',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13.5,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
