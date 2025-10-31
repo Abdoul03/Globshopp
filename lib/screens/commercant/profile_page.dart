@@ -58,7 +58,11 @@ class _ProfileState extends State<Profile> {
       if (accessToken == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Token non trouvé, veuillez vous reconnecter"),
+            content: Text(
+              "Token non trouvé, veuillez vous reconnecter",
+              style: TextStyle(color: Constant.colorsWhite),
+            ),
+            backgroundColor: Constant.blue,
           ),
         );
         return;
@@ -67,7 +71,11 @@ class _ProfileState extends State<Profile> {
       if (id == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Token invalide, veuillez vous reconnecter"),
+            content: Text(
+              "Token invalide, veuillez vous reconnecter",
+              style: TextStyle(color: Constant.colorsWhite),
+            ),
+            backgroundColor: Constant.blue,
           ),
         );
         return;
@@ -75,7 +83,13 @@ class _ProfileState extends State<Profile> {
       final conversionId = int.tryParse(id);
       if (conversionId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("ID utilisateur invalide")),
+          const SnackBar(
+            content: Text(
+              "ID utilisateur invalide",
+              style: TextStyle(color: Constant.colorsWhite),
+            ),
+            backgroundColor: Constant.blue,
+          ),
         );
         return;
       }
