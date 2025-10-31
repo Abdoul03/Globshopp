@@ -49,8 +49,25 @@ class Produitservice {
   Future<List<Produit>> getFournisseurProduits() async {
     try {
       final response = await _apiservice.requestWithAuthentification(
-        "Get",
+        "GET",
         "/produits/fournisseur",
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => Produit.fromJson(json)).toList();
+      } else {
+        throw Exception('Échec du chargement des produits');
+      }
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération du produit : $e');
+    }
+  }
+
+  Future<List<Produit>> getFournisseurProduitsById(int fournisseurId) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "GET",
+        "/produits/fournisseur/$fournisseurId",
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
