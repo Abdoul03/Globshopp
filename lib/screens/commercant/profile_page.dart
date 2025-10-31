@@ -1,11 +1,15 @@
 // lib/screens/profile_page.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/commercant.dart';
 import 'package:globshopp/screens/custom/circleImageButton.dart';
 import 'package:globshopp/screens/custom/fieldLabel.dart';
 import 'package:globshopp/screens/custom/infoTile.dart';
 import 'package:globshopp/services/authentification.dart';
+import 'package:globshopp/services/commercantService.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -17,7 +21,77 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final storage = FlutterSecureStorage();
   final Authentification _authentification = Authentification();
+  final CommercantService _commercantService = CommercantService();
+
+  Commercant? commercant;
+
   bool isLoading = false;
+
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'accessToken');
+  }
+
+  String? extractIdFromToken(String accessToken) {
+    try {
+      // Le token a la forme header.payload.signature
+      final parts = accessToken.split('.');
+      if (parts.length != 3) return null;
+
+      final payload = parts[1];
+      // Base64Url decoding
+      var normalized = base64Url.normalize(payload);
+      final payloadMap = jsonDecode(utf8.decode(base64Url.decode(normalized)));
+
+      if (payloadMap is! Map<String, dynamic>) return null;
+      return payloadMap['sub'] as String?;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> getUser() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final accessToken = await getAccessToken();
+      if (accessToken == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Token non trouvé, veuillez vous reconnecter"),
+          ),
+        );
+        return;
+      }
+      final id = extractIdFromToken(accessToken);
+      if (id == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Token invalide, veuillez vous reconnecter"),
+          ),
+        );
+        return;
+      }
+      final conversionId = int.tryParse(id);
+      if (conversionId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("ID utilisateur invalide")),
+        );
+        return;
+      }
+      final user = await _commercantService.getCommercant(conversionId!);
+      setState(() {
+        commercant = user;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
+    }
+  }
 
   Future<void> logOut() async {
     setState(() {
@@ -33,8 +107,10 @@ class _ProfileState extends State<Profile> {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
-  Future<String?> getAccessToken() async {
-    return await storage.read(key: 'accessToken');
+  @override
+  void initState() {
+    getUser();
+    super.initState();
   }
 
   @override
@@ -109,29 +185,36 @@ class _ProfileState extends State<Profile> {
                   FieldLabel('Nom'),
                   InfoTile(
                     icon: Icons.person_outline_rounded,
-                    text: 'Abdoul Ibrahima Samaké',
+                    text:
+                        '${commercant?.prenom ?? ""} ${commercant?.nom ?? ""}',
                   ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Téléphone'),
-                  InfoTile(icon: Icons.phone_outlined, text: '71267813'),
+                  InfoTile(
+                    icon: Icons.phone_outlined,
+                    text: commercant?.telephone ?? "",
+                  ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Email'),
                   InfoTile(
                     icon: Icons.mail_outline_rounded,
-                    text: 'Samabdoul03@gmail.com',
+                    text: commercant?.email ?? "",
                   ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Rôle'),
-                  InfoTile(icon: Icons.vpn_key_outlined, text: 'Commerçant'),
+                  InfoTile(
+                    icon: Icons.vpn_key_outlined,
+                    text: "${commercant?.role}",
+                  ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Adresse'),
                   InfoTile(
                     icon: Icons.location_city_outlined,
-                    text: 'Bamako / Mali / Grand marché',
+                    text: 'Bamako / Mali',
                   ),
 
                   const SizedBox(height: 24),

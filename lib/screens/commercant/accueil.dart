@@ -97,7 +97,10 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       setState(() => _loading = false);
-      throw Exception('Erreur lors de la récupération des categories : $e');
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
     }
   }
 

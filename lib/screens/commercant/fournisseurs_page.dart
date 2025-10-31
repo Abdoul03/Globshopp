@@ -20,6 +20,12 @@ class _FournisseursPageState extends State<FournisseursPage> {
   List<Fournisseur> _searchResultats = [];
   bool isLoading = false;
 
+  @override
+  void initState() {
+    chargerFournisseur();
+    super.initState();
+  }
+
   Future<void> chargerFournisseur() async {
     try {
       setState(() {
@@ -33,7 +39,10 @@ class _FournisseursPageState extends State<FournisseursPage> {
       });
     } catch (e) {
       setState(() => isLoading = false);
-      throw Exception('Erreur lors de la récupération des categories : $e');
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
     }
   }
 
@@ -107,27 +116,33 @@ class _FournisseursPageState extends State<FournisseursPage> {
 
                 // Liste des fournisseurs
                 SliverList.separated(
-                  itemCount: _searchCtrl.text.isEmpty
-                      ? _fournisseur.length
-                      : _searchResultats.isEmpty
-                      ? 1
-                      : _searchResultats.length,
+                  itemCount: _searchCtrl.text.trim().isNotEmpty
+                      ? _searchResultats.length
+                      : _fournisseur.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 14),
-                  itemBuilder: (context, i) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: SupplierCard(
-                      supplier: _fournisseur[i],
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                SupplierDetailPage(supplier: _fournisseur[i]),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  itemBuilder: (context, i) {
+                    final currentList = _searchCtrl.text.trim().isNotEmpty
+                        ? _searchResultats
+                        : _fournisseur;
+
+                    final supplier = currentList[i];
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SupplierCard(
+                        supplier: supplier,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  SupplierDetailPage(supplier: supplier),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
 
                 const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -156,19 +171,23 @@ class SupplierCard extends StatelessWidget {
         : '';
     final String initials = firstNameInitial + lastNameInitial;
     final imageWidget = supplier.photoUrl == null
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+        ? Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: Constant.blue, // ou une autre couleur par défaut
+              borderRadius: BorderRadius.circular(8),
+            ),
+            alignment: Alignment.center,
             child: Text(
               initials,
-              style: TextStyle(fontSize: 24, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 24,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           )
-        // Image.asset(
-        //     supplier.image,
-        //     width: 64,
-        //     height: 64,
-        //     fit: BoxFit.cover,
-        //   )
         : Image.network(
             supplier.photoUrl!,
             width: 64,

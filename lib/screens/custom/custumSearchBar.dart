@@ -26,7 +26,7 @@ class Custumsearchbar extends StatelessWidget {
         prefixIcon: Icon(RemixIcons.search_line),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromARGB(181, 0, 0, 0),
+            color: Constant.colorsWhite,
             style: BorderStyle.solid,
           ),
           borderRadius: BorderRadius.all(Radius.circular(15)),

@@ -123,7 +123,10 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
       setState(() {
         _isLoading = false;
       });
-      throw Exception("Erreur de creation de la commande : $e");
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
     }
   }
 

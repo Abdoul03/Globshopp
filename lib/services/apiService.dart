@@ -134,7 +134,8 @@ class Apiservice {
     final response = await http.post(
       Uri.parse('${Constant.remoteUrl}/auth/refresh'),
       headers: {'Content-Type': 'application/json'},
-      body: refresh,
+      // body: refresh,
+      body: jsonEncode({'refreshToken': refresh}),
     );
 
     if (response.statusCode == 200) {
