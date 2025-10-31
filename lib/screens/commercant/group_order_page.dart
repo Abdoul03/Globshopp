@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/screens/commercant/custom/kvLine.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';
 
 class GroupOrderPage extends StatefulWidget {
@@ -10,14 +11,6 @@ class GroupOrderPage extends StatefulWidget {
 
   @override
   State<GroupOrderPage> createState() => _GroupOrderPageState();
-}
-
-/* ---------- Palette ---------- */
-class _G {
-  static const text = Color(0xFF0B0B0B);
-  static const sub = Color(0xFF6F737A);
-  static const border = Color(0xFFE6E6EA);
-  static const blue = Color(0xFF3B6DB8);
 }
 
 class _GroupOrderPageState extends State<GroupOrderPage> {
@@ -63,9 +56,10 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(
-              context,
-            ).colorScheme.copyWith(primary: _G.blue, onPrimary: Colors.white),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: Constant.blue,
+              onPrimary: Colors.white,
+            ),
           ),
           child: child!,
         );
@@ -164,7 +158,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                         'Création de commande groupée',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: _G.text,
+                          color: Constant.colorsBlack,
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
@@ -175,7 +169,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                         'Cette commande groupée sera créée pour le\nproduit : ${widget.produit.nom}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          color: _G.sub,
+                          color: Constant.grisClaire,
                           fontSize: 13.5,
                           height: 1.35,
                         ),
@@ -186,12 +180,12 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          _KVLine(
+                          KVLine(
                             k: 'Prix unitaire :',
                             v: _fmtMoney(widget.produit.prix),
                           ),
                           const SizedBox(height: 8),
-                          _KVLine(
+                          KVLine(
                             k: 'Moq :',
                             v: '${_fmtInt(widget.produit.moq)} ',
                           ),
@@ -217,12 +211,14 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: _G.border),
+                              borderSide: const BorderSide(
+                                color: Constant.border,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: const BorderSide(
-                                color: _G.blue,
+                                color: Constant.blue,
                                 width: 1.4,
                               ),
                             ),
@@ -242,7 +238,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             hintText: 'Sélectionnez une date',
                             suffixIcon: const Icon(
                               Icons.calendar_today_rounded,
-                              color: _G.blue,
+                              color: Constant.blue,
                             ),
                             filled: true,
                             fillColor: Colors.white,
@@ -252,12 +248,14 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: _G.border),
+                              borderSide: const BorderSide(
+                                color: Constant.border,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: const BorderSide(
-                                color: _G.blue,
+                                color: Constant.blue,
                                 width: 1.4,
                               ),
                             ),
@@ -283,7 +281,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
-                              color: _G.blue,
+                              color: Constant.blue,
                             ),
                           ),
                         ],
@@ -296,7 +294,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                         height: 52,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: _G.blue,
+                            backgroundColor: Constant.blue,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -358,40 +356,6 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-/* ------------------ Widgets ------------------ */
-
-class _KVLine extends StatelessWidget {
-  const _KVLine({required this.k, required this.v});
-  final String k;
-  final String v;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          k,
-          style: const TextStyle(
-            color: _G.text,
-            fontSize: 14.5,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(width: 10),
-        Text(
-          v,
-          style: const TextStyle(
-            color: _G.text,
-            fontSize: 14.5,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
     );
   }
 }

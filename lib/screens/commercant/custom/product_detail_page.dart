@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/screens/commercant/joinGroupOrder.dart';
 import 'package:globshopp/screens/commercant/supplier_detail_page.dart';
 import '../group_order_page.dart';
 
@@ -289,8 +290,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   onPressed: () {
                     if (widget.produit.commandeGroupees != null &&
                         widget.produit.commandeGroupees!.isNotEmpty) {
-                      // Rejoindre la commande existante
-                      // TODO : Ajouter la logique pour rejoindre
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              JoinGroupOrder(produit: widget.produit),
+                        ),
+                      );
                     } else {
                       // Créer une nouvelle commande
                       Navigator.push(
