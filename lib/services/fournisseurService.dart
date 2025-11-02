@@ -22,4 +22,21 @@ class FournisseurService {
       throw Exception("Erreur lors de la recuperation des fournisseur : $e");
     }
   }
+
+  Future<Fournisseur> getFournisseur(int id) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "GET",
+        "/fournisseur/$id",
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return Fournisseur.fromJson(data);
+      } else {
+        throw Exception('Échec du chargement du commerçant');
+      }
+    } catch (e) {
+      throw Exception("Erreur lors de la recuperation des fournisseur : $e");
+    }
+  }
 }

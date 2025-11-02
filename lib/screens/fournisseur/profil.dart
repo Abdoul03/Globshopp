@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/fournisseur.dart';
 import 'package:globshopp/screens/custom/circleImageButton.dart';
 import 'package:globshopp/screens/custom/fieldLabel.dart';
 import 'package:globshopp/screens/custom/infoTile.dart';
 import 'package:globshopp/services/authentification.dart';
+import 'package:globshopp/services/fournisseurService.dart';
 
 class Profil extends StatefulWidget {
   const Profil({super.key});
@@ -13,8 +18,81 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
+  final storage = FlutterSecureStorage();
+  final FournisseurService _fournisseurService = FournisseurService();
   final Authentification _authentification = Authentification();
   bool isLoading = false;
+
+  Fournisseur? fournisseur;
+
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'accessToken');
+  }
+
+  String? extractIdFromToken(String accessToken) {
+    try {
+      // Le token a la forme header.payload.signature
+      final parts = accessToken.split('.');
+      if (parts.length != 3) return null;
+
+      final payload = parts[1];
+      // Base64Url decoding
+      var normalized = base64Url.normalize(payload);
+      final payloadMap = jsonDecode(utf8.decode(base64Url.decode(normalized)));
+
+      if (payloadMap is! Map<String, dynamic>) return null;
+      return payloadMap['sub'] as String?;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> getUserInformation() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final accessToken = await getAccessToken();
+      if (accessToken == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Token non trouvé, veuillez vous reconnecter",
+              style: TextStyle(color: Constant.colorsWhite),
+            ),
+            backgroundColor: Constant.blue,
+          ),
+        );
+        return;
+      }
+      final id = extractIdFromToken(accessToken);
+      if (id == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Token invalide, veuillez vous reconnecter",
+              style: TextStyle(color: Constant.colorsWhite),
+            ),
+            backgroundColor: Constant.blue,
+          ),
+        );
+        return;
+      }
+      final conversionId = int.tryParse(id);
+      final user = await _fournisseurService.getFournisseur(conversionId!);
+      setState(() {
+        fournisseur = user;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
+    }
+  }
+
   Future<void> logOut() async {
     setState(() {
       isLoading = true;
@@ -27,6 +105,12 @@ class _ProfilState extends State<Profil> {
       context,
     ).showSnackBar(SnackBar(content: Text("Deconnecter avec succes")));
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
+  @override
+  void initState() {
+    getUserInformation();
+    super.initState();
   }
 
   @override
@@ -101,23 +185,30 @@ class _ProfilState extends State<Profil> {
                   FieldLabel('Nom'),
                   InfoTile(
                     icon: Icons.person_outline_rounded,
-                    text: 'Abdoul Ibrahima Samaké',
+                    text:
+                        "${fournisseur?.prenom ?? ""} ${fournisseur?.nom ?? ""}",
                   ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Téléphone'),
-                  InfoTile(icon: Icons.phone_outlined, text: '71267813'),
+                  InfoTile(
+                    icon: Icons.phone_outlined,
+                    text: fournisseur?.telephone ?? "",
+                  ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Email'),
                   InfoTile(
                     icon: Icons.mail_outline_rounded,
-                    text: 'Samabdoul03@gmail.com',
+                    text: fournisseur?.email ?? "",
                   ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Rôle'),
-                  InfoTile(icon: Icons.vpn_key_outlined, text: 'Commerçant'),
+                  InfoTile(
+                    icon: Icons.vpn_key_outlined,
+                    text: "${fournisseur?.role ?? ""}",
+                  ),
                   const SizedBox(height: 12),
 
                   FieldLabel('Adresse'),
