@@ -28,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   List<Produit> _produits = [];
   List<Produit> _searchResults = [];
   List<Categorie> categories = [];
+  // Liste temporaire pour stocker les produits filtrés par catégorie
+  List<Produit> _produitsFiltresParCategorie = [];
 
   // List<Map<String, Object?>> categories = [];
   bool _loading = true;
@@ -92,6 +94,7 @@ class _HomePageState extends State<HomePage> {
       final produit = await _produitservice.getAllProduits();
       setState(() {
         _produits = produit;
+        _produitsFiltresParCategorie = produit; // Initialiser avec tous les produits
         _searchResults = produit;
         _loading = false;
       });
@@ -104,26 +107,48 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _onSearchTextChanged(String text) {
+  List<Produit> _calculerResultatsFiltres() {
+    List<Produit> produitsFiltres = _produitsFiltresParCategorie;
+
+    // Si on a une recherche textuelle, on filtre aussi par texte
+    if (_searchContoller.text.isNotEmpty) {
+      final text = _searchContoller.text.toLowerCase();
+      produitsFiltres = produitsFiltres.where((p) {
+        final titreMatch = p.nom.toLowerCase().contains(text);
+        final descMatch = p.description.toLowerCase().contains(text);
+        return titreMatch || descMatch;
+      }).toList();
+    }
+
+    return produitsFiltres;
+  }
+
+  void _appliquerFiltres() {
     setState(() {
-      if (text.isEmpty) {
-        setState(() {
-          _searchResults = _produits;
-        });
-        return;
+      _searchResults = _calculerResultatsFiltres();
+    });
+  }
+
+  void _onSearchTextChanged(String text) {
+    _appliquerFiltres();
+  }
+
+  void _filtrerParCategorie(Categorie categorie) {
+    setState(() {
+      _selectedCategory = categories.indexOf(categorie);
+
+      if (categorie.id == 0) {
+        // Si "Tout" → on prend tous les produits
+        _produitsFiltresParCategorie = List.from(_produits);
+      } else {
+        // Sinon on garde uniquement les produits appartenant à cette catégorie
+        _produitsFiltresParCategorie = _produits
+            .where((p) => p.categorie != null && p.categorie!.id == categorie.id)
+            .toList();
       }
 
-      setState(() {
-        _searchResults = _produits.where((produit) {
-          final titreMatch = produit.nom.toLowerCase().contains(
-            text.toLowerCase(),
-          );
-          final descMatch = produit.description.toLowerCase().contains(
-            text.toLowerCase(),
-          );
-          return titreMatch || descMatch;
-        }).toList();
-      });
+      // Réappliquer les filtres (recherche + catégorie)
+      _searchResults = _calculerResultatsFiltres();
     });
   }
 
@@ -248,7 +273,8 @@ class _HomePageState extends State<HomePage> {
                     nom: categorie.nom,
                     icon: categorie.icone ?? Icons.grid_view_rounded,
                     selected: i == _selectedCategory,
-                    onTap: () => setState(() => _selectedCategory = i),
+                    onTap: () =>
+                        setState(() => _filtrerParCategorie(categories[i])),
                   );
                 },
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
@@ -270,18 +296,29 @@ class _HomePageState extends State<HomePage> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  // Liste source : produits normaux ou résultats de recherche
-                  final List produitsAffiches = _searchContoller.text.isEmpty
-                      ? _produits
-                      : _searchResults;
-
-                  // Si recherche active et aucun résultat
-                  if (_searchContoller.text.isNotEmpty &&
-                      produitsAffiches.isEmpty) {
-                    return const Center(child: Text("Aucun produit trouvé"));
+                  // Si la liste est vide, afficher un message
+                  if (_searchResults.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: Text(
+                          "Aucun produit trouvé dans cette catégorie",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
                   }
 
-                  final produit = produitsAffiches[index];
+                  // Vérification de sécurité supplémentaire
+                  if (index < 0 || index >= _searchResults.length) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final produit = _searchResults[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -295,11 +332,7 @@ class _HomePageState extends State<HomePage> {
                     child: Productcard(produit: produit),
                   );
                 },
-                childCount: _searchContoller.text.isEmpty
-                    ? _produits.length
-                    : _searchResults.isEmpty
-                    ? 1 // Pour afficher le message "Aucun produit trouvé"
-                    : _searchResults.length,
+                childCount: _searchResults.isEmpty ? 1 : _searchResults.length,
               ),
             ),
           ),
