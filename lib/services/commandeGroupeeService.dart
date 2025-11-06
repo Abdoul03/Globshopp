@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/services/apiService.dart';
 
@@ -24,6 +25,25 @@ class CommandeGroupeeService {
         return Participation.fromJson(data);
       } else {
         throw Exception('Échec de creation de la commande groupée ');
+      }
+    } catch (e) {
+      throw Exception("Erreur lors de la creation de la commande groupée : $e");
+    }
+  }
+
+  Future<List<CommandeGroupee>> getfournisseurCommandes(
+    int fournisseurId,
+  ) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "GET",
+        "commandeGroupee/fournisseur/$fournisseurId",
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => CommandeGroupee.fromJson(json)).toList();
+      } else {
+        throw Exception('Échec du chargement des produits');
       }
     } catch (e) {
       throw Exception("Erreur lors de la creation de la commande groupée : $e");
