@@ -21,7 +21,10 @@ class _NavigationbarState extends State<Navigationbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: appScreens[_selectedIndex]),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: appScreens[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {

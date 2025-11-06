@@ -1,0 +1,1 @@
+enum Statut { EFFECTUER, ECHOUER, ANNULER }

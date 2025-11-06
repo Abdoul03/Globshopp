@@ -1,7 +1,7 @@
 import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/pays.dart';
-import 'package:globshopp/model/role.dart';
+import 'package:globshopp/model/enum/role.dart';
 import 'package:globshopp/model/utilisateur.dart';
 
 class Commercant extends Utilisateur {
@@ -27,15 +27,15 @@ class Commercant extends Utilisateur {
 
   factory Commercant.fromJson(Map<String, dynamic> json) {
     return Commercant(
-      id: json['id'],
-      nom: json['nom'],
-      prenom: json['prenom'],
-      username: json['username'],
-      telephone: json['telephone'],
-      email: json['email'],
+      id: json['id'] != null ? (json['id'] as int) : null,
+      nom: json['nom'] ?? "",
+      prenom: json['prenom'] ?? "",
+      username: json['username'] ?? "",
+      telephone: json['telephone'] ?? "",
+      email: json['email'] ?? "",
       actif: json['actif'] ?? false,
-      photoUrl: json['photoUrl'],
-      motDePasse: json['motDePasse'],
+      photoUrl: json['photoUrl'] ?? "",
+      motDePasse: "",
       role: json['role'] != null ? Role.values.byName(json['role']) : null,
       pays: json['pays'] != null ? Pays.fromJson(json['pays']) : null,
       participation: json['participation'] != null

@@ -25,7 +25,7 @@ class Inscription {
     }
   }
 
-  Future<String?> registerFournisseur(Fournisseurs fournisseur) async {
+  Future<String?> registerFournisseur(Fournisseur fournisseur) async {
     try {
       final response = await http.post(
         Uri.parse("${Constant.remoteUrl}/auth/fournisseur/register"),

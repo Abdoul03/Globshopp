@@ -1,10 +1,9 @@
 // lib/screens/onboarding_carousel.dart
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:globshopp/screens/login_page.dart';
+import 'package:globshopp/screens/auth/login_page.dart';
 
 //destination finale après l’onboarding
-import 'role_selection_page.dart';
+//import 'role_selection_page.dart';
 
 class OnboardingCarousel extends StatefulWidget {
   const OnboardingCarousel({super.key});
@@ -106,7 +105,7 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
 
               // --- Indicateurs (points) ---
               Padding(
-                padding: const EdgeInsets.only(bottom: 150),
+                padding: const EdgeInsets.only(bottom: 100),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_slides.length, (i) {
@@ -144,15 +143,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
                     ),
                   ),
                   // Debug-only shortcut to accueil
-                  // if (kDebugMode)
-                  //   TextButton(
-                  //     onPressed: () =>
-                  //         Navigator.pushReplacementNamed(context, '/accueil'),
-                  //     child: const Text(
-                  //       'Ouvrir l\'accueil (dev)',
-                  //       style: TextStyle(color: Colors.redAccent),
-                  //     ),
-                  //   ),
                   const Spacer(),
                   Container(
                     width: 50,
@@ -250,9 +240,11 @@ class _Slide extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Paragraphe
-        Text(
-          data.text,
-          style: TextStyle(fontSize: 13, height: 1.50, color: textColor),
+        Expanded(
+          child: Text(
+            data.text,
+            style: TextStyle(fontSize: 13, height: 1.50, color: textColor),
+          ),
         ),
       ],
     );

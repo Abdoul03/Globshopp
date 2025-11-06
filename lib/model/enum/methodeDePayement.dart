@@ -1,0 +1,1 @@
+enum MethodeDePayement { ORANGE_MONEY, CARTE_BANCAIRE, MOOV_MONEY, WAVE }

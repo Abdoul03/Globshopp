@@ -1,5 +1,5 @@
 import 'package:globshopp/model/pays.dart';
-import 'package:globshopp/model/role.dart';
+import 'package:globshopp/model/enum/role.dart';
 
 abstract class Utilisateur {
   // Propriétés
