@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/model/enum/orderStatus.dart';
+import 'package:globshopp/screens/fournisseur/custom/listeCommande.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';
 
 class Commande extends StatefulWidget {
@@ -93,6 +94,12 @@ class _CommandeState extends State<Commande> {
   }
 
   @override
+  void initState() {
+    chargerCommande();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constant.colorsWhite,
@@ -104,6 +111,7 @@ class _CommandeState extends State<Commande> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              //buton de filtrage
               SizedBox(
                 height: 50,
                 child: ListView(
@@ -151,6 +159,9 @@ class _CommandeState extends State<Commande> {
                   ],
                 ),
               ),
+              // listes des commmande grouper
+              SizedBox(height: 30),
+              Listecommande(commandeGroupee: toutesLesCommandes),
             ],
           ),
         ),

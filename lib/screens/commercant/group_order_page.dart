@@ -6,8 +6,8 @@ import 'package:globshopp/screens/commercant/custom/kvLine.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';
 
 class GroupOrderPage extends StatefulWidget {
-  const GroupOrderPage({super.key, required this.produit});
   final Produit produit;
+  const GroupOrderPage({super.key, required this.produit});
 
   @override
   State<GroupOrderPage> createState() => _GroupOrderPageState();

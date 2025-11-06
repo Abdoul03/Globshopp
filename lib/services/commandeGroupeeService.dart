@@ -31,19 +31,19 @@ class CommandeGroupeeService {
     }
   }
 
-  Future<List<CommandeGroupee>> getfournisseurCommandes(
-    int fournisseurId,
-  ) async {
+  Future<List<CommandeGroupee>> getfournisseurCommandes(int id) async {
     try {
       final response = await _apiservice.requestWithAuthentification(
         "GET",
-        "commandeGroupee/fournisseur/$fournisseurId",
+        "/commandeGroupee/fournisseur/$id",
       );
+      print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => CommandeGroupee.fromJson(json)).toList();
       } else {
-        throw Exception('Échec du chargement des produits');
+        throw Exception('Échec du chargement des commandes Groupées');
       }
     } catch (e) {
       throw Exception("Erreur lors de la creation de la commande groupée : $e");
