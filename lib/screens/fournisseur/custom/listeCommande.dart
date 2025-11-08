@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/screens/commercant/commandes_page.dart';
+import 'package:globshopp/screens/fournisseur/custom/detailCommande.dart';
 import 'package:intl/intl.dart';
 
 class Listecommande extends StatefulWidget {
@@ -17,14 +18,19 @@ class _ListecommandeState extends State<Listecommande> {
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      physics:
-          NeverScrollableScrollPhysics(), // si c'est dans SingleChildScrollView
+      physics: NeverScrollableScrollPhysics(),
       itemCount: widget.commandeGroupee.length,
       itemBuilder: (context, index) {
         final commande = widget.commandeGroupee[index];
         return GestureDetector(
           onTap: () {
             // action quand on clique sur une commande
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailCommande(commande: commande),
+              ),
+            );
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
