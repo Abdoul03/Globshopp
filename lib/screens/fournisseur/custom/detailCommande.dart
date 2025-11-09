@@ -95,7 +95,20 @@ class _DetailCommandeState extends State<DetailCommande> {
 
               SizedBox(height: 12),
 
-              Row(),
+              Container(
+                height: 70,
+                color: Constant.grisClaire,
+                child: Row(
+                  children: [
+                    Container(width: 12, color: Constant.blue),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
