@@ -1,5 +1,10 @@
 // lib/screens/commandes_page.dart
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:globshopp/model/commandeGroupee.dart' as cg;
+import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/services/commandeGroupeeService.dart';
 
 class CommandesPage extends StatefulWidget {
   const CommandesPage({super.key});
@@ -11,58 +16,88 @@ class CommandesPage extends StatefulWidget {
 class _CommandesPageState extends State<CommandesPage> {
   final _searchCtrl = TextEditingController();
   String _q = '';
+  final _storage = const FlutterSecureStorage();
+  final _service = CommandeGroupeeService();
+  List<Order> _orders = [];
+  bool _loading = false;
+  String? _error;
 
-  // ✅ Seulement 2 commandes
-  final _orders = const [
-    Order(
-      title: 'T-shirts coton “Everyday fit”',
-      price: '1000 Fcfa',
-      status: OrderStatus.inProgress,
-      qty: 144,
-      imageUrl:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
-    ),
-    Order(
-      title: 'T-shirts coton “Everyday fit”',
-      price: '1000 Fcfa',
-      status: OrderStatus.done,
-      qty: 144,
-      imageUrl:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
-    ),
-    Order(
-      title: 'T-shirts coton “Everyday fit”',
-      price: '1000 Fcfa',
-      status: OrderStatus.done,
-      qty: 144,
-      imageUrl:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
-    ),
-    Order(
-      title: 'T-shirts coton “Everyday fit”',
-      price: '1000 Fcfa',
-      status: OrderStatus.done,
-      qty: 144,
-      imageUrl:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
-    ),
-    Order(
-      title: 'T-shirts coton “Everyday fit”',
-      price: '1000 Fcfa',
-      status: OrderStatus.done,
-      qty: 144,
-      imageUrl:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
-    ),
-    Order(
-      title: 'T-shirts coton “Everyday fit”',
-      price: '1000 Fcfa',
-      status: OrderStatus.done,
-      qty: 144,
-      imageUrl:
-          'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300',
-    ),
-  ];
+  Future<String?> _getAccessToken() async {
+    return await _storage.read(key: 'accessToken');
+  }
+
+  String? _extractIdFromToken(String accessToken) {
+    try {
+      final parts = accessToken.split('.');
+      if (parts.length != 3) return null;
+      final payload = parts[1];
+      final normalized = base64Url.normalize(payload);
+      final payloadMap = jsonDecode(utf8.decode(base64Url.decode(normalized)));
+      if (payloadMap is! Map<String, dynamic>) return null;
+      return payloadMap['sub']?.toString();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _loadOrders() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final token = await _getAccessToken();
+      if (token == null) {
+        throw Exception('Token manquant');
+      }
+      final idStr = _extractIdFromToken(token);
+      if (idStr == null) {
+        throw Exception('Token invalide');
+      }
+      final commercantId = int.tryParse(idStr);
+      if (commercantId == null) {
+        throw Exception('Identifiant commerçant invalide');
+      }
+      final List<cg.CommandeGroupee> data =
+          await _service.getCommercantCommandesAll(commercantId);
+      final mapped = data.map(_mapCommandeToOrder).toList();
+      setState(() {
+        _orders = mapped;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+        _error = e.toString().replaceFirst('Exception: ', '');
+      });
+    }
+  }
+
+  Order _mapCommandeToOrder(cg.CommandeGroupee c) {
+    final Produit? p = c.produit;
+    final String title = p?.nom ?? 'Produit';
+    final String price = ((p?.prix ?? c.montant)).toString() + ' Fcfa';
+    final int qty = c.quantiteRequis;
+    final String imageUrl = p?.firstImageUrl ??
+        'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300';
+    final String s = (c.status?.name ?? '').toUpperCase();
+    OrderStatus status;
+    switch (s) {
+      case 'TERMINER':
+        status = OrderStatus.done;
+        break;
+      case 'ANNULER':
+        status = OrderStatus.canceled;
+        break;
+      case 'EXPEDIER':
+        status = OrderStatus.inProgress;
+        break;
+      case 'ENCOURS':
+      default:
+        status = OrderStatus.inProgress;
+    }
+    return Order(title: title, price: price, status: status, qty: qty, imageUrl: imageUrl);
+  }
 
   @override
   void dispose() {
@@ -72,7 +107,9 @@ class _CommandesPageState extends State<CommandesPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final top = MediaQuery.of(context).padding.top; // inutilisé
+    if (_orders.isEmpty && !_loading && _error == null) {
+      _loadOrders();
+    }
 
     final filtered = _orders.where((o) {
       if (_q.isEmpty) return true;
@@ -103,6 +140,20 @@ class _CommandesPageState extends State<CommandesPage> {
           ),
 
           // --------- Liste des commandes (filtrée) ---------
+          if (_loading)
+            const SliverToBoxAdapter(
+              child: Center(child: Padding(
+                padding: EdgeInsets.all(24),
+                child: CircularProgressIndicator(),
+              )),
+            ),
+          if (!_loading && _error != null)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(_error!, style: const TextStyle(color: Colors.red)),
+              ),
+            ),
           SliverList.separated(
             itemCount: filtered.length,
             separatorBuilder: (_, __) => const SizedBox(height: 10),
