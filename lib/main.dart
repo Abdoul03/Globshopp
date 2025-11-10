@@ -10,7 +10,6 @@ import 'package:globshopp/screens/commercant/annuaire_page.dart';
 import 'package:globshopp/screens/commercant/profile_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-// void main() => runApp(const GlobalShopperApp());
 void main() async {
   await dotenv.load(fileName: ".env");
   runApp(GlobalShopperApp());
