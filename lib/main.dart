@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:globshopp/screens/onboarding_carousel.dart';
 import 'package:globshopp/screens/auth/login_page.dart';
 import 'package:globshopp/screens/commercant/accueil.dart';
@@ -9,7 +10,11 @@ import 'package:globshopp/screens/commercant/annuaire_page.dart';
 import 'package:globshopp/screens/commercant/profile_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(const GlobalShopperApp());
+// void main() => runApp(const GlobalShopperApp());
+void main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(GlobalShopperApp());
+}
 
 class GlobalShopperApp extends StatelessWidget {
   const GlobalShopperApp({super.key});

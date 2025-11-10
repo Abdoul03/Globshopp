@@ -102,8 +102,9 @@ class _DetailCommandeState extends State<DetailCommande> {
                   children: [
                     Container(width: 12, color: Constant.blue),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      verticalDirection: VerticalDirection.up,
                       children: [],
                     ),
                   ],
