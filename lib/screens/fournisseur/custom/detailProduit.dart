@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
 
 class DetailProduit extends StatefulWidget {
@@ -12,6 +13,16 @@ class DetailProduit extends StatefulWidget {
 class _DetailProduitState extends State<DetailProduit> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Text(widget.produit.nom));
+    return Scaffold(
+      backgroundColor: Constant.colorsWhite,
+      appBar: AppBar(
+        backgroundColor: Constant.colorsWhite,
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        child: SafeArea(child: Text(widget.produit.nom)),
+      ),
+    );
   }
 }

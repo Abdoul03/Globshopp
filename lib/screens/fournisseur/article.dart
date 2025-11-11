@@ -72,85 +72,80 @@ class _ArticleState extends State<Article> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Constant.colorsWhite,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      // padding: EdgeInsets.all(20),
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle, // Make it a circle
-                        border: Border.all(
-                          color: Constant.colorsgray,
-                          width: 2.0,
-                        ),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(RemixIcons.notification_2_line),
-                        color: Constant.colorsBlack,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    // padding: EdgeInsets.all(20),
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle, // Make it a circle
+                      border: Border.all(
+                        color: Constant.colorsgray,
+                        width: 2.0,
                       ),
                     ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(RemixIcons.notification_2_line),
+                      color: Constant.colorsBlack,
+                    ),
+                  ),
 
-                    Container(
-                      alignment: Alignment.center,
-                      // padding: EdgeInsets.all(20),
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle, // Make it a circle
-                        border: Border.all(
-                          color: Constant.colorsgray,
-                          width: 2.0,
-                        ),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(RemixIcons.history_line),
-                        color: Constant.colorsBlack,
+                  Container(
+                    alignment: Alignment.center,
+                    // padding: EdgeInsets.all(20),
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle, // Make it a circle
+                      border: Border.all(
+                        color: Constant.colorsgray,
+                        width: 2.0,
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 33),
-                //Bar de recherche
-                Custumsearchbar(
-                  hintText: "Rechercher",
-                  onchange: _onSearchTextChanged,
-                  controller: _searchController,
-                ),
-                const SizedBox(height: 20),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(RemixIcons.history_line),
+                      color: Constant.colorsBlack,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 33),
+              //Bar de recherche
+              Custumsearchbar(
+                hintText: "Rechercher",
+                onchange: _onSearchTextChanged,
+                controller: _searchController,
+              ),
+              const SizedBox(height: 20),
 
-                //Contenaire de produits
-                Column(
-                  children: [
-                    isLoading
-                        ? CircularProgressIndicator(color: Constant.blue)
-                        : ListView.separated(
-                            itemCount: _produits.length,
-                            shrinkWrap: true,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: 10),
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final produit = _produits[index];
-                              return ListeProduit(produit: produit);
-                            },
-                          ),
-                  ],
-                ),
-              ],
-            ),
+              //Contenaire de produits
+              isLoading
+                  ? CircularProgressIndicator(color: Constant.blue)
+                  : Expanded(
+                      child: ListView.separated(
+                        itemCount: _produits.length,
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final produit = _produits[index];
+                          return ListeProduit(produit: produit);
+                        },
+                      ),
+                    ),
+            ],
           ),
         ),
       ),
