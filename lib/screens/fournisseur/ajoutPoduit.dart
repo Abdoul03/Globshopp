@@ -89,21 +89,6 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
     }
   }
 
-  Future<void> ajouterUnProduit(Produit produit, List<File>? images) async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      final response = await _produitservice.createProduit(produit, images);
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() => isLoading = false);
-      throw Exception("Erreur lors de l'ajout du produit : $e");
-    }
-  }
-
   void _ajouterCaracteristique() {
     final nom = _caracteristiqueNom.text.trim();
     final value = _caracteristiqueValeur.text.trim();
@@ -145,6 +130,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
     _stock.dispose();
     _caracteristiqueNom.dispose();
     _caracteristiqueValeur.dispose();
+    _caracteristique.clear();
     // _unite.dispose();
     super.dispose();
   }
@@ -547,6 +533,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
 
                       setState(() {
                         _selectedCategorie = null;
+                        _caracteristique.clear();
                         medias.clear();
                       });
                     },
@@ -580,6 +567,8 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        Text("Caracteristique", style: TextStyle(fontSize: 19)),
+        const SizedBox(height: 16),
         Text(
           'Nom',
           style: TextStyle(fontSize: 14, color: Constant.colorsBlack),

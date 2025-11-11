@@ -221,7 +221,7 @@ class _ProfileState extends State<Profile> {
                   FieldLabel('Rôle'),
                   InfoTile(
                     icon: Icons.vpn_key_outlined,
-                    text: "${commercant?.role}",
+                    text: "${commercant?.role!.name}",
                   ),
                   const SizedBox(height: 12),
 

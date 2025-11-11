@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/custom/custumSearchBar.dart';
+import 'package:globshopp/screens/fournisseur/custom/listeProduit.dart';
 import 'package:globshopp/services/produitService.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -58,6 +59,12 @@ class _ArticleState extends State<Article> {
         }).toList();
       });
     });
+  }
+
+  @override
+  void initState() {
+    getSupplierProduct();
+    super.initState();
   }
 
   @override
@@ -125,79 +132,22 @@ class _ArticleState extends State<Article> {
                 const SizedBox(height: 20),
 
                 //Contenaire de produits
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 400,
-                    height: 115,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(
-                        color: Constant.colorsgray,
-                        width: 1.0,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        //Image
-                        Container(
-                          margin: EdgeInsets.only(left: 10.0),
-                          width: 95,
-                          height: 90,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(
-                              color: Constant.colorsgray,
-                              width: 1.0,
-                              style: BorderStyle.solid,
-                            ),
+                Column(
+                  children: [
+                    isLoading
+                        ? CircularProgressIndicator(color: Constant.blue)
+                        : ListView.separated(
+                            itemCount: _produits.length,
+                            shrinkWrap: true,
+                            separatorBuilder: (context, index) =>
+                                SizedBox(height: 10),
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final produit = _produits[index];
+                              return ListeProduit(produit: produit);
+                            },
                           ),
-                          child: Text("Image"),
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "T-shirts coton “Everyday Fit” ",
-                                style: TextStyle(
-                                  color: Constant.colorsBlack,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                "Prix : 1000 fcfa",
-                                textAlign: TextAlign.right,
-                                style: TextStyle(color: Constant.colorsgray),
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Text(
-                                    "MOQ : 144 pieces",
-                                    style: TextStyle(color: Constant.jaune),
-                                  ),
-                                  SizedBox(width: 20),
-                                  Text(
-                                    "Stock : 20000",
-                                    style: TextStyle(
-                                      color: Constant.blue,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ],
             ),

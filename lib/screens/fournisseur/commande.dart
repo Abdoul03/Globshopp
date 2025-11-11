@@ -161,7 +161,9 @@ class _CommandeState extends State<Commande> {
               ),
               // listes des commmande grouper
               SizedBox(height: 30),
-              Listecommande(commandeGroupee: toutesLesCommandes),
+              isLoading
+                  ? CircularProgressIndicator(color: Constant.blue)
+                  : Listecommande(commandeGroupee: toutesLesCommandes),
             ],
           ),
         ),

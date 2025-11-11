@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commandeGroupee.dart';
-import 'package:globshopp/screens/commercant/commandes_page.dart';
 import 'package:globshopp/screens/fournisseur/custom/detailCommande.dart';
 import 'package:intl/intl.dart';
 
@@ -60,7 +59,7 @@ class _ListecommandeState extends State<Listecommande> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        commande.produit!.nom ?? "Nom du produit",
+                        commande.produit!.nom,
                         style: TextStyle(
                           color: Constant.colorsBlack,
                           fontWeight: FontWeight.bold,
@@ -104,7 +103,7 @@ class _ListecommandeState extends State<Listecommande> {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                "Prix : ${commande.produit!.prix ?? 'N/A'} fcfa",
+                                "Prix : ${commande.produit!.prix}",
                                 style: TextStyle(
                                   color: Constant.colorsBlack,
                                   fontSize: 10,
@@ -112,7 +111,7 @@ class _ListecommandeState extends State<Listecommande> {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                "${commande.status!.name}",
+                                commande.status!.name,
                                 style: TextStyle(
                                   color: Constant.colorsBlack,
                                   fontSize: 10,
