@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
@@ -77,6 +78,22 @@ class Produitservice {
       }
     } catch (e) {
       throw Exception('Erreur lors de la récupération du produit : $e');
+    }
+  }
+
+  Future<bool> supprimerUnProduit(int produitId) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "DELETE",
+        "/produits/$produitId",
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception("Echec de la suppression du produit");
+      }
+    } catch (e) {
+      throw Exception('Erreur lors de la Suppression du produit : $e');
     }
   }
 

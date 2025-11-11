@@ -47,10 +47,12 @@ class _ListecommandeState extends State<Listecommande> {
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: Constant.colorsgray, width: 1),
                   ),
-                  child: Image.network(
-                    commande.produit!.mediaUrls.first,
-                    fit: BoxFit.cover,
-                  ),
+                  child: commande.produit!.media.isNotEmpty
+                      ? Image.network(
+                          commande.produit!.mediaUrls.first,
+                          fit: BoxFit.cover,
+                        )
+                      : Center(child: Icon(Icons.image_outlined, size: 48)),
                 ),
                 SizedBox(width: 10),
                 Expanded(

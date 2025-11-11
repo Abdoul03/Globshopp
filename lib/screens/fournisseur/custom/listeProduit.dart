@@ -14,6 +14,7 @@ class ListeProduit extends StatefulWidget {
 class _ListeProduitState extends State<ListeProduit> {
   @override
   Widget build(BuildContext context) {
+    final urls = widget.produit.mediaUrls;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -51,13 +52,17 @@ class _ListeProduitState extends State<ListeProduit> {
                   style: BorderStyle.solid,
                 ),
               ),
-              child: Image.network(
-                widget.produit.mediaUrls.first,
-                fit: BoxFit.cover,
-              ),
+              child: urls.isNotEmpty
+                  ? Image.network(
+                      widget.produit.mediaUrls.first,
+                      fit: BoxFit.cover,
+                    )
+                  : Center(child: Icon(Icons.image_outlined, size: 48)),
             ),
+            SizedBox(width: 16),
             Center(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
