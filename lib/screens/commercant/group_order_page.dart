@@ -107,7 +107,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
         SnackBar(
           backgroundColor: Constant.blue,
           content: Text(
-            "Tous les champs doivent être remplis .",
+            "Commande Grouper Creer avec succes.",
             style: TextStyle(color: Constant.colorsWhite),
           ),
         ),
@@ -118,6 +118,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
         _isLoading = false;
       });
       final msg = e.toString().replaceFirst('Exception: ', '');
+      print(msg);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
       );

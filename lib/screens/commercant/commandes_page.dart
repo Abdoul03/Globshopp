@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commandeGroupee.dart' as cg;
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';
@@ -58,8 +59,8 @@ class _CommandesPageState extends State<CommandesPage> {
       if (commercantId == null) {
         throw Exception('Identifiant commerçant invalide');
       }
-      final List<cg.CommandeGroupee> data =
-          await _service.getCommercantCommandesAll(commercantId);
+      final List<cg.CommandeGroupee> data = await _service
+          .getCommercantCommandesAll(commercantId);
       final mapped = data.map(_mapCommandeToOrder).toList();
       setState(() {
         _orders = mapped;
@@ -78,7 +79,8 @@ class _CommandesPageState extends State<CommandesPage> {
     final String title = p?.nom ?? 'Produit';
     final String price = ((p?.prix ?? c.montant)).toString() + ' Fcfa';
     final int qty = c.quantiteRequis;
-    final String imageUrl = p?.firstImageUrl ??
+    final String imageUrl =
+        p?.firstImageUrl ??
         'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300';
     final String s = (c.status?.name ?? '').toUpperCase();
     OrderStatus status;
@@ -96,7 +98,13 @@ class _CommandesPageState extends State<CommandesPage> {
       default:
         status = OrderStatus.inProgress;
     }
-    return Order(title: title, price: price, status: status, qty: qty, imageUrl: imageUrl);
+    return Order(
+      title: title,
+      price: price,
+      status: status,
+      qty: qty,
+      imageUrl: imageUrl,
+    );
   }
 
   @override
@@ -124,7 +132,7 @@ class _CommandesPageState extends State<CommandesPage> {
         slivers: [
           // --------- Header Recherche ---------
           SliverAppBar(
-            automaticallyImplyLeading: false, // 🚫 enlève le bouton retour auto
+            automaticallyImplyLeading: false,
             pinned: true,
             floating: true,
             backgroundColor: Colors.white,
@@ -142,10 +150,12 @@ class _CommandesPageState extends State<CommandesPage> {
           // --------- Liste des commandes (filtrée) ---------
           if (_loading)
             const SliverToBoxAdapter(
-              child: Center(child: Padding(
-                padding: EdgeInsets.all(24),
-                child: CircularProgressIndicator(),
-              )),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ),
           if (!_loading && _error != null)
             SliverToBoxAdapter(
@@ -199,6 +209,7 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      surfaceTintColor: Colors.transparent,
       color: Colors.white,
       elevation: 0,
       borderRadius: BorderRadius.circular(14),
@@ -210,15 +221,15 @@ class _SearchField extends StatelessWidget {
           prefixIcon: const Icon(Icons.search_rounded),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Constant.grisClaire),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Constant.grisClaire),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Constant.grisClaire),
           ),
           filled: true,
           fillColor: Colors.white,
@@ -244,75 +255,85 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, bg, fg) = _statusStyle(order.status);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: _cardBorder),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 2,
-            offset: Offset(0, 1),
-            color: Color(0x0F000000),
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("En cours d'inplementation"),
+            backgroundColor: Colors.redAccent,
           ),
-        ],
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          // Avatar produit
-          ClipRRect(
-            borderRadius: BorderRadius.circular(40),
-            child: Image.network(
-              order.imageUrl,
-              width: 56,
-              height: 56,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: _cardBorder),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 2,
+              offset: Offset(0, 1),
+              color: Color(0x0F000000),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Avatar produit
+            ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: Image.network(
+                order.imageUrl,
                 width: 56,
                 height: 56,
-                color: const Color(0xFFEFF1F6),
-                child: const Icon(Icons.image_outlined),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  width: 56,
+                  height: 56,
+                  color: const Color(0xFFEFF1F6),
+                  child: const Icon(Icons.image_outlined),
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
+            const SizedBox(width: 12),
 
-          // Titre, prix, état
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  order.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: _text,
+            // Titre, prix, état
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    order.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: _text,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  order.price,
-                  style: const TextStyle(
-                    fontSize: 13.5,
-                    color: _sub,
-                    fontWeight: FontWeight.w600,
+                  const SizedBox(height: 8),
+                  Text(
+                    order.price,
+                    style: const TextStyle(
+                      fontSize: 13.5,
+                      color: _sub,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                _StatusPill(label: label, bg: bg, fg: fg),
-              ],
+                  const SizedBox(height: 8),
+                  _StatusPill(label: label, bg: bg, fg: fg),
+                ],
+              ),
             ),
-          ),
 
-          const SizedBox(width: 12),
+            const SizedBox(width: 12),
 
-          // Pastille quantité
-          _QtyBadge(qty: order.qty),
-        ],
+            // Pastille quantité
+            _QtyBadge(qty: order.qty),
+          ],
+        ),
       ),
     );
   }

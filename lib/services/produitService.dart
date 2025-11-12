@@ -162,10 +162,16 @@ class Produitservice {
     final refresh = await getRefreshToken();
     if (refresh == null) return null;
 
+    // 1. Creation de l'objet JSON (Map) attendu par le serveur
+    final bodyObject = {"refreshToken": refresh};
+
+    // 2. ENCODAGE de l'objet en chaîne JSON
+    final jsonBody = jsonEncode(bodyObject);
+
     final response = await http.post(
       Uri.parse('${Constant.remoteUrl}/auth/refresh'),
       headers: {'Content-Type': 'application/json'},
-      body: refresh,
+      body: jsonBody,
     );
 
     if (response.statusCode == 200) {

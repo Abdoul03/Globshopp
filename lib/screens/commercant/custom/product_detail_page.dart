@@ -40,6 +40,32 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return await storage.read(key: 'accessToken');
   }
 
+  // NOUVELLE MÉTHODE : Vérifie si l'utilisateur est dans une commande
+  Future<bool> _isUserInGroupOrder() async {
+    // 1. Récupérer le token et l'ID de l'utilisateur
+    final accessToken = await getAccessToken();
+    if (accessToken == null) return false; // Non connecté
+    final userId = extractIdFromToken(accessToken);
+    if (userId == null) return false; // ID utilisateur introuvable
+
+    // 2. Parcourir les commandes groupées du produit
+    final commandes = widget.produit.commandeGroupees;
+    if (commandes == null || commandes.isEmpty) return false;
+
+    // 3. Vérifier si l'utilisateur est dans la liste des participants d'une commande
+    for (var commande in commandes) {
+      // Vous devez vous assurer que votre modèle de commandeGroupee
+      // a bien une propriété 'participants' qui est une List<String>
+      // d'IDs d'utilisateurs.
+      if (commande.participations != null &&
+          commande.participations!.contains(userId)) {
+        return true; // L'utilisateur est trouvé dans une commande
+      }
+    }
+
+    return false; // L'utilisateur n'est dans aucune commande
+  }
+
   @override
   Widget build(BuildContext context) {
     final urls = widget.produit.mediaUrls;

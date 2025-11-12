@@ -80,10 +80,13 @@ class _HomePageState extends State<HomePage> {
         return Icons.devices_other_rounded;
       case 'habit':
       case 'habits':
+      case "fashions":
         return Icons.checkroom_rounded;
       case 'electro':
       case 'electromenager':
         return Icons.kitchen_outlined;
+      case 'agricoles':
+        return Icons.agriculture_rounded;
       default:
         return Icons.grid_view_rounded;
     }
@@ -94,7 +97,8 @@ class _HomePageState extends State<HomePage> {
       final produit = await _produitservice.getAllProduits();
       setState(() {
         _produits = produit;
-        _produitsFiltresParCategorie = produit; // Initialiser avec tous les produits
+        _produitsFiltresParCategorie =
+            produit; // Initialiser avec tous les produits
         _searchResults = produit;
         _loading = false;
       });
@@ -143,7 +147,9 @@ class _HomePageState extends State<HomePage> {
       } else {
         // Sinon on garde uniquement les produits appartenant à cette catégorie
         _produitsFiltresParCategorie = _produits
-            .where((p) => p.categorie != null && p.categorie!.id == categorie.id)
+            .where(
+              (p) => p.categorie != null && p.categorie!.id == categorie.id,
+            )
             .toList();
       }
 
@@ -303,10 +309,7 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.all(32.0),
                         child: Text(
                           "Aucun produit trouvé dans cette catégorie",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),
                       ),
