@@ -78,7 +78,12 @@ class _FournisseursPageState extends State<FournisseursPage> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? CircularProgressIndicator(color: Constant.blue)
+        ? Center(
+            child: CircularProgressIndicator(
+              color: Constant.blue,
+              backgroundColor: Constant.colorsWhite,
+            ),
+          )
         : Scaffold(
             backgroundColor: Colors.white,
 

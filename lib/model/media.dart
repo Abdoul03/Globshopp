@@ -5,7 +5,8 @@ class Media {
   String fileName;
   String fileType;
   String filePath;
-  Produit? produit; // Relation ManyToOne vers Produit
+  Produit? produit;
+  String webPath;
 
   Media({
     this.id,
@@ -13,6 +14,7 @@ class Media {
     required this.fileType,
     required this.filePath,
     this.produit,
+    required this.webPath,
   });
 
   // --- fromJson ---
@@ -25,6 +27,7 @@ class Media {
       produit: json['produit'] != null
           ? Produit.fromJson(json['produit'])
           : null,
+      webPath: json['webPath'] ?? '',
     );
   }
 
@@ -35,7 +38,8 @@ class Media {
       'fileName': fileName,
       'fileType': fileType,
       'filePath': filePath,
-      'produit': produit?.toJson(), // sérialisation récursive si nécessaire
+      'produit': produit?.toJson(),
+      'webPath': webPath, // sérialisation récursive si nécessaire
     };
   }
 }

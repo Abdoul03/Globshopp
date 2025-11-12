@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/produit.dart';
+import 'package:globshopp/screens/fournisseur/article.dart';
+import 'package:globshopp/screens/fournisseur/modifierProduit.dart';
 import 'package:globshopp/services/produitService.dart';
 
 class DetailProduit extends StatefulWidget {
@@ -29,7 +31,7 @@ class _DetailProduitState extends State<DetailProduit> {
           SnackBar(
             backgroundColor: Constant.blue,
             content: const Text(
-              'Inpossible de supprimer une prooduit qui contient des commandes',
+              'Inpossible de supprimer un produit qui contient des commandes',
               style: TextStyle(color: Constant.colorsWhite),
             ),
           ),
@@ -42,7 +44,10 @@ class _DetailProduitState extends State<DetailProduit> {
           setState(() {
             isLoading = false;
           });
-          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Article()),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -200,7 +205,26 @@ class _DetailProduitState extends State<DetailProduit> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (widget.produit.commandeGroupees!.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Constant.blue,
+                              content: const Text(
+                                'Inpossible de Modifier un produit qui contient des commandes',
+                                style: TextStyle(color: Constant.colorsWhite),
+                              ),
+                            ),
+                          );
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ModifierProduit(produit: widget.produit),
+                          ),
+                        );
+                      },
                       child: Text("Modifier"),
                     ),
                   ),

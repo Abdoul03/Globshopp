@@ -89,9 +89,7 @@ class Produit {
   /// Retourne la liste des URLs complètes pour Flutter
   List<String> get mediaUrls {
     if (media == null || media.isEmpty) return [];
-    return media!
-        .map((m) => "${Constant.remoteUrl}/images/${m.filePath}")
-        .toList();
+    return media!.map((m) => "${Constant.remoteUrl}${m.webPath}").toList();
   }
 
   String? get firstImageUrl => mediaUrls.isNotEmpty ? mediaUrls.first : null;

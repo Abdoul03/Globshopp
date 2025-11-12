@@ -75,17 +75,11 @@ class _LoginFormState extends State<LoginForm> {
       });
       final role = extractRoleFromToken(tokenPair.accessToken);
       if (role == 'ROLE_COMMERCANT') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Bienvenue")));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Commercantnavigation()),
         );
       } else if (role == 'ROLE_FOURNISSEUR') {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Bienvenue")));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Navigationbar()),

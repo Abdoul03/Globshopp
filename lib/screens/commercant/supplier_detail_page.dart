@@ -129,7 +129,7 @@ class _SupplierDetailPageState extends State<SupplierDetailPage> {
 
           // Placeholder de produits du fournisseur
           isLoading
-              ? CircularProgressIndicator(color: Constant.blue)
+              ? Center(child: CircularProgressIndicator(color: Constant.blue))
               : GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
