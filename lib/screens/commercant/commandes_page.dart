@@ -6,6 +6,7 @@ import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commandeGroupee.dart' as cg;
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';
+import 'package:globshopp/screens/commercant/order_detail_page.dart';
 
 class CommandesPage extends StatefulWidget {
   const CommandesPage({super.key});
@@ -99,6 +100,7 @@ class _CommandesPageState extends State<CommandesPage> {
         status = OrderStatus.inProgress;
     }
     return Order(
+      id: c.id ?? 0,
       title: title,
       price: price,
       status: status,
@@ -184,6 +186,7 @@ class _CommandesPageState extends State<CommandesPage> {
 enum OrderStatus { inProgress, canceled, done }
 
 class Order {
+  final int id;
   final String title;
   final String price;
   final OrderStatus status;
@@ -191,6 +194,7 @@ class Order {
   final String imageUrl;
 
   const Order({
+    required this.id,
     required this.title,
     required this.price,
     required this.status,
@@ -257,10 +261,9 @@ class OrderCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("En cours d'inplementation"),
-            backgroundColor: Colors.redAccent,
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => OrderDetailPage(order: order),
           ),
         );
       },
