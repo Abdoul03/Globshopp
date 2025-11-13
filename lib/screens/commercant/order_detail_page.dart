@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:globshopp/screens/commercant/commandes_page.dart' show Order, OrderStatus;
+import 'package:globshopp/services/commandeGroupeeService.dart';
+import 'package:globshopp/model/commandeGroupee.dart' as cg;
 
-class OrderDetailPage extends StatelessWidget {
+class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({super.key, required this.order});
 
   final Order order;
+
+  @override
+  State<OrderDetailPage> createState() => _OrderDetailPageState();
+}
+
+class _OrderDetailPageState extends State<OrderDetailPage> {
+  final _service = CommandeGroupeeService();
+  cg.CommandeGroupee? _data;
+  bool _loading = false;
+  String? _error;
 
   static const _text = Color(0xFF0B0B0B);
   static const _sub = Color(0xFF5C5F66);
@@ -19,20 +32,70 @@ class OrderDetailPage extends StatelessWidget {
   static const _deadlineBg = Color(0xFFFAD7DA);
   static const _deadlineFg = Color(0xFFD44755);
 
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  Future<void> _fetch() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final res = await _service.getAOrderGroupe(widget.order.id);
+      setState(() {
+        _data = res;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+        _error = e.toString().replaceFirst('Exception: ', '');
+      });
+    }
+  }
+
   (String, Color, Color) _statusStyle(OrderStatus s) {
-    switch (s) {
-      case OrderStatus.inProgress:
-        return ('En cours', _pillInBg, _pillInFg);
-      case OrderStatus.canceled:
-        return ('Annuler', _pillCaBg, _pillCaFg);
-      case OrderStatus.done:
+    final backend = _data?.status?.name.toUpperCase();
+    switch (backend) {
+      case 'TERMINER':
         return ('Terminer', _pillDoBg, _pillDoFg);
+      case 'ANNULER':
+        return ('Annuler', _pillCaBg, _pillCaFg);
+      case 'EXPEDIER':
+      case 'ENCOURS':
+        return ('En cours', _pillInBg, _pillInFg);
+      default:
+        switch (s) {
+          case OrderStatus.inProgress:
+            return ('En cours', _pillInBg, _pillInFg);
+          case OrderStatus.canceled:
+            return ('Annuler', _pillCaBg, _pillCaFg);
+          case OrderStatus.done:
+            return ('Terminer', _pillDoBg, _pillDoFg);
+        }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final (label, bg, fg) = _statusStyle(order.status);
+    final (label, bg, fg) = _statusStyle(widget.order.status);
+    final produit = _data?.produit;
+    final imageUrl = produit?.firstImageUrl ?? widget.order.imageUrl;
+    final title = produit?.nom ?? widget.order.title;
+    final description = (produit?.description?.isNotEmpty == true)
+        ? produit!.description
+        : 'Le Auralis X9 Pro combine élégance et performance dans un design minimaliste.';
+    final moq = (produit?.moq ?? _data?.quantiteRequis ?? 144);
+    final prixText = (produit?.prix != null)
+        ? '${produit!.prix}fcfa'
+        : '140.000fcfa';
+    final qActuelle = _data?.quaniteActuelle ?? 100;
+    final deadline = _data?.deadline != null
+        ? DateFormat('dd/MM/yyyy').format(_data!.deadline)
+        : '20/11/2025';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -43,6 +106,16 @@ class OrderDetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (_loading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8, bottom: 8),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                  ),
                 // Carte produit + statut
                 Container(
                   decoration: BoxDecoration(
@@ -64,7 +137,7 @@ class OrderDetailPage extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          order.imageUrl,
+                          imageUrl,
                           width: 84,
                           height: 84,
                           fit: BoxFit.cover,
@@ -83,21 +156,21 @@ class OrderDetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              order.title,
+                              title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                color: _text,
+                                color: _OrderDetailPageState._text,
                               ),
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              'Le Auralis X9 Pro combine élégance et performance dans un design minimaliste.',
+                              description,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12.5, color: _sub),
+                              style: const TextStyle(fontSize: 12.5, color: _OrderDetailPageState._sub),
                             ),
                             const SizedBox(height: 8),
                             Row(
@@ -124,14 +197,14 @@ class OrderDetailPage extends StatelessWidget {
                                   height: 26,
                                   padding: const EdgeInsets.symmetric(horizontal: 10),
                                   decoration: BoxDecoration(
-                                    color: _deadlineBg,
+                                    color: _OrderDetailPageState._deadlineBg,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   alignment: Alignment.center,
-                                  child: const Text(
-                                    'DeadLine: 20/11/2025',
-                                    style: TextStyle(
-                                      color: _deadlineFg,
+                                  child: Text(
+                                    'DeadLine: $deadline',
+                                    style: const TextStyle(
+                                      color: _OrderDetailPageState._deadlineFg,
                                       fontWeight: FontWeight.w700,
                                       fontSize: 12,
                                     ),
@@ -161,15 +234,15 @@ class OrderDetailPage extends StatelessWidget {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Minimum order Quantity',
-                              style: TextStyle(color: _sub, fontWeight: FontWeight.w600),
+                              style: TextStyle(color: _OrderDetailPageState._sub, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(height: 6),
+                            const SizedBox(height: 6),
                             Text(
-                              '144 pieces',
-                              style: TextStyle(
+                              '$moq pieces',
+                              style: const TextStyle(
                                 color: Color(0xFFEB8A1A),
                                 fontSize: 22,
                                 fontWeight: FontWeight.w800,
@@ -184,12 +257,12 @@ class OrderDetailPage extends StatelessWidget {
                           children: [
                             const Text(
                               'Price',
-                              style: TextStyle(color: _sub, fontWeight: FontWeight.w600),
+                              style: TextStyle(color: _OrderDetailPageState._sub, fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(height: 6),
-                            const Text(
-                              '140.000fcfa',
-                              style: TextStyle(
+                            Text(
+                              prixText,
+                              style: const TextStyle(
                                 color: Color(0xFFEB8A1A),
                                 fontSize: 22,
                                 fontWeight: FontWeight.w800,
@@ -213,11 +286,11 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   child: Row(
-                    children: const [
+                    children: [
                       Expanded(
-                        child: Text('Quantité actuelle', style: TextStyle(fontWeight: FontWeight.w700)),
+                        child: Text('Quantité actuelle', style: const TextStyle(fontWeight: FontWeight.w700)),
                       ),
-                      Text('100 pieces', style: TextStyle(color: Color(0xFF246BEB), fontWeight: FontWeight.w800)),
+                      Text('$qActuelle pieces', style: const TextStyle(color: Color(0xFF246BEB), fontWeight: FontWeight.w800)),
                     ],
                   ),
                 ),
@@ -239,24 +312,20 @@ class OrderDetailPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 6),
                         child: Text('Liste des membres', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                       ),
-                      const _MemberTile(
-                        name: 'Aminata Diallo',
-                        since: '22/03/2025',
-                        pieces: 60,
-                        avatarUrl: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=100',
-                      ),
-                      const _MemberTile(
-                        name: 'Aminata Diallo',
-                        since: '22/03/2025',
-                        pieces: 60,
-                        avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100',
-                      ),
-                      const _MemberTile(
-                        name: 'Aminata Diallo',
-                        since: '22/03/2025',
-                        pieces: 60,
-                        avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100',
-                      ),
+                      if ((_data?.participations ?? []).isNotEmpty)
+                        ..._data!.participations!.map((p) => _MemberTile(
+                              name: '${p.commercant?.prenom ?? ''} ${p.commercant?.nom ?? ''}'.trim(),
+                              since: p.data != null ? DateFormat('dd/MM/yyyy').format(p.data!) : '-',
+                              pieces: p.quantite,
+                              avatarUrl: (p.commercant?.photoUrl?.isNotEmpty == true)
+                                  ? p.commercant!.photoUrl!
+                                  : 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100',
+                            )),
+                      if ((_data?.participations ?? []).isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
+                          child: Text('Aucune participation pour le moment.', style: TextStyle(color: _OrderDetailPageState._sub)),
+                        ),
                       const SizedBox(height: 8),
                       Center(
                         child: OutlinedButton(
@@ -309,17 +378,21 @@ class OrderDetailPage extends StatelessWidget {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Mariam Koné',
-                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                  (_data?.produit?.fournisseur != null)
+                                      ? '${_data!.produit!.fournisseur!.prenom} ${_data!.produit!.fournisseur!.nom}'.trim()
+                                      : 'Fournisseur',
+                                  style: const TextStyle(fontWeight: FontWeight.w700),
                                 ),
-                                SizedBox(height: 4),
-                                Text('Membre depuis 23/11/2022', style: TextStyle(color: _sub)),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 4),
+                                const Text('Membre depuis —', style: TextStyle(color: _OrderDetailPageState._sub)),
+                                const SizedBox(height: 8),
                                 Text(
-                                  'Curabitur luctus odio vel lorem vestibulum, vitae tincidunt leo posuere. Fusce ultricies, mi non volutpat cursus, lacus est dignissim metus, vel finibus risus tortor ac nisl.',
-                                  style: TextStyle(color: _sub),
+                                  (_data?.produit?.fournisseur != null)
+                                      ? 'Contact: ${_data!.produit!.fournisseur!.email ?? ''}\nTéléphone: ${_data!.produit!.fournisseur!.telephone ?? ''}'
+                                      : 'Informations fournisseur indisponibles.',
+                                  style: const TextStyle(color: _OrderDetailPageState._sub),
                                 ),
                               ],
                             ),
@@ -396,7 +469,7 @@ class _MemberTile extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   'Membre depuis : $since',
-                  style: const TextStyle(color: OrderDetailPage._sub),
+                  style: const TextStyle(color: _OrderDetailPageState._sub),
                 ),
               ],
             ),

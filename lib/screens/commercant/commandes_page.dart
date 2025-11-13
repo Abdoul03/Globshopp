@@ -100,6 +100,7 @@ class _CommandesPageState extends State<CommandesPage> {
         status = OrderStatus.inProgress;
     }
     return Order(
+      id: c.id ?? 0,
       title: title,
       price: price,
       status: status,
@@ -185,6 +186,7 @@ class _CommandesPageState extends State<CommandesPage> {
 enum OrderStatus { inProgress, canceled, done }
 
 class Order {
+  final int id;
   final String title;
   final String price;
   final OrderStatus status;
@@ -192,6 +194,7 @@ class Order {
   final String imageUrl;
 
   const Order({
+    required this.id,
     required this.title,
     required this.price,
     required this.status,

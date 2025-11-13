@@ -92,4 +92,28 @@ class CommandeGroupeeService {
       throw Exception("Erreur lors du chargement de la commande du commerçant : $e");
     }
   }
+
+  Future<CommandeGroupee> getAOrderGroupe(int id) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "GET",
+        "/commandeGroupee/$id",
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return CommandeGroupee.fromJson(data);
+      } else if (response.statusCode == 404) {
+        throw Exception('Commande introuvable');
+      } else if (response.statusCode == 401) {
+        throw Exception('Non autorisé');
+      } else {
+        throw Exception('Échec du chargement du détail commande');
+      }
+    } catch (e) {
+      throw Exception("Erreur lors du chargement du détail commande : $e");
+    }
+  }
 }
