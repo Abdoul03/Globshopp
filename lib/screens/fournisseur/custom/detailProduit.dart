@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/caracteristique.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/fournisseur/article.dart';
 import 'package:globshopp/screens/fournisseur/modifierProduit.dart';
@@ -140,6 +141,44 @@ class _DetailProduitState extends State<DetailProduit> {
                         style: TextStyle(color: Constant.grisClaire),
                       ),
                     ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Caracteristique",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  ),
+                  SizedBox(height: 15),
+                  ListView.separated(
+                    itemCount: widget.produit.caracteristiques.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final caracteristique =
+                          widget.produit.caracteristiques[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            caracteristique.nom,
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          Text(caracteristique.valeur),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     Text(caracteristique.nom),
+                          //     Text(caracteristique.valeur),
+                          //   ],
+                          // ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

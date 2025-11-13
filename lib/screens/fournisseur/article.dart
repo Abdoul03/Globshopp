@@ -134,16 +134,42 @@ class _ArticleState extends State<Article> {
               isLoading
                   ? CircularProgressIndicator(color: Constant.blue)
                   : Expanded(
-                      child: ListView.separated(
-                        itemCount: _produits.length,
-                        shrinkWrap: true,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 10),
-                        itemBuilder: (context, index) {
-                          final produit = _produits[index];
-                          return ListeProduit(produit: produit);
-                        },
-                      ),
+                      child: _searchResults.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    RemixIcons.search_2_line,
+                                    size: 50,
+                                    color: Constant.grisClaire,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    _searchController.text.isEmpty
+                                        ? 'Aucun produit disponible.' // Si la liste initiale est vide
+                                        : 'Aucun résultat trouvé pour "${_searchController.text}".', // Si la recherche n'a rien donné
+                                    style: TextStyle(
+                                      color: Constant.grisClaire,
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Expanded(
+                              child: ListView.separated(
+                                itemCount: _searchResults.length,
+                                shrinkWrap: true,
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 10),
+                                itemBuilder: (context, index) {
+                                  final produit = _searchResults[index];
+                                  return ListeProduit(produit: produit);
+                                },
+                              ),
+                            ),
                     ),
             ],
           ),
