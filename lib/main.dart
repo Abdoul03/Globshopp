@@ -11,7 +11,7 @@ import 'package:globshopp/screens/commercant/profile_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "assets/config/.env");
   runApp(GlobalShopperApp());
 }
 
