@@ -89,6 +89,42 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
     }
   }
 
+  Future<void> AjouterDUProduit(Produit produit, List<File>? images) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await _produitservice.createProduit(produit, images);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Constant.colorsWhite,
+          content: Text(
+            "Produit Ajouter avec succes.",
+            style: TextStyle(color: Constant.blue),
+          ),
+        ),
+      );
+      _nom.clear();
+      _description.clear();
+      _prix.clear();
+      _moq.clear();
+      _stock.clear();
+
+      _caracteristiqueNom.clear();
+      _caracteristiqueValeur.clear();
+
+      setState(() {
+        _selectedCategorie = null;
+        _caracteristique.clear();
+        medias.clear();
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      throw Exception('Erreur lors de la récupération des categories : $e');
+    }
+  }
+
   void _ajouterCaracteristique() {
     final nom = _caracteristiqueNom.text.trim();
     final value = _caracteristiqueValeur.text.trim();
@@ -462,10 +498,8 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                       final moq = int.tryParse(_moq.text.trim());
                       final stock = int.tryParse(_stock.text.trim());
 
-                      final nomCaracteristique = _caracteristiqueNom.text
-                          .trim();
-                      final valueCaracteristique = _caracteristiqueValeur.text
-                          .trim();
+                      final nomCaract = _caracteristiqueNom.text.trim();
+                      final valueCaract = _caracteristiqueValeur.text.trim();
 
                       if (nom.isEmpty ||
                           prix == null ||
@@ -474,8 +508,8 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                           stock == null ||
                           _selectedCategorie == null ||
                           _uniteproduit == null ||
-                          nomCaracteristique.isEmpty ||
-                          valueCaracteristique.isEmpty) {
+                          nomCaract.isEmpty ||
+                          valueCaract.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -493,10 +527,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                         return;
                       }
                       _caracteristique.add(
-                        Caracteristique(
-                          nom: nomCaracteristique,
-                          valeur: valueCaracteristique,
-                        ),
+                        Caracteristique(nom: nomCaract, valeur: valueCaract),
                       );
 
                       final produit = Produit(
@@ -510,32 +541,7 @@ class _AjoutpoduitState extends State<Ajoutpoduit> {
                         caracteristiques: _caracteristique,
                       );
 
-                      _produitservice.createProduit(produit, medias);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Constant.colorsWhite,
-                          content: Text(
-                            "Produit Ajouter avec succes.",
-                            style: TextStyle(color: Constant.blue),
-                          ),
-                        ),
-                      );
-
-                      _nom.clear();
-                      _description.clear();
-                      _prix.clear();
-                      _moq.clear();
-                      _stock.clear();
-
-                      _caracteristiqueNom.clear();
-                      _caracteristiqueValeur.clear();
-
-                      setState(() {
-                        _selectedCategorie = null;
-                        _caracteristique.clear();
-                        medias.clear();
-                      });
+                      AjouterDUProduit(produit, medias);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Constant.blue,
