@@ -88,7 +88,7 @@ class Produit {
 
   /// Retourne la liste des URLs complètes pour Flutter
   List<String> get mediaUrls {
-    if (media == null || media.isEmpty) return [];
+    if (media.isEmpty) return [];
     return media!.map((m) => "${Constant.remoteUrl}${m.webPath}").toList();
   }
 

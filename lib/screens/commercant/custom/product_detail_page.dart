@@ -222,15 +222,42 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               // ─────────── Description ───────────
               Text(
                 widget.produit.description,
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1.4,
-                  color: Constant.colorsgray,
-                ),
+                style: TextStyle(fontSize: 12, height: 1.4),
               ),
 
               const SizedBox(height: 12),
 
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Caracteristique",
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                  ),
+                  SizedBox(height: 15),
+                  ListView.separated(
+                    itemCount: widget.produit.caracteristiques.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final caracteristique =
+                          widget.produit.caracteristiques[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${caracteristique.nom} :",
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          Text(caracteristique.valeur),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
               // ─────────── Carte Fournisseur ───────────
               Container(
                 padding: const EdgeInsets.symmetric(
