@@ -57,8 +57,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       // Vous devez vous assurer que votre modèle de commandeGroupee
       // a bien une propriété 'participants' qui est une List<String>
       // d'IDs d'utilisateurs.
-      if (commande.participations != null &&
-          commande.participations!.contains(userId)) {
+      if (commande.participation != null &&
+          commande.participation!.contains(userId)) {
         return true; // L'utilisateur est trouvé dans une commande
       }
     }

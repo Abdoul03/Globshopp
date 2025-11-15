@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:globshopp/screens/commercant/commandes_page.dart' show Order, OrderStatus;
+import 'package:globshopp/screens/commercant/commandes_page.dart'
+    show Order, OrderStatus;
 import 'package:globshopp/services/commandeGroupeeService.dart';
 import 'package:globshopp/model/commandeGroupee.dart' as cg;
 
@@ -114,7 +115,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 if (_error != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
-                    child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                    child: Text(
+                      _error!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
                 // Carte produit + statut
                 Container(
@@ -170,14 +174,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               description,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12.5, color: _OrderDetailPageState._sub),
+                              style: const TextStyle(
+                                fontSize: 12.5,
+                                color: _OrderDetailPageState._sub,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 Container(
                                   height: 26,
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: bg,
                                     borderRadius: BorderRadius.circular(20),
@@ -195,7 +204,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 const SizedBox(width: 8),
                                 Container(
                                   height: 26,
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: _OrderDetailPageState._deadlineBg,
                                     borderRadius: BorderRadius.circular(20),
@@ -228,7 +239,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: _cardBorder),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -237,7 +251,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           children: [
                             const Text(
                               'Minimum order Quantity',
-                              style: TextStyle(color: _OrderDetailPageState._sub, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                color: _OrderDetailPageState._sub,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const SizedBox(height: 6),
                             Text(
@@ -257,7 +274,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           children: [
                             const Text(
                               'Price',
-                              style: TextStyle(color: _OrderDetailPageState._sub, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                color: _OrderDetailPageState._sub,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const SizedBox(height: 6),
                             Text(
@@ -284,13 +304,25 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: _cardBorder),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text('Quantité actuelle', style: const TextStyle(fontWeight: FontWeight.w700)),
+                        child: Text(
+                          'Quantité actuelle',
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
                       ),
-                      Text('$qActuelle pieces', style: const TextStyle(color: Color(0xFF246BEB), fontWeight: FontWeight.w800)),
+                      Text(
+                        '$qActuelle pieces',
+                        style: const TextStyle(
+                          color: Color(0xFF246BEB),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -304,27 +336,56 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: _cardBorder),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 6),
-                        child: Text('Liste des membres', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 6,
+                        ),
+                        child: Text(
+                          'Liste des membres',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                      if ((_data?.participations ?? []).isNotEmpty)
-                        ..._data!.participations!.map((p) => _MemberTile(
-                              name: '${p.commercant?.prenom ?? ''} ${p.commercant?.nom ?? ''}'.trim(),
-                              since: p.data != null ? DateFormat('dd/MM/yyyy').format(p.data!) : '-',
-                              pieces: p.quantite,
-                              avatarUrl: (p.commercant?.photoUrl?.isNotEmpty == true)
-                                  ? p.commercant!.photoUrl!
-                                  : 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100',
-                            )),
-                      if ((_data?.participations ?? []).isEmpty)
+                      if ((_data?.participation ?? []).isNotEmpty)
+                        ..._data!.participation!.map(
+                          (p) => _MemberTile(
+                            name:
+                                '${p.commercantResponseDTO?.prenom ?? ''} ${p.commercantResponseDTO?.nom ?? ''}'
+                                    .trim(),
+                            since: p.data != null
+                                ? DateFormat('dd/MM/yyyy').format(p.data!)
+                                : '-',
+                            pieces: p.quantite,
+                            avatarUrl:
+                                (p
+                                        .commercantResponseDTO
+                                        ?.photoUrl
+                                        ?.isNotEmpty ==
+                                    true)
+                                ? p.commercantResponseDTO!.photoUrl!
+                                : 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100',
+                          ),
+                        ),
+                      if ((_data?.participation ?? []).isEmpty)
                         const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
-                          child: Text('Aucune participation pour le moment.', style: TextStyle(color: _OrderDetailPageState._sub)),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 4,
+                          ),
+                          child: Text(
+                            'Aucune participation pour le moment.',
+                            style: TextStyle(color: _OrderDetailPageState._sub),
+                          ),
                         ),
                       const SizedBox(height: 8),
                       Center(
@@ -352,7 +413,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       child: Text(
                         'A propos du fournisseur',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     Container(
@@ -367,11 +431,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=160',
-                              width: 90,
-                              height: 90,
-                              fit: BoxFit.cover,
+                            child: Text(
+                              _data!.produit!.fournisseur!.prenom
+                                      .substring(0, 1)
+                                      .toUpperCase() +
+                                  _data!.produit!.fournisseur!.nom
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -381,18 +451,28 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               children: [
                                 Text(
                                   (_data?.produit?.fournisseur != null)
-                                      ? '${_data!.produit!.fournisseur!.prenom} ${_data!.produit!.fournisseur!.nom}'.trim()
+                                      ? '${_data!.produit!.fournisseur!.prenom} ${_data!.produit!.fournisseur!.nom}'
+                                            .trim()
                                       : 'Fournisseur',
-                                  style: const TextStyle(fontWeight: FontWeight.w700),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text('Membre depuis —', style: TextStyle(color: _OrderDetailPageState._sub)),
+                                const Text(
+                                  'Membre depuis —',
+                                  style: TextStyle(
+                                    color: _OrderDetailPageState._sub,
+                                  ),
+                                ),
                                 const SizedBox(height: 8),
                                 Text(
                                   (_data?.produit?.fournisseur != null)
-                                      ? 'Contact: ${_data!.produit!.fournisseur!.email ?? ''}\nTéléphone: ${_data!.produit!.fournisseur!.telephone ?? ''}'
+                                      ? 'Contact: ${_data!.produit!.fournisseur!.email}\nTéléphone: ${_data!.produit!.fournisseur!.telephone}'
                                       : 'Informations fournisseur indisponibles.',
-                                  style: const TextStyle(color: _OrderDetailPageState._sub),
+                                  style: const TextStyle(
+                                    color: _OrderDetailPageState._sub,
+                                  ),
                                 ),
                               ],
                             ),
@@ -456,10 +536,7 @@ class _MemberTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundImage: NetworkImage(avatarUrl),
-          ),
+          CircleAvatar(radius: 22, backgroundImage: NetworkImage(avatarUrl)),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

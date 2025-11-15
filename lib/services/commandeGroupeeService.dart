@@ -23,11 +23,38 @@ class CommandeGroupeeService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return Participation.fromJson(data);
+      } else if (response.statusCode == 500) {
+        throw Exception(response.body);
       } else {
         throw Exception('Échec de creation de la commande groupée ');
       }
     } catch (e) {
       throw Exception("Erreur lors de la creation de la commande groupée : $e");
+    }
+  }
+
+  Future<Participation> JoindreUneCommande(
+    int produitId,
+    Participation participation,
+  ) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "POST",
+        "/commandeGroupee/join/$produitId",
+        body: jsonEncode(participation.toJson()),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return Participation.fromJson(data);
+      } else if (response.statusCode == 500) {
+        throw Exception(response.body);
+      } else {
+        throw Exception('Vous ne pouvez pas rejoindre cette commande groupée ');
+      }
+    } catch (e) {
+      throw Exception(
+        "Une erreur est survenue quand vous avez essayer de rejoindre la commande groupée : $e",
+      );
     }
   }
 
@@ -51,14 +78,14 @@ class CommandeGroupeeService {
   }
 
   // --- Commercant Endpoints Integration ---
-  Future<List<CommandeGroupee>> getCommercantCommandesAll(int commercantId) async {
+  Future<List<CommandeGroupee>> getCommercantCommandesAll(
+    int commercantId,
+  ) async {
     try {
       final response = await _apiservice.requestWithAuthentification(
         "GET",
         "/commandeGroupee/commercant/all/$commercantId",
-        headers: {
-          'Accept': 'application/json',
-        },
+        headers: {'Accept': 'application/json'},
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -67,7 +94,9 @@ class CommandeGroupeeService {
         throw Exception('Échec du chargement des commandes du commerçant');
       }
     } catch (e) {
-      throw Exception("Erreur lors du chargement des commandes du commerçant : $e");
+      throw Exception(
+        "Erreur lors du chargement des commandes du commerçant : $e",
+      );
     }
   }
 
@@ -76,9 +105,7 @@ class CommandeGroupeeService {
       final response = await _apiservice.requestWithAuthentification(
         "GET",
         "/commandeGroupee/commercant/$commercantId",
-        headers: {
-          'Accept': 'application/json',
-        },
+        headers: {'Accept': 'application/json'},
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
@@ -89,7 +116,9 @@ class CommandeGroupeeService {
         throw Exception('Échec du chargement de la commande du commerçant');
       }
     } catch (e) {
-      throw Exception("Erreur lors du chargement de la commande du commerçant : $e");
+      throw Exception(
+        "Erreur lors du chargement de la commande du commerçant : $e",
+      );
     }
   }
 
@@ -98,9 +127,7 @@ class CommandeGroupeeService {
       final response = await _apiservice.requestWithAuthentification(
         "GET",
         "/commandeGroupee/$id",
-        headers: {
-          'Accept': 'application/json',
-        },
+        headers: {'Accept': 'application/json'},
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);

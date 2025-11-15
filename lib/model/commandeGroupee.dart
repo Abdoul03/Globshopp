@@ -14,7 +14,7 @@ class CommandeGroupee {
   DateTime? dateDebut;
   Commercant? commercant;
   Produit? produit;
-  List<Participation>? participations;
+  List<Participation>? participation;
 
   CommandeGroupee({
     this.id,
@@ -26,7 +26,7 @@ class CommandeGroupee {
     this.dateDebut,
     this.commercant,
     this.produit,
-    this.participations,
+    this.participation,
   });
 
   // --- fromJson ---
@@ -52,7 +52,7 @@ class CommandeGroupee {
       produit: json['produit'] != null
           ? Produit.fromJson(json['produit'])
           : null,
-      participations: (json['participations'] as List?)
+      participation: (json['participation'] as List?)
           ?.map((p) => Participation.fromJson(p))
           .toList(),
     );
@@ -70,7 +70,7 @@ class CommandeGroupee {
       'dateDebut': dateDebut?.toIso8601String(),
       'commercant': commercant?.toJson(),
       'produit': produit?.toJson(),
-      'participations': participations?.map((p) => p.toJson()).toList(),
+      'participation': participation?.map((p) => p.toJson()).toList(),
     };
   }
 }

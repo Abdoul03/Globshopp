@@ -4,7 +4,7 @@ import 'package:globshopp/model/transaction.dart';
 
 class Participation {
   final int? id;
-  Commercant? commercant;
+  Commercant? commercantResponseDTO;
   CommandeGroupee? commandeGroupee;
   DateTime? data;
   int quantite;
@@ -13,7 +13,7 @@ class Participation {
 
   Participation({
     this.id,
-    this.commercant,
+    this.commercantResponseDTO,
     this.commandeGroupee,
     this.data,
     required this.quantite,
@@ -25,8 +25,8 @@ class Participation {
   factory Participation.fromJson(Map<String, dynamic> json) {
     return Participation(
       id: json['id'],
-      commercant: json['commercant'] != null
-          ? Commercant.fromJson(json['commercant'])
+      commercantResponseDTO: json['commercantResponseDTO'] != null
+          ? Commercant.fromJson(json['commercantResponseDTO'])
           : null,
       commandeGroupee: json['commandeGroupee'] != null
           ? CommandeGroupee.fromJson(json['commandeGroupee'])
@@ -44,7 +44,7 @@ class Participation {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'commercant': commercant?.toJson(),
+      'commercant': commercantResponseDTO?.toJson(),
       'commandeGroupee': commandeGroupee?.toJson(),
       'data': data?.toIso8601String(),
       'quantite': quantite,
