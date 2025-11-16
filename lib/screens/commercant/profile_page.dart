@@ -10,6 +10,7 @@ import 'package:globshopp/screens/custom/fieldLabel.dart';
 import 'package:globshopp/screens/custom/infoTile.dart';
 import 'package:globshopp/services/authentification.dart';
 import 'package:globshopp/services/commercantService.dart';
+import 'package:globshopp/screens/commercant/edit_profile_page.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -93,7 +94,7 @@ class _ProfileState extends State<Profile> {
         );
         return;
       }
-      final user = await _commercantService.getCommercant(conversionId!);
+      final user = await _commercantService.getCommercant(conversionId);
       setState(() {
         commercant = user;
         isLoading = false;
@@ -155,10 +156,20 @@ class _ProfileState extends State<Profile> {
                 padding: const EdgeInsets.only(right: 12),
                 child: CircleImageButton(
                   imagePath: 'assets/icons/edit.png',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Modifier le profil')),
+                  onTap: () async {
+                    final updated = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EditProfilePage(commercant: commercant),
+                      ),
                     );
+                    if (updated is Commercant) {
+                      setState(() {
+                        commercant = updated;
+                      });
+                    } else {
+                      await getUser();
+                    }
                   },
                 ),
               ),

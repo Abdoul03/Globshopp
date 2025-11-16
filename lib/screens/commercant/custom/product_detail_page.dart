@@ -6,6 +6,8 @@ import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/commercant/joinGroupOrder.dart';
 import 'package:globshopp/screens/commercant/supplier_detail_page.dart';
 import '../group_order_page.dart';
+import 'package:globshopp/model/commandeGroupee.dart';
+import 'package:globshopp/screens/fournisseur/custom/detailCommande.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Produit produit;
@@ -40,30 +42,44 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return await storage.read(key: 'accessToken');
   }
 
-  // NOUVELLE MÉTHODE : Vérifie si l'utilisateur est dans une commande
+  // Vérifie si le commerçant participe à une commande groupée de ce produit
   Future<bool> _isUserInGroupOrder() async {
-    // 1. Récupérer le token et l'ID de l'utilisateur
     final accessToken = await getAccessToken();
-    if (accessToken == null) return false; // Non connecté
-    final userId = extractIdFromToken(accessToken);
-    if (userId == null) return false; // ID utilisateur introuvable
+    if (accessToken == null) return false;
+    final userIdStr = extractIdFromToken(accessToken);
+    if (userIdStr == null) return false;
+    final userId = int.tryParse(userIdStr);
+    if (userId == null) return false;
 
-    // 2. Parcourir les commandes groupées du produit
     final commandes = widget.produit.commandeGroupees;
     if (commandes == null || commandes.isEmpty) return false;
 
-    // 3. Vérifier si l'utilisateur est dans la liste des participants d'une commande
-    for (var commande in commandes) {
-      // Vous devez vous assurer que votre modèle de commandeGroupee
-      // a bien une propriété 'participants' qui est une List<String>
-      // d'IDs d'utilisateurs.
-      if (commande.participation != null &&
-          commande.participation!.contains(userId)) {
-        return true; // L'utilisateur est trouvé dans une commande
-      }
+    for (final cmd in commandes) {
+      final parts = cmd.participations ?? [];
+      final found = parts.any((p) => p.commercant?.id == userId);
+      if (found) return true;
     }
+    return false;
+  }
 
-    return false; // L'utilisateur n'est dans aucune commande
+  // Retourne la commande groupée où le commerçant participe (sinon null)
+  Future<CommandeGroupee?> _getUserGroupOrder() async {
+    final accessToken = await getAccessToken();
+    if (accessToken == null) return null;
+    final userIdStr = extractIdFromToken(accessToken);
+    if (userIdStr == null) return null;
+    final userId = int.tryParse(userIdStr);
+    if (userId == null) return null;
+
+    final commandes = widget.produit.commandeGroupees;
+    if (commandes == null || commandes.isEmpty) return null;
+
+    for (final cmd in commandes) {
+      final parts = cmd.participations ?? [];
+      final found = parts.any((p) => p.commercant?.id == userId);
+      if (found) return cmd;
+    }
+    return null;
   }
 
   @override
@@ -328,51 +344,85 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
               const SizedBox(height: 18),
 
-              // ─────────── Bouton principal ───────────
-              SizedBox(
-                height: 44,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Constant.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    elevation: 0,
-                  ),
-                  onPressed: () {
-                    if (widget.produit.commandeGroupees != null &&
-                        widget.produit.commandeGroupees!.isNotEmpty) {
+              // ─────────── Bouton principal (FutureBuilder) ───────────
+              FutureBuilder<CommandeGroupee?>(
+                future: _getUserGroupOrder(),
+                builder: (context, snapshot) {
+                  final hasAny = widget.produit.commandeGroupees != null &&
+                      widget.produit.commandeGroupees!.isNotEmpty;
+                  final isLoading = snapshot.connectionState == ConnectionState.waiting;
+                  final userOrder = snapshot.data;
+
+                  String label;
+                  VoidCallback? onPressed;
+
+                  if (isLoading) {
+                    label = 'Chargement...';
+                    onPressed = null;
+                  } else if (userOrder != null) {
+                    label = 'Voir détail commande';
+                    onPressed = () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              JoinGroupOrder(produit: widget.produit),
+                          builder: (_) => DetailCommande(commande: userOrder),
                         ),
                       );
-                    } else {
-                      // Créer une nouvelle commande
+                    };
+                  } else if (hasAny) {
+                    label = 'Rejoindre la commande';
+                    onPressed = () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              GroupOrderPage(produit: widget.produit),
+                          builder: (_) => JoinGroupOrder(produit: widget.produit),
                         ),
                       );
-                    }
-                  },
-                  child: Text(
-                    widget.produit.commandeGroupees != null &&
-                            widget.produit.commandeGroupees!.isNotEmpty
-                        ? 'Rejoindre la commande'
-                        : 'Créer une commande',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13.5,
+                    };
+                  } else {
+                    label = 'Créer une commande';
+                    onPressed = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => GroupOrderPage(produit: widget.produit),
+                        ),
+                      );
+                    };
+                  }
+
+                  return SizedBox(
+                    height: 44,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Constant.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: onPressed,
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              label,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13.5,
+                              ),
+                            ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),
