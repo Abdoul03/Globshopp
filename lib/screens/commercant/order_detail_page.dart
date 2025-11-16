@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globshopp/_base/constant.dart';
 import 'package:intl/intl.dart';
 import 'package:globshopp/screens/commercant/commandes_page.dart'
     show Order, OrderStatus;
@@ -35,8 +36,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   void initState() {
-    super.initState();
     _fetch();
+    super.initState();
   }
 
   Future<void> _fetch() async {
@@ -97,7 +98,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     final deadline = _data?.deadline != null
         ? DateFormat('dd/MM/yyyy').format(_data!.deadline)
         : '20/11/2025';
+    final prenom = _data?.produit?.fournisseur?.prenom ?? "";
+    final nom = _data?.produit?.fournisseur?.nom ?? "";
 
+    final prenomInitial = (prenom.isNotEmpty) ? prenom[0].toUpperCase() : '';
+    final nomInitial = (nom.isNotEmpty) ? nom[0].toUpperCase() : '';
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -387,17 +392,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             style: TextStyle(color: _OrderDetailPageState._sub),
                           ),
                         ),
-                      const SizedBox(height: 8),
-                      Center(
-                        child: OutlinedButton(
-                          onPressed: null,
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Color(0xFF246BEB),
-                            side: BorderSide(color: Color(0xFF246BEB)),
-                          ),
-                          child: const Text('Voir plus'),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -432,14 +426,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Text(
-                              _data!.produit!.fournisseur!.prenom
-                                      .substring(0, 1)
-                                      .toUpperCase() +
-                                  _data!.produit!.fournisseur!.nom
-                                      .substring(0, 1)
-                                      .toUpperCase(),
+                              prenomInitial + nomInitial,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Constant.blue,
                                 fontSize: 24,
                               ),
                             ),

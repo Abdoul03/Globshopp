@@ -84,7 +84,7 @@ class CommandeGroupeeService {
     try {
       final response = await _apiservice.requestWithAuthentification(
         "GET",
-        "/commandeGroupee/commercant/all/$commercantId",
+        "/commandeGroupee/commercant/$commercantId",
         headers: {'Accept': 'application/json'},
       );
       if (response.statusCode == 200) {
