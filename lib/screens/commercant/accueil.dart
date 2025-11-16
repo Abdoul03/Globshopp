@@ -86,6 +86,9 @@ class _HomePageState extends State<HomePage> {
       case 'electromenager':
         return Icons.kitchen_outlined;
       case 'agricoles':
+      case 'agricultures':
+      case 'agricole':
+      case 'agriculture':
         return Icons.agriculture_rounded;
       default:
         return Icons.grid_view_rounded;

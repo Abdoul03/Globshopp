@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/commercant/custom/kvLine.dart';
 import 'package:globshopp/services/commandeGroupeeService.dart';
@@ -28,6 +29,43 @@ class _JoinGroupOrderState extends State<JoinGroupOrder> {
         _montantTotal = qte * widget.produit.prix;
       }
     });
+  }
+
+  Future<void> joindreLaCommande(
+    int produitId,
+    Participation participation,
+  ) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await _commandeGroupeeService.JoindreUneCommande(
+        produitId,
+        participation,
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Constant.blue,
+          content: Text(
+            "Vous avez rejoin la Commande Grouper avec succes.",
+            style: TextStyle(color: Constant.colorsWhite),
+          ),
+        ),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      print(msg);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+      );
+    }
   }
 
   //Formatage manuel
@@ -203,7 +241,15 @@ class _JoinGroupOrderState extends State<JoinGroupOrder> {
                               return;
                             }
 
-                            // Action à faire ici
+                            final participation = Participation(
+                              quantite: quantite,
+                              montant: _montantTotal,
+                            );
+
+                            joindreLaCommande(
+                              widget.produit.id!,
+                              participation,
+                            );
                           },
                           child: _isLoading
                               ? CircularProgressIndicator(

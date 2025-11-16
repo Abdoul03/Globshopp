@@ -20,6 +20,7 @@ class Constant {
   static const border = Color(0xFFE6E6E6);
 
   // static String remoteUrl = dotenv.env["BASE_URL"] ?? '';
+  // static String remoteUrl = "http://172.20.10.2:8080/api";
 
   static String get remoteUrl {
     if (Platform.isAndroid) {

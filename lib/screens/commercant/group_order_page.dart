@@ -95,7 +95,7 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
       setState(() {
         _isLoading = true;
       });
-      final create = await _commandeGroupeeService.createGroupOrder(
+      await _commandeGroupeeService.createGroupOrder(
         produitId,
         deadline,
         participation,
@@ -332,8 +332,6 @@ class _GroupOrderPageState extends State<GroupOrderPage> {
                               date,
                               participation,
                             );
-
-                            // Action à faire ici
                           },
                           child: _isLoading
                               ? CircularProgressIndicator(

@@ -15,7 +15,7 @@ class _DetailCommandeState extends State<DetailCommande> {
   @override
   Widget build(BuildContext context) {
     final urls = widget.commande.produit!.mediaUrls;
-    final participations = widget.commande.participations ?? [];
+    final participations = widget.commande.participation ?? [];
     return Scaffold(
       backgroundColor: Constant.colorsWhite,
       // appBar: AppBar(
@@ -145,10 +145,6 @@ class _DetailCommandeState extends State<DetailCommande> {
                 ),
               ),
               SizedBox(height: 12),
-              Text(
-                "Membres",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-              ),
               ListView.separated(
                 separatorBuilder: (context, index) => SizedBox(height: 10),
                 shrinkWrap: true,
@@ -156,59 +152,141 @@ class _DetailCommandeState extends State<DetailCommande> {
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final participe = participations[index];
+
+                  // Conteneur Principal de l'item (Membres)
                   return Container(
+                    height: 80,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ), // Ajout de padding pour l'intérieur
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
                       border: Border.all(
                         color: Constant.colorsgray,
                         width: 1.0,
                         style: BorderStyle.solid,
                       ),
                     ),
-                    height: 20,
-                    color: Constant.blueTransparant,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment
+                          .center, // Alignement vertical au centre
                       children: [
+                        // 1. Cercle d'Initiales (Photo de profil)
                         Container(
-                          margin: EdgeInsets.only(left: 10.0),
+                          margin: EdgeInsets.only(
+                            right: 10.0,
+                          ), // Marge à droite
                           height: 70,
+                          width: 70,
                           decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            shape: BoxShape
+                                .circle, // Utiliser un cercle pour la photo
+                            color: Constant
+                                .blueTransparant, // Ajouter la couleur ici
                             border: Border.all(
                               color: Constant.colorsgray,
                               width: 1.0,
                               style: BorderStyle.solid,
                             ),
                           ),
+                          alignment: Alignment.center, // Centrer le texte
                           child: Text(
-                            participe.commercant!.prenom
+                            participe.commercantResponseDTO!.prenom
                                     .substring(0, 1)
                                     .toUpperCase() +
-                                participe.commercant!.nom
+                                participe.commercantResponseDTO!.nom
                                     .substring(0, 1)
                                     .toUpperCase(),
                             style: TextStyle(
                               color: Constant.blue,
                               fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Text(participe.commercant!.prenom),
-                        Text(
-                          "${participe.quantite}",
-                          style: TextStyle(
-                            fontSize: 12,
-                            backgroundColor: Constant.jauneTransparant,
-                            color: Constant.jaune,
+
+                        // 2. Section Nom/Adresse et Quantité (Prend le reste de l'espace)
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .spaceBetween, // Espacement maximal
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Colonne 2A: Nom et Adresse
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Nom Complet
+                                  Text(
+                                    "${participe.commercantResponseDTO!.prenom} ${participe.commercantResponseDTO!.nom}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  // Adresse (Simulée, remplacez par le vrai champ)
+                                  Text(
+                                    "${participe.commercantResponseDTO!.role!.name}",
+                                    style: TextStyle(
+                                      color: Constant.colorsgray,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              // Colonne 2B: Quantité
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Constant.jauneTransparant,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  "${participe.quantite}",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Constant.jaune,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   );
                 },
+              ),
+
+              SizedBox(height: 12),
+
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Constant.blue,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  child: Text("Valider"),
+                ),
               ),
             ],
           ),
