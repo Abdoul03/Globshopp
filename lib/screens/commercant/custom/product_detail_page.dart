@@ -55,8 +55,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (commandes == null || commandes.isEmpty) return false;
 
     for (final cmd in commandes) {
-      final parts = cmd.participations ?? [];
-      final found = parts.any((p) => p.commercant?.id == userId);
+      final parts = cmd.participation ?? [];
+      final found = parts.any((p) => p.commercantResponseDTO?.id == userId);
       if (found) return true;
     }
     return false;
@@ -75,8 +75,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (commandes == null || commandes.isEmpty) return null;
 
     for (final cmd in commandes) {
-      final parts = cmd.participations ?? [];
-      final found = parts.any((p) => p.commercant?.id == userId);
+      final parts = cmd.participation ?? [];
+      final found = parts.any((p) => p.commercantResponseDTO?.id == userId);
       if (found) return cmd;
     }
     return null;
@@ -348,9 +348,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               FutureBuilder<CommandeGroupee?>(
                 future: _getUserGroupOrder(),
                 builder: (context, snapshot) {
-                  final hasAny = widget.produit.commandeGroupees != null &&
+                  final hasAny =
+                      widget.produit.commandeGroupees != null &&
                       widget.produit.commandeGroupees!.isNotEmpty;
-                  final isLoading = snapshot.connectionState == ConnectionState.waiting;
+                  final isLoading =
+                      snapshot.connectionState == ConnectionState.waiting;
                   final userOrder = snapshot.data;
 
                   String label;
@@ -375,7 +377,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => JoinGroupOrder(produit: widget.produit),
+                          builder: (_) =>
+                              JoinGroupOrder(produit: widget.produit),
                         ),
                       );
                     };
@@ -385,7 +388,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => GroupOrderPage(produit: widget.produit),
+                          builder: (_) =>
+                              GroupOrderPage(produit: widget.produit),
                         ),
                       );
                     };

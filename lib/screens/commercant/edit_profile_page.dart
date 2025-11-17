@@ -28,9 +28,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     prenomCtrl = TextEditingController(text: widget.commercant?.prenom ?? '');
     nomCtrl = TextEditingController(text: widget.commercant?.nom ?? '');
-    telephoneCtrl = TextEditingController(text: widget.commercant?.telephone ?? '');
+    telephoneCtrl = TextEditingController(
+      text: widget.commercant?.telephone ?? '',
+    );
     emailCtrl = TextEditingController(text: widget.commercant?.email ?? '');
-    usernameCtrl = TextEditingController(text: widget.commercant?.username ?? '');
+    usernameCtrl = TextEditingController(
+      text: widget.commercant?.username ?? '',
+    );
     passwordCtrl = TextEditingController();
   }
 
@@ -48,6 +52,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constant.colorsWhite,
       appBar: AppBar(
         title: const SizedBox.shrink(),
         backgroundColor: Colors.white,
@@ -67,10 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 const Center(
                   child: Text(
                     'Modifier le profile',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -88,15 +90,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFFE6E6E6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE6E6E6),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF3D74B6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3D74B6),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Nom requis' : null,
+                      validator: (v) =>
+                          (v == null || v.trim().isEmpty) ? 'Nom requis' : null,
                     ),
                     const SizedBox(height: 16),
                     const Text('Prenom'),
@@ -110,15 +120,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFFE6E6E6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE6E6E6),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF3D74B6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3D74B6),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Prénom requis' : null,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'Prénom requis'
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     const Text('Nom d’utilisateur'),
@@ -132,15 +151,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFFE6E6E6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE6E6E6),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF3D74B6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3D74B6),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Nom d’utilisateur requis' : null,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'Nom d’utilisateur requis'
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     const Text('Telephone'),
@@ -155,15 +183,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFFE6E6E6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE6E6E6),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF3D74B6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3D74B6),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Téléphone requis' : null,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'Téléphone requis'
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     const Text('Email'),
@@ -178,17 +215,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFFE6E6E6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE6E6E6),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF3D74B6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3D74B6),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Email requis';
-                        final ok = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(v);
+                        if (v == null || v.trim().isEmpty)
+                          return 'Email requis';
+                        final ok = RegExp(
+                          r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                        ).hasMatch(v);
                         return ok ? null : 'Email invalide';
                       },
                     ),
@@ -205,15 +252,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFFE6E6E6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE6E6E6),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF3D74B6)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3D74B6),
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         suffixIcon: IconButton(
-                          icon: Icon(showPassword ? Icons.visibility_off : Icons.visibility),
+                          icon: Icon(
+                            showPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
                           onPressed: () {
                             setState(() => showPassword = !showPassword);
                           },
@@ -241,7 +299,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             final id = widget.commercant?.id;
                             if (id == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('ID utilisateur introuvable')),
+                                const SnackBar(
+                                  content: Text('ID utilisateur introuvable'),
+                                ),
                               );
                               return;
                             }
@@ -260,17 +320,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               if (passwordCtrl.text.trim().isNotEmpty) {
                                 payload['motDePasse'] = passwordCtrl.text;
                               }
-                              final updated = await _service.updateCommercant(id, payload);
+                              final updated = await _service.updateCommercant(
+                                id,
+                                payload,
+                              );
+
                               if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Profil modifié avec succès')),
+                                const SnackBar(
+                                  content: Text('Profil modifié avec succès'),
+                                ),
                               );
                               Navigator.pop(context, updated);
                             } catch (e) {
                               if (!mounted) return;
-                              final msg = e.toString().replaceFirst('Exception: ', '');
+                              final msg = e.toString().replaceFirst(
+                                'Exception: ',
+                                '',
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
+                                SnackBar(
+                                  content: Text(msg),
+                                  backgroundColor: Colors.redAccent,
+                                ),
                               );
                             } finally {
                               if (mounted) setState(() => isSubmitting = false);
@@ -280,13 +352,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           )
                         : const Text(
                             'Modifier',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                   ),
                 ),
