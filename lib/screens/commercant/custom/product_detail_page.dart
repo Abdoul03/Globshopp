@@ -55,8 +55,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (commandes == null || commandes.isEmpty) return false;
 
     for (final cmd in commandes) {
-      final parts = cmd.participations ?? [];
-      final found = parts.any((p) => p.commercant?.id == userId);
+      final parts = cmd.participation ?? [];
+      final found = parts.any((p) => p.commercantResponseDTO?.id == userId);
       if (found) return true;
     }
     return false;
@@ -75,8 +75,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     if (commandes == null || commandes.isEmpty) return null;
 
     for (final cmd in commandes) {
-      final parts = cmd.participations ?? [];
-      final found = parts.any((p) => p.commercant?.id == userId);
+      final parts = cmd.participation ?? [];
+      final found = parts.any((p) => p.commercantResponseDTO?.id == userId);
       if (found) return cmd;
     }
     return null;

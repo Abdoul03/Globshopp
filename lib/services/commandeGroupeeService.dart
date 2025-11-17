@@ -88,8 +88,23 @@ class CommandeGroupeeService {
         headers: {'Accept': 'application/json'},
       );
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => CommandeGroupee.fromJson(json)).toList();
+        final decoded = jsonDecode(response.body);
+
+        // Si le backend renvoie une liste JSON
+        if (decoded is List) {
+          return decoded
+              .map((json) => CommandeGroupee.fromJson(json))
+              .toList();
+        }
+
+        // Si le backend renvoie un seul objet JSON
+        if (decoded is Map<String, dynamic>) {
+          return [CommandeGroupee.fromJson(decoded)];
+        }
+
+        throw Exception(
+          'Format de réponse inattendu pour les commandes du commerçant',
+        );
       } else {
         throw Exception('Échec du chargement des commandes du commerçant');
       }
