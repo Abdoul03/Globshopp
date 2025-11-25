@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/enum/orderStatus.dart';
+import 'package:globshopp/model/participation.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/commercant/joinGroupOrder.dart';
 import 'package:globshopp/screens/commercant/supplier_detail_page.dart';
@@ -69,18 +71,44 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final userIdStr = extractIdFromToken(accessToken);
     if (userIdStr == null) return null;
     final userId = int.tryParse(userIdStr);
-    if (userId == null) return null;
-
+    print('DEBUG: User ID extrait : $userId'); // Imprime l'ID de l'utilisateur
+    // ...
     final commandes = widget.produit.commandeGroupees;
     if (commandes == null || commandes.isEmpty) return null;
-
     for (final cmd in commandes) {
+      print('DEBUG: Vérification de la commande ID : ${cmd.id}');
       final parts = cmd.participation ?? [];
-      final found = parts.any((p) => p.commercantResponseDTO?.id == userId);
-      if (found) return cmd;
+
+      // Ajoute d'une boucle pour vérifier les IDs des participants
+      for (final p in parts) {
+        print('DEBUG: ID participant : ${p.commercantResponseDTO?.id}');
+        if (p.commercantResponseDTO?.id == userId) {
+          print('DEBUG: PARTICIPATION TROUVÉE ! Retourne la commande.');
+          return cmd; // Retourne la commande
+        }
+      }
     }
+    print('DEBUG: Aucune participation trouvée. Retourne null.');
     return null;
   }
+  // Future<CommandeGroupee?> _getUserGroupOrder() async {
+  //   final accessToken = await getAccessToken();
+  //   if (accessToken == null) return null;
+  //   final userIdStr = extractIdFromToken(accessToken);
+  //   if (userIdStr == null) return null;
+  //   final userId = int.tryParse(userIdStr);
+  //   if (userId == null) return null;
+
+  //   final commandes = widget.produit.commandeGroupees;
+  //   if (commandes == null || commandes.isEmpty) return null;
+
+  //   for (final cmd in commandes) {
+  //     final parts = cmd.participation ?? [];
+  //     final found = parts.any((p) => p.commercantResponseDTO?.id == userId);
+  //     if (found) return cmd;
+  //   }
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +228,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           'MOQ:',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Constant.colorsgray,
+                            color: Constant.jaune,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -346,22 +374,46 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
               // ─────────── Bouton principal (FutureBuilder) ───────────
               FutureBuilder<CommandeGroupee?>(
+                // Le future vérifie si l'utilisateur fait partie d'une commande
                 future: _getUserGroupOrder(),
                 builder: (context, snapshot) {
-                  final hasAny =
-                      widget.produit.commandeGroupees != null &&
-                      widget.produit.commandeGroupees!.isNotEmpty;
+                  final allGroupOrders = widget.produit.commandeGroupees ?? [];
+
+                  // Vérifie s'il existe AU MOINS UNE commande qui n'est pas TERMINER
+                  final hasAnyOpenOrder = allGroupOrders.any(
+                    (cmd) => cmd.status != OrderStatus.TERMINER,
+                  );
+
                   final isLoading =
                       snapshot.connectionState == ConnectionState.waiting;
+
+                  // C'est la donnée clé : la commande de l'utilisateur (ou null)
                   final userOrder = snapshot.data;
 
                   String label;
                   VoidCallback? onPressed;
 
+                  // Vérifie si la commande de l'utilisateur (si elle existe) est terminée
+                  final isFinished = userOrder?.status == OrderStatus.TERMINER;
+
                   if (isLoading) {
+                    // 1. Chargement
                     label = 'Chargement...';
                     onPressed = null;
-                  } else if (userOrder != null) {
+                  } else if (userOrder != null && isFinished) {
+                    // 2. L'utilisateur a une commande TERMINÉE -> Créer nouvelle
+                    label = 'Créer une nouvelle commande';
+                    onPressed = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              GroupOrderPage(produit: widget.produit),
+                        ),
+                      );
+                    };
+                  } else if (userOrder != null && !isFinished) {
+                    // 3. L'utilisateur a une commande NON TERMINÉE -> Voir détails
                     label = 'Voir détail commande';
                     onPressed = () {
                       Navigator.push(
@@ -371,7 +423,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         ),
                       );
                     };
-                  } else if (hasAny) {
+                  } else if (userOrder == null && hasAnyOpenOrder) {
+                    // 4. L'utilisateur n'a PAS de commande (userOrder == null) ET il existe des commandes ouvertes
                     label = 'Rejoindre la commande';
                     onPressed = () {
                       Navigator.push(
@@ -383,6 +436,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       );
                     };
                   } else {
+                    // 5. L'utilisateur n'a PAS de commande ET il n'y a aucune commande ouverte (ou seulement des terminées)
                     label = 'Créer une commande';
                     onPressed = () {
                       Navigator.push(
@@ -395,6 +449,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     };
                   }
 
+                  // ... (Reste du ElevatedButton)
                   return SizedBox(
                     height: 44,
                     width: double.infinity,

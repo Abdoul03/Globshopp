@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       case 'tout':
         return RemixIcons.menu_2_line;
       case 'accessoire':
-      case 'accesoire':
+      case 'accessoires':
       case 'accessoir': // au cas où ton back envoie sans le 'e'
         return Icons.headphones_rounded;
       case 'electronique':

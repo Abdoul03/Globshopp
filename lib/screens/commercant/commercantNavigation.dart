@@ -60,7 +60,7 @@ class _CommercantnavigationState extends State<Commercantnavigation> {
           ),
           BottomNavigationBarItem(
             icon: Icon(RemixIcons.book_3_line),
-            label: "Annuaire",
+            label: "Transitaires",
           ),
           BottomNavigationBarItem(
             icon: Icon(RemixIcons.user_6_line),
