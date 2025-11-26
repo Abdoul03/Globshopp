@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/commandeGroupee.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/model/tokenPair.dart';
 import 'package:globshopp/services/apiService.dart';
@@ -44,6 +45,25 @@ class Produitservice {
       }
     } catch (e) {
       throw Exception('Erreur lors de la récupération du produit : $e');
+    }
+  }
+
+  Future<CommandeGroupee> getParticipation(int produitId) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "GET",
+        "/produits/$produitId/participation-utilisateur",
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return CommandeGroupee.fromJson(data);
+      } else {
+        throw Exception('Échec du chargement du produit');
+      }
+    } catch (e) {
+      throw Exception(
+        'Erreur lors de la récupération de votre participation : $e',
+      );
     }
   }
 
