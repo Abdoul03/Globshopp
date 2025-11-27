@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:globshopp/_base/constant.dart';
+import 'package:globshopp/model/enum/orderStatus.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/commercant/joinGroupOrder.dart';
 import 'package:globshopp/screens/commercant/supplier_detail_page.dart';
@@ -45,49 +46,62 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   // Retourne la commande groupée où le commerçant participe (sinon null)
+  // Utilise l'API pour récupérer la commande où l'utilisateur participe
   Future<CommandeGroupee?> _getUserGroupOrder() async {
-    String? errorMessage;
     final accessToken = await getAccessToken();
     if (accessToken == null) return null;
     final userIdStr = extractIdFromToken(accessToken);
     if (userIdStr == null) return null;
     final userId = int.tryParse(userIdStr);
+    if (userId == null) return null;
+
+    print('DEBUG _getUserGroupOrder: userId = $userId');
 
     try {
-      // 1. Appel au service pour récupérer LA commande de l'utilisateur sur ce produit.
-      // L'ID utilisateur n'est plus nécessaire ici car il est géré par l'API via le token.
-      final CommandeGroupee? userOrder = await _produitservice.getParticipation(
+      // L'API retourne la commande où l'utilisateur participe pour ce produit
+      // Si l'utilisateur ne participe pas, l'API retourne une erreur (404 généralement)
+      final CommandeGroupee userOrder = await _produitservice.getParticipation(
         widget.produit.id!,
       );
 
-      if (userOrder == null) {
-        // Aucune commande trouvée pour ce produit
-        return null;
-      }
-
-      final participation = userOrder.participation ?? [];
-      // Vérifie simplement si l'utilisateur apparaît dans la liste des participations
-      final isUserInOrder = participation.any(
-        (p) => p.commercantResponseDTO?.id == userId,
+      print(
+        'DEBUG _getUserGroupOrder: API retourne commande ID=${userOrder.id}, status=${userOrder.status}',
       );
 
-      // Si l'utilisateur participe à cette commande, on la retourne,
-      // sinon on renvoie null (il ne fait pas partie d'une commande sur ce produit)
-      return isUserInOrder ? userOrder : null;
+      // Vérifie dans les commandes du produit si cette commande existe avec un statut différent
+      // (plus à jour que celui retourné par l'API)
+      final allGroupOrders = widget.produit.commandeGroupees ?? [];
+      final matchingOrder = allGroupOrders.firstWhere(
+        (cmd) => cmd.id == userOrder.id,
+        orElse: () => userOrder, // Si pas trouvée, utilise celle de l'API
+      );
+
+      print(
+        'DEBUG _getUserGroupOrder: commande dans produit ID=${matchingOrder.id}, status=${matchingOrder.status}',
+      );
+
+      // Retourne toujours la commande si l'utilisateur y participe, peu importe son statut
+      // La logique du bouton décidera quoi afficher selon le statut
+      print(
+        'DEBUG _getUserGroupOrder: retourne commande ID=${matchingOrder.id}',
+      );
+      return matchingOrder;
     } on Exception catch (e) {
-      // Gérer l'exception pour afficher la SnackBar
-      errorMessage = e.toString().replaceFirst('Exception: ', '');
-      print('ERREUR SERVICE : $errorMessage');
+      // Si l'API retourne une erreur, cela peut signifier :
+      // 1. L'utilisateur ne participe pas (cas normal)
+      // 2. L'API a un problème
+      print('DEBUG _getUserGroupOrder: Exception de l\'API: $e');
+
+      // On essaie quand même de chercher dans les commandes du produit
+      // en utilisant l'ID utilisateur pour vérifier les participations
+      // Mais comme les participations ne sont pas chargées, on ne peut pas vraiment vérifier
+      // Donc on retourne null
+      return null;
     } catch (e) {
-      // Gérer les autres erreurs inattendues
-      errorMessage = 'Une erreur inattendue est survenue : ${e.toString()}';
-      print('ERREUR INATTENDUE : $errorMessage');
+      // Erreur inattendue
+      print('DEBUG _getUserGroupOrder: erreur inattendue: $e');
+      return null;
     }
-
-    // Afficher la SnackBar si une erreur s'est produite et si le widget est toujours monté
-
-    // Si une erreur s'est produite, on retourne null
-    return null;
   }
 
   @override
@@ -362,11 +376,29 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   // 1) Le produit a-t-il AU MOINS une commande groupée ?
                   final hasAnyOrder = allGroupOrders.isNotEmpty;
 
+                  // 2) Y a-t-il au moins une commande active (non TERMINER) ?
+                  final hasActiveOrder = allGroupOrders.any(
+                    (cmd) => cmd.status != OrderStatus.TERMINER,
+                  );
+
+                  // 3) Toutes les commandes sont-elles TERMINER ?
+                  final allOrdersFinished = hasAnyOrder && !hasActiveOrder;
+
                   final isLoading =
                       snapshot.connectionState == ConnectionState.waiting;
 
-                  // 2) Commande dans laquelle l'utilisateur participe (peut être null)
+                  // 3) Commande dans laquelle l'utilisateur participe (peut être null)
                   final userOrder = snapshot.data;
+
+                  // DEBUG: Logs pour comprendre le comportement
+                  print('DEBUG BOUTON:');
+                  print('  - hasAnyOrder: $hasAnyOrder');
+                  print('  - hasActiveOrder: $hasActiveOrder');
+                  print('  - allOrdersFinished: $allOrdersFinished');
+                  print(
+                    '  - userOrder: ${userOrder?.id} (status: ${userOrder?.status})',
+                  );
+                  print('  - isLoading: $isLoading');
 
                   String label;
                   VoidCallback? onPressed;
@@ -376,21 +408,53 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     label = 'Chargement...';
                     onPressed = null;
                   } else if (userOrder != null) {
-                    // 3) Il existe une commande pour ce produit ET l'utilisateur en fait partie
-                    //    -> Voir les détails de la commande
-                    label = 'Voir les détails de la commande';
+                    print(
+                      'DEBUG: userOrder != null, status: ${userOrder.status}',
+                    );
+                    // L'utilisateur participe à une commande pour ce produit
+                    if (userOrder.status == OrderStatus.TERMINER) {
+                      // La commande de l'utilisateur est TERMINÉE -> Créer une nouvelle commande
+                      label = 'Créer une commande';
+                      onPressed = () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                GroupOrderPage(produit: widget.produit),
+                          ),
+                        );
+                      };
+                    } else {
+                      // La commande de l'utilisateur est active (EN COURS, etc.) -> Voir les détails
+                      label = 'Voir les détails de la commande';
+                      onPressed = () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DetailCommande(commande: userOrder),
+                          ),
+                        );
+                      };
+                    }
+                  } else if (allOrdersFinished) {
+                    // Toutes les commandes sont TERMINÉE et l'utilisateur n'y participe pas
+                    // -> On propose de créer une nouvelle commande
+                    print('DEBUG: Cas allOrdersFinished (toutes terminées)');
+                    label = 'Créer une commande';
                     onPressed = () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => DetailCommande(commande: userOrder),
+                          builder: (_) =>
+                              GroupOrderPage(produit: widget.produit),
                         ),
                       );
                     };
-                  } else if (hasAnyOrder) {
-                    // 4) Le produit a une (ou plusieurs) commande(s) groupée(s)
-                    //    mais l'utilisateur n'en fait pas partie
-                    //    -> Rejoindre la commande
+                  } else if (hasActiveOrder) {
+                    // Le produit a au moins une commande groupée active (EN COURS)
+                    // mais l'utilisateur n'en fait pas partie
+                    // -> Rejoindre la commande
+                    print('DEBUG: Cas hasActiveOrder (rejoindre)');
                     label = 'Rejoindre la commande';
                     onPressed = () {
                       Navigator.push(
@@ -402,8 +466,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       );
                     };
                   } else {
-                    // 5) Le produit n'a AUCUNE commande groupée
-                    //    -> Créer une commande
+                    // Le produit n'a AUCUNE commande groupée
+                    // -> Créer une commande
+                    print('DEBUG: Cas aucune commande (créer)');
                     label = 'Créer une commande';
                     onPressed = () {
                       Navigator.push(

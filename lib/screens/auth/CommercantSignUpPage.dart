@@ -128,7 +128,7 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
                 TextField(
                   controller: _userName,
                   textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.text,
                   decoration: _decoration('Entrez votre username'),
                 ),
                 const SizedBox(height: 16),
@@ -269,43 +269,70 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
 
                 const SizedBox(height: 24),
 
-                // 🔹 Séparateur "Ou"
                 Row(
-                  children: const [
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Expanded(
-                      child: Divider(color: Constant.border, thickness: 1),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
-                        'Ou',
-                        style: TextStyle(color: Colors.black54),
+                        'Vous n’avez deja un compte ? ',
+                        style: TextStyle(color: Colors.black87),
                       ),
                     ),
-                    Expanded(
-                      child: Divider(color: Constant.border, thickness: 1),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => LoginPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Connectez-vous',
+                        style: TextStyle(
+                          color: Constant.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                // // 🔹 Séparateur "Ou"
+                // Row(
+                //   children: const [
+                //     Expanded(
+                //       child: Divider(color: Constant.border, thickness: 1),
+                //     ),
+                //     Padding(
+                //       padding: EdgeInsets.symmetric(horizontal: 12),
+                //       child: Text(
+                //         'Ou',
+                //         style: TextStyle(color: Colors.black54),
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Divider(color: Constant.border, thickness: 1),
+                //     ),
+                //   ],
+                // ),
 
-                // 🔸 Boutons sociaux
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    _SocialSquare(
-                      path: 'assets/icons/google.png',
-                      tooltip: 'Se connecter avec Google',
-                    ),
-                    _SocialSquare(
-                      path: 'assets/icons/facebook.png',
-                      tooltip: 'Se connecter avec Facebook',
-                    ),
-                  ],
-                ),
+                // const SizedBox(height: 20),
 
-                const SizedBox(height: 36),
+                // // 🔸 Boutons sociaux
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: const [
+                //     _SocialSquare(
+                //       path: 'assets/icons/google.png',
+                //       tooltip: 'Se connecter avec Google',
+                //     ),
+                //     _SocialSquare(
+                //       path: 'assets/icons/facebook.png',
+                //       tooltip: 'Se connecter avec Facebook',
+                //     ),
+                //   ],
+                // ),
+
+                // const SizedBox(height: 36),
               ],
             ),
           ),

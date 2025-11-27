@@ -167,16 +167,18 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       );
                     },
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: const Text(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      alignment: Alignment.bottomRight,
+                    ),
+                    child: Text(
                       'Mot de passe oublié ?',
-                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 13.5, color: Colors.black54),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
 
                 PrimaryButton(
                   onPressed: connexion,
@@ -187,35 +189,34 @@ class _LoginFormState extends State<LoginForm> {
 
                 const SizedBox(height: 24),
 
-                Row(
-                  children: const [
-                    Expanded(child: Divider(color: _border, thickness: 1)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'Ou',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: _border, thickness: 1)),
-                  ],
-                ),
+                // Row(
+                //   children: const [
+                //     Expanded(child: Divider(color: _border, thickness: 1)),
+                //     Padding(
+                //       padding: EdgeInsets.symmetric(horizontal: 12),
+                //       child: Text(
+                //         'Ou',
+                //         style: TextStyle(color: Colors.black54),
+                //       ),
+                //     ),
+                //     Expanded(child: Divider(color: _border, thickness: 1)),
+                //   ],
+                // ),
 
-                const SizedBox(height: 20),
+                // const SizedBox(height: 20),
 
-                SocialButton(
-                  label: 'Connectez-vous avec Google',
-                  assetPath: 'assets/icons/google.png',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 12),
+                // SocialButton(
+                //   label: 'Connectez-vous avec Google',
+                //   assetPath: 'assets/icons/google.png',
+                //   onTap: () {},
+                // ),
+                // const SizedBox(height: 12),
 
-                SocialButton(
-                  label: 'Connectez-vous avec Facebook',
-                  assetPath: 'assets/icons/facebook.png',
-                  onTap: () {},
-                ),
-
+                // SocialButton(
+                //   label: 'Connectez-vous avec Facebook',
+                //   assetPath: 'assets/icons/facebook.png',
+                //   onTap: () {},
+                // ),
                 const SizedBox(height: 28),
 
                 Row(

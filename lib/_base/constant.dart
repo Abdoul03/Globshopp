@@ -19,17 +19,5 @@ class Constant {
   static const vertTransparant = Color.fromARGB(38, 120, 200, 65);
   static const border = Color(0xFFE6E6E6);
 
-  // static String remoteUrl = dotenv.env["BASE_URL"] ?? '';
-  // static String remoteUrl = "http://172.20.10.2:8080/api";
-
-  static String get remoteUrl {
-    if (Platform.isAndroid) {
-      return "http://10.0.2.2:8080/api";
-    } else if (Platform.isIOS) {
-      return "http://localhost:8080/api";
-    } else {
-      // Pour d'autres plateformes (web, desktop, etc.)
-      return "http://localhost:8080/api";
-    }
-  }
+  static String remoteUrl = dotenv.env["BASE_URL"] ?? '';
 }
