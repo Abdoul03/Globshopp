@@ -67,6 +67,25 @@ class Produitservice {
     }
   }
 
+  Future<CommandeGroupee> getLastOrder(int id) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "GET",
+        "/produits/last/$id",
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return CommandeGroupee.fromJson(data);
+      } else {
+        throw Exception('Échec du chargement de la dernier commande');
+      }
+    } catch (e) {
+      throw Exception(
+        'Erreur lors de la récupération de la derniere commande : $e',
+      );
+    }
+  }
+
   Future<List<Produit>> getFournisseurProduits() async {
     try {
       final response = await _apiservice.requestWithAuthentification(

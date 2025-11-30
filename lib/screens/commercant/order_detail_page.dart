@@ -5,6 +5,7 @@ import 'package:globshopp/screens/commercant/commandes_page.dart'
     show Order, OrderStatus;
 import 'package:globshopp/services/commandeGroupeeService.dart';
 import 'package:globshopp/model/commandeGroupee.dart' as cg;
+import 'package:remixicon/remixicon.dart';
 
 class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({super.key, required this.order});
@@ -49,6 +50,23 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       final res = await _service.getAOrderGroupe(widget.order.id);
       setState(() {
         _data = res;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+        _error = e.toString().replaceFirst('Exception: ', '');
+      });
+    }
+  }
+
+  Future<void> _quitterUneCommande() async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      final leave = await _service.leaveAnOrder(widget.order.id);
+      setState(() {
         _loading = false;
       });
     } catch (e) {
@@ -482,21 +500,30 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             color: const Color(0xFF246BEB),
             padding: const EdgeInsets.only(top: 44, left: 12, right: 12),
             child: Row(
-              children: const [
-                BackButton(color: Colors.white),
-                SizedBox(width: 8),
-                Expanded(
+              children: [
+                const BackButton(color: Colors.white),
+                const SizedBox(width: 8),
+                const Expanded(
                   child: Text(
                     'Information sur la commande',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-                SizedBox(width: 48),
+                const SizedBox(width: 45),
+                GestureDetector(
+                  onTap: () => _quitterUneCommande(),
+                  child: const Icon(
+                    RemixIcons.logout_circle_r_line,
+                    color: Constant.colorsWhite,
+                    size: 30,
+                  ),
+                ),
+                const SizedBox(width: 8),
               ],
             ),
           ),

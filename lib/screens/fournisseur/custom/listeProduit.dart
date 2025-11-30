@@ -60,40 +60,42 @@ class _ListeProduitState extends State<ListeProduit> {
                   : Center(child: Icon(Icons.image_outlined, size: 48)),
             ),
             SizedBox(width: 16),
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.produit.nom,
-                    style: TextStyle(
-                      color: Constant.colorsBlack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+            Expanded(
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.produit.nom,
+                      style: TextStyle(
+                        color: Constant.colorsBlack,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Prix : ${widget.produit.prix}",
-                    textAlign: TextAlign.right,
-                    style: TextStyle(color: Constant.colorsgray),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        "MOQ : ${widget.produit.moq} ${widget.produit.unite.name}",
-                        style: TextStyle(color: Constant.jaune),
-                      ),
-                      SizedBox(width: 20),
-                      Text(
-                        "Stock : ${widget.produit.stock}",
-                        style: TextStyle(color: Constant.blue, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
+                    SizedBox(height: 10),
+                    Text(
+                      "Prix : ${widget.produit.prix}",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(color: Constant.colorsgray),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          "MOQ : ${widget.produit.moq} ${widget.produit.unite.name}",
+                          style: TextStyle(color: Constant.jaune),
+                        ),
+                        SizedBox(width: 20),
+                        Text(
+                          "Stock : ${widget.produit.stock}",
+                          style: TextStyle(color: Constant.blue, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

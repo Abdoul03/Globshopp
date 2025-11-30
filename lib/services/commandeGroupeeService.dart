@@ -143,4 +143,23 @@ class CommandeGroupeeService {
       throw Exception("Erreur lors du chargement du détail commande : $e");
     }
   }
+
+  Future<CommandeGroupee> leaveAnOrder(int id) async {
+    try {
+      final response = await _apiservice.requestWithAuthentification(
+        "POST",
+        "commandeGroupee/remove/$id",
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return CommandeGroupee.fromJson(data);
+      } else if (response.statusCode == 404) {
+        throw Exception('Commande introuvable');
+      } else {
+        throw Exception("Erreur lorsque vous quitter une commande commande");
+      }
+    } catch (e) {
+      throw Exception("$e");
+    }
+  }
 }
