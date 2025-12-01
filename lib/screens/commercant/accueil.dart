@@ -35,13 +35,6 @@ class _HomePageState extends State<HomePage> {
   // List<Map<String, Object?>> categories = [];
   bool _loading = true;
 
-  @override
-  void initState() {
-    chargerCategorie();
-    chargerProduits();
-    super.initState();
-  }
-
   Future<void> chargerCategorie() async {
     try {
       final categorie = await _categorieService.getAllCategoeri();
@@ -160,6 +153,13 @@ class _HomePageState extends State<HomePage> {
       // Réappliquer les filtres (recherche + catégorie)
       _searchResults = _calculerResultatsFiltres();
     });
+  }
+
+  @override
+  void initState() {
+    chargerCategorie();
+    chargerProduits();
+    super.initState();
   }
 
   @override
@@ -323,13 +323,18 @@ class _HomePageState extends State<HomePage> {
                   (context, index) {
                     // Si la liste est vide, afficher un message
                     if (_searchResults.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
-                          child: Text(
-                            "Aucun produit trouvé dans cette catégorie",
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
-                            textAlign: TextAlign.center,
+                          child: Center(
+                            child: Text(
+                              "Aucun produit trouvé dans cette catégorie",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                              // textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       );

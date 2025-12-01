@@ -55,10 +55,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       });
     } catch (e) {
       final msg = e.toString().replaceFirst('Exception: ', '');
-      print(msg);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(msg), backgroundColor: Colors.redAccent),
-      );
+      throw Exception('Erreur lors de la récupération des categories : $e');
     }
   }
 

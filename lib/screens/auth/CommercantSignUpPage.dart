@@ -274,7 +274,7 @@ class _CommercantsignuppageState extends State<Commercantsignuppage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Vous n’avez deja un compte ? ',
+                        'Vous avez deja un compte ? ',
                         style: TextStyle(color: Colors.black87),
                       ),
                     ),

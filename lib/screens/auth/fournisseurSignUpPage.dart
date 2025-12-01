@@ -275,7 +275,7 @@ class _FournisseursignuppageState extends State<Fournisseursignuppage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Vous n’avez deja un compte ? ',
+                        'Vous avez deja un compte ? ',
                         style: TextStyle(color: Colors.black87),
                       ),
                     ),

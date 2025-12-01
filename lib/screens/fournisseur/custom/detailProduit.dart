@@ -4,6 +4,7 @@ import 'package:globshopp/model/caracteristique.dart';
 import 'package:globshopp/model/produit.dart';
 import 'package:globshopp/screens/fournisseur/article.dart';
 import 'package:globshopp/screens/fournisseur/modifierProduit.dart';
+import 'package:globshopp/screens/fournisseur/navigationBar.dart';
 import 'package:globshopp/services/produitService.dart';
 
 class DetailProduit extends StatefulWidget {
@@ -47,8 +48,9 @@ class _DetailProduitState extends State<DetailProduit> {
           });
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Article()),
+            MaterialPageRoute(builder: (context) => Navigationbar()),
           );
+          ;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -259,8 +261,7 @@ class _DetailProduitState extends State<DetailProduit> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ModifierProduit(produit: widget.produit),
+                            builder: (context) => Navigationbar(),
                           ),
                         );
                       },
