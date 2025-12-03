@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:globshopp/_base/constant.dart';
 import 'package:globshopp/model/commandeGroupee.dart';
+import 'package:globshopp/model/enum/orderStatus.dart';
+// import 'package:globshopp/screens/commercant/commandes_page.dart';
 import 'package:intl/intl.dart';
 
 class DetailCommande extends StatefulWidget {
@@ -268,26 +270,28 @@ class _DetailCommandeState extends State<DetailCommande> {
 
               SizedBox(height: 12),
 
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Constant.blue,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: Text("Valider"),
-                ),
-              ),
+              widget.commande.status == OrderStatus.TERMINER
+                  ? SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constant.blue,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        child: Text("Valider"),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ],
           ),
         ),

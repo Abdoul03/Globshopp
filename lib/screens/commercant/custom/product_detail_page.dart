@@ -393,6 +393,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         dernierCommande?.status == OrderStatus.ENCOURS &&
                         userOrder == null;
 
+                    final hasCancel =
+                        dernierCommande?.status == OrderStatus.ANNULER;
+
                     String label;
                     VoidCallback? onPressed;
 
@@ -400,6 +403,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       // Chargement en cours
                       label = 'Chargement...';
                       onPressed = null;
+                    } else if (hasCancel) {
+                      label = 'Créer une commande';
+                      onPressed = () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                GroupOrderPage(produit: widget.produit),
+                          ),
+                        );
+                      };
                     } else if (userOrder != null) {
                       // 3) Il existe une commande pour ce produit ET l'utilisateur en fait partie
                       //    -> Voir les détails de la commande

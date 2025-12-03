@@ -144,11 +144,11 @@ class CommandeGroupeeService {
     }
   }
 
-  Future<CommandeGroupee> leaveAnOrder(int id) async {
+  Future<CommandeGroupee> leaveAnOrder(int commandeId) async {
     try {
       final response = await _apiservice.requestWithAuthentification(
         "POST",
-        "commandeGroupee/remove/$id",
+        "/commandeGroupee/remove/$commandeId",
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

@@ -273,7 +273,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Minimum order Quantity',
+                              'Quantité minimum',
                               style: TextStyle(
                                 color: _OrderDetailPageState._sub,
                                 fontWeight: FontWeight.w600,
@@ -296,7 +296,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Price',
+                              'Prix',
                               style: TextStyle(
                                 color: _OrderDetailPageState._sub,
                                 fontWeight: FontWeight.w600,
